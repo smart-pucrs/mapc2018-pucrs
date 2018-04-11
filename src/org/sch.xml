@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<organisational-specification xmlns="http://moise.sourceforge.net/os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="autoId_0" os-version="0.7" xsi:schemaLocation="http://moise.sourceforge.net/os http://moise.sourceforge.net/xml/os.xsd">
+
+<structural-specification>
+<link-types>
+<link-type id="authority"/>
+<link-type id="acquaintance"/>
+<link-type id="communication"/>
+</link-types>
+</structural-specification>
+
+<functional-specification>
+<scheme id="st">
+  <goal id="job_delivered" type="performance">
+    <plan operator="sequence">
+      <goal id="phase1" type="performance">
+        <plan operator="parallel">
+          <goal id="assistp1" type="performance">
+            <plan operator="sequence">
+              <goal id="buy_items" type="performance"/>
+            </plan>
+          </goal>
+          <goal id="assemblep1" type="performance">
+            <plan operator="sequence">
+              <goal id="prepare_assemble" type="performance"/>
+            </plan>
+          </goal>
+        </plan>
+      </goal>
+      <goal id="phase2" type="performance">
+        <plan operator="parallel">
+          <goal id="assistp2" type="performance">
+            <plan operator="sequence">
+              <goal id="assist_assemble" type="performance"/>
+            </plan>
+          </goal>
+          <goal id="assemblep2" type="performance">
+            <plan operator="sequence">
+              <goal id="do_assemble" type="performance"/>
+              <goal id="stop_assist_assemble" type="performance"/>
+            </plan>
+          </goal>
+        </plan>
+      </goal>
+    </plan>
+  </goal>
+
+  <mission id="massemble">
+    <goal id="do_assemble"/>
+    <goal id="prepare_assemble"/>
+  </mission>
+  <mission id="massist">
+    <goal id="stop_assist_assemble"/>
+    <goal id="assist_assemble"/>
+    <goal id="buy_items"/>
+  </mission>
+  
+</scheme>
+
+<scheme id="oneagent">
+  <goal id="job_delivered" type="performance">
+    <plan operator="sequence">
+	    <goal id="prepare_assemble" type="performance"/>
+	    <goal id="do_assemble" type="performance"/>
+    </plan>
+  </goal>
+
+  <mission id="massemble">
+    <goal id="do_assemble"/>
+    <goal id="prepare_assemble"/>
+  </mission>
+  
+</scheme>
+</functional-specification>
+
+<normative-specification>
+<properties>
+<property id="mission_permission" value="ignore"/>
+</properties>
+</normative-specification>
+
+</organisational-specification>

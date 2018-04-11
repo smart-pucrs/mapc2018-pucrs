@@ -1,0 +1,13 @@
+{
+  "scenario": "city2017",
+  "host": "10.32.175.181",
+  "port": 12300,
+  "scheduling": false,
+  "timeout": 40000,
+  "times": false,
+  "notifications": false,
+  "queued": true,
+  "entities": [
+    {"name": "connectionB8", "username": "agentB8", "password": "1", "iilang": false, "xml": false}
+  ]
+}
