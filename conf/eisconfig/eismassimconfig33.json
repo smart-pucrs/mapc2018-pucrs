@@ -1,6 +1,6 @@
 {
   "scenario": "city2017",
-  "host": "agentcontest1.in.tu-clausthal.de",
+  "host": "localhost",
   "port": 12300,
   "scheduling": false,
   "timeout": 40000,
@@ -8,6 +8,6 @@
   "notifications": false,
   "queued": true,
   "entities": [
-    {"name": "connectionA10", "username": "SMART-JaCaMo10", "password": "zEEYxvtn", "iilang": false, "xml": false}
+    {"name": "connectionA33", "username": "agentA33", "password": "1", "iilang": false, "xml": false}
   ]
 }

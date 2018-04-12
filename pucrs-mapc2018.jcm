@@ -140,6 +140,36 @@ mas scenario {
 		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
 		goals: register("connectionA28")
 	}
+	agent vehicle29: vehicle.asl {
+		join: vehicleart, org
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
+		goals: register("connectionA28")
+	}
+	agent vehicle30: vehicle.asl {
+		join: vehicleart, org
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
+		goals: register("connectionA28")
+	}
+	agent vehicle31: vehicle.asl {
+		join: vehicleart, org
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
+		goals: register("connectionA28")
+	}
+	agent vehicle32: vehicle.asl {
+		join: vehicleart, org
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
+		goals: register("connectionA28")
+	}
+	agent vehicle33: vehicle.asl {
+		join: vehicleart, org
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
+		goals: register("connectionA28")
+	}
+	agent vehicle34: vehicle.asl {
+		join: vehicleart, org
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
+		goals: register("connectionA28")
+	}
 	
 	workspace vehicleart {
 		artifact eis_art_vehicle1: env.EISArtifact("conf/eisconfig/eismassimconfig1.json")
@@ -170,6 +200,12 @@ mas scenario {
 		artifact eis_art_vehicle26: env.EISArtifact("conf/eisconfig/eismassimconfig26.json")
 		artifact eis_art_vehicle27: env.EISArtifact("conf/eisconfig/eismassimconfig27.json")
 		artifact eis_art_vehicle28: env.EISArtifact("conf/eisconfig/eismassimconfig28.json")
+		artifact eis_art_vehicle29: env.EISArtifact("conf/eisconfig/eismassimconfig29.json")
+		artifact eis_art_vehicle30: env.EISArtifact("conf/eisconfig/eismassimconfig30.json")
+		artifact eis_art_vehicle31: env.EISArtifact("conf/eisconfig/eismassimconfig31.json")
+		artifact eis_art_vehicle32: env.EISArtifact("conf/eisconfig/eismassimconfig32.json")
+		artifact eis_art_vehicle33: env.EISArtifact("conf/eisconfig/eismassimconfig33.json")
+		artifact eis_art_vehicle34: env.EISArtifact("conf/eisconfig/eismassimconfig34.json")
 		artifact team_artifact: env.TeamArtifact()
 	}
 	

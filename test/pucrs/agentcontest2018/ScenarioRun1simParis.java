@@ -1,4 +1,4 @@
-package pucrs.agentcontest2017;
+package pucrs.agentcontest2018;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import jason.JasonException;
 import massim.Server;
 
 
-public class ScenarioRun3sims {
+public class ScenarioRun1simParis {
 
 	@Before
 	public void setUp() {
@@ -17,7 +17,7 @@ public class ScenarioRun3sims {
 			@Override
 			public void run() {
 				try {
-					Server.main(new String[] {"-conf", "conf/3simsConfig.json", "--monitor"});
+					Server.main(new String[] {"-conf", "conf/1simConfigParis.json", "--monitor"});					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -25,7 +25,7 @@ public class ScenarioRun3sims {
 		}).start();
 
 		try {			
-			JaCaMoLauncher.main(new String[] {"pucrs-mapc2017.jcm"});
+			JaCaMoLauncher.main(new String[] {"pucrs-mapc2018.jcm"});
 		} catch (JasonException e) {
 			System.out.println("Exception: "+e.getMessage());
 			e.printStackTrace();
