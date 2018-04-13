@@ -142,33 +142,33 @@ mas scenario {
 	}
 	agent vehicle29: vehicle.asl {
 		join: vehicleart, org
-		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
-		goals: register("connectionA28")
+		focus: vehicleart.eis_art_vehicle29, vehicleart.team_artifact
+		goals: register("connectionA29")
 	}
 	agent vehicle30: vehicle.asl {
 		join: vehicleart, org
-		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
-		goals: register("connectionA28")
+		focus: vehicleart.eis_art_vehicle30, vehicleart.team_artifact
+		goals: register("connectionA30")
 	}
 	agent vehicle31: vehicle.asl {
 		join: vehicleart, org
-		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
-		goals: register("connectionA28")
+		focus: vehicleart.eis_art_vehicle31, vehicleart.team_artifact
+		goals: register("connectionA31")
 	}
 	agent vehicle32: vehicle.asl {
 		join: vehicleart, org
-		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
-		goals: register("connectionA28")
+		focus: vehicleart.eis_art_vehicle32, vehicleart.team_artifact
+		goals: register("connectionA32")
 	}
 	agent vehicle33: vehicle.asl {
 		join: vehicleart, org
-		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
-		goals: register("connectionA28")
+		focus: vehicleart.eis_art_vehicle33, vehicleart.team_artifact
+		goals: register("connectionA33")
 	}
 	agent vehicle34: vehicle.asl {
 		join: vehicleart, org
-		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
-		goals: register("connectionA28")
+		focus: vehicleart.eis_art_vehicle34, vehicleart.team_artifact
+		goals: register("connectionA34")
 	}
 	
 	workspace vehicleart {
