@@ -18,6 +18,7 @@
 	: .my_name(Me)
 <- 
 //	!new::new_round;
+	setReady;
     .print("Registering...");
     register(E);
 	.
