@@ -13,12 +13,11 @@
 	<classpathentry kind="lib" path="lib/jason-2.2-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/moise-0.11-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/npl-0.3-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/protocol-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/protocol-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/eismassim-3.5-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="lib/eismassim-3.5.jar"/>
 	<classpathentry kind="lib" path="lib/monitor-2018-1.0-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="lib/monitor-2018-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/protocol-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/server-2018-1.0-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="lib/server-2018-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
