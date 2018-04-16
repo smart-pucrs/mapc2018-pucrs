@@ -162,7 +162,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 						while (ready == 0) { await_time(100); }
 						if (!percepts.isEmpty()) {
 //							startTime = System.nanoTime();
-							logger.info("***"+percepts);
+//							logger.info("***"+percepts);
 		//					if (agent.equals("vehicle1")) { logger.info("***"+percepts); }
 							int currentStep = getCurrentStep(percepts);
 							if (lastStep != currentStep) { // only updates if it is a new step

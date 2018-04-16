@@ -46,6 +46,16 @@
 	: .my_name(Me)
 <- 
 	.wait( default::actionID(S) );
+	.wait(500);
+	if ( Me == vehicle1 ) {
+		?default::map(Map);
+		?default::cellSize(CellSize);
+		?default::proximity(Proximity);
+		initMap(Map,CellSize,Proximity);
+	}
+	!action::recharge_is_new_skip;
+	if ( Me \== vehicle1 ) { setMap; }
+	!action::recharge_is_new_skip;
 	!always_recharge;
     .
     
