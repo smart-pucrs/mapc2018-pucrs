@@ -1,5 +1,9 @@
 # PUCRS code for the MAPC of 2018
 
+Source code of SMART-JACAMO team for the 2018 Multi-agent Programming Contest (MAPC)! **For further documentation regarding the contest scenario click [this link](https://github.com/agentcontest/massim/tree/master/docs)**
+
+### Getting ready
+
 To start developing and contributing to this repository, open Eclipse, and select from the toolbar:
 
 File > Import > Git > Projects from Git > Clone URI
