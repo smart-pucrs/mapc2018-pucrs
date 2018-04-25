@@ -2,7 +2,8 @@
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("$jacamoJar/templates/org-obedient.asl", org) }
 { include("action/actions.asl",action) }
-//{ include("common-rules.asl") }
+{ include("strategies/build/build.asl",build) }
+{ include("common-rules.asl",rules) }
 //{ include("strategies/round/new-round.asl") }
 //{ include("strategies/common-plans.asl", strategies) }
 //{ include("strategies/scheme-plans.asl", org) }
@@ -56,7 +57,12 @@
 	!action::recharge_is_new_skip;
 	if ( Me \== vehicle1 ) { setMap; }
 	!action::recharge_is_new_skip;
-	!always_recharge;
+//	!always_recharge;
+	!!build::buy_well;
     .
     
-+!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
++!always_recharge 
+<- 
+	!action::recharge_is_new_skip; 
+	!always_recharge;
+	.

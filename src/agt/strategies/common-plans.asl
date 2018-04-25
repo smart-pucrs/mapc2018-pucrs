@@ -3,6 +3,13 @@
 //<-
 //	!action::recharge_is_new_skip;
 //	.
++default::well(Name, Lat, Lon, Type, Team, Integrity)
+	: default::team(MyTeam) & rules::compareStrings(Team, MyTeam)
+<-
+	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team");
+	.
+	
+
 
 +!go_to_workshop(Storage)
 	: new::workshopList(WList)

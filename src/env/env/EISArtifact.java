@@ -336,7 +336,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 //		"maxLon",
 //		"minLat",
 //		"maxLat",
-//		"team",
+		"team",
 //		"id",
 	}));
 	
@@ -348,6 +348,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 		"shop",			
 		"storage",
 		"workshop",
+		"well",
 //		"resourceNode",		
 		"auction",
 		"dump",
