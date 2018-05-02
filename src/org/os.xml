@@ -2,11 +2,18 @@
 <organisational-specification xmlns="http://moise.sourceforge.net/os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="autoId_0" os-version="0.7" xsi:schemaLocation="http://moise.sourceforge.net/os http://moise.sourceforge.net/xml/os.xsd">
 
 <structural-specification>
-<link-types>
-<link-type id="authority"/>
-<link-type id="acquaintance"/>
-<link-type id="communication"/>
-</link-types>
+<role-definitions>
+ <role id="builder" />
+ <role id="worker" />
+</role-definitions>
+
+<group-specification id="team">
+ <roles>
+  <role id="builder" />
+  <role id="worker" />
+ </roles>
+</group-specification>
+
 </structural-specification>
 
 <functional-specification>

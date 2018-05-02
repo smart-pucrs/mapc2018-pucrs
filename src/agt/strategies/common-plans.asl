@@ -1,15 +1,8 @@
-//+default::actionID(X) 
-//	: free & not strategies::hold_action(Action)
-//<-
-//	!action::recharge_is_new_skip;
-//	.
 +default::well(Name, Lat, Lon, Type, Team, Integrity)
-	: default::team(MyTeam) & rules::compareStrings(Team, MyTeam)
+	: default::team(MyTeam) & MyTeam \== Team
 <-
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team");
 	.
-	
-
 
 +!go_to_workshop(Storage)
 	: new::workshopList(WList)
@@ -288,3 +281,6 @@
 	!job_failed_assist;
 	.
 +!check_aucion_finished(_,_,_,_,_,_,_,_,_).
+
++!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
+

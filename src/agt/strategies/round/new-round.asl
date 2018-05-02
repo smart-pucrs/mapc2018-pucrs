@@ -4,8 +4,8 @@
 	: true
 <-
 	+initiator::completed_jobs(0); // debugging
-	+initiator::free_agents([]);
-	+initiator::free_trucks([]);
+	+initiator::vehicle_job(truck,2);
+	+initiator::max_bid_time(10000);
 	
 	+metrics::money(0);
 	+metrics::completedJobs(0);
@@ -36,9 +36,8 @@
 	+storageList([]);
 	+shopList([]);
 	+workshopList([]);
-	+max_bid_time(10000);
-	+tool_types([vehicle1,vehicle5,vehicle13,vehicle21]);
-	+vehicle_job(truck,2);
+	
+	
 	+noActionCount(0);
 	
 	+metrics::noAction(0);
@@ -55,24 +54,10 @@
 	setReady;
 	.
 
-@shopListQty[atomic]
-+default::shop(ShopId, Lat, Lon, Restock, Items)
-	: .my_name(vehicle1) & shopList(List) & not .member(ShopId,List)
-<-
-//	.print("Adding Shop: ",ShopId," Lat: ",Lat," Lon: ",Lon," Restock: ",Restock," Items: ",Items);
-//	-+shopList([shop(ShopId,Items)|List]);
-	createBuyCoordinationList(ShopId);
-	for (.member(item(ItemId,Price,Qty,_,_,_),Items)) {
-		addShopItem(item(ShopId,ItemId),Qty,ItemId,Price);
-	}
-	-+shopList([ShopId|List]);
-	.
 @shopList[atomic]
-+default::shop(ShopId, Lat, Lon, Restock, Items)
++default::shop(ShopId, Lat, Lon)
 	: shopList(List) & not .member(ShopId,List)
 <-
-//	.print("Adding Shop: ",ShopId," Lat: ",Lat," Lon: ",Lon," Restock: ",Restock," Items: ",Items);
-//	-+shopList([shop(ShopId,Items)|List]);
 	-+shopList([ShopId|List]);
 	.
 
@@ -109,6 +94,13 @@
 	:  dumpList(List) & not .member(DumpId,List)
 <- 
 	-+dumpList([DumpId|List]);
+	.
+	
+@resource[atomic]
++default::resourceNode(NodeId,Lat,Lon,Item)
+	: not default::resNode(NodeId,Lat,Lon,Item)
+<-
+	addResourceNode(NodeId,Lat,Lon,Item);
 	.
 	
 {end}

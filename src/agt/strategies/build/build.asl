@@ -15,5 +15,5 @@
 +!build_well(Type)
 	: true
 <- 
-	.print("I finisehd the well of type ",Type);
+	.print("I finished the well of type ",Type);
 	.

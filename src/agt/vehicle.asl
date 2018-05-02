@@ -4,22 +4,27 @@
 { include("action/actions.asl",action) }
 { include("strategies/build/build.asl",build) }
 { include("common-rules.asl",rules) }
-//{ include("strategies/round/new-round.asl") }
-//{ include("strategies/common-plans.asl", strategies) }
+{ include("strategies/round/new-round.asl") }
+{ include("strategies/gather/gather.asl",gather) }
+{ include("strategies/common-plans.asl", strategies) }
 //{ include("strategies/scheme-plans.asl", org) }
 //{ include("strategies/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
 
-//+!add_initiator
-//<- 
-//	.include("strategies/initiator.asl", initiator);
-//	.
++!add_initiator
+<- 
+	.include("strategies/initiator.asl", initiator);
+	.
+	
++!add_coordinator
+<- 
+	.include("strategies/coordinator.asl", coordinator);
+	.
 	
 +!register(E)
 	: .my_name(Me)
 <- 
-//	!new::new_round;
-	setReady;
+	!new::new_round;
     .print("Registering...");
     register(E);
 	.
@@ -29,22 +34,9 @@
 <-
 	addServerName(Me,ServerMe);
 	.
-	
-//+default::hasItem(Item,Qty)
-//<- .print("Just got #",Qty," of ",Item).
-
-//+default::role(Role,_,LoadCap,_,Tools)
-//<-
-
-// only send recharge
-//+default::role(Role,_,LoadCap,_,Tools)
-//<-
-//	.wait( default::actionID(S) );
-//	!!strategies::free;
-//.
 
 +default::role(Role, BaseSpeed, MaxSpeed, BaseLoad, MaxLoad, BaseSkill, MaxSkill, BaseVision, MaxVision, BaseBattery, MaxBattery)
-	: .my_name(Me)
+	: .my_name(Me) & play(Me,MyRole,_)
 <- 
 	.wait( default::actionID(S) );
 	.wait(500);
@@ -57,12 +49,8 @@
 	!action::recharge_is_new_skip;
 	if ( Me \== vehicle1 ) { setMap; }
 	!action::recharge_is_new_skip;
-//	!always_recharge;
-	!!build::buy_well;
+	if ( Me == vehicle2 ) { !!coordinator::initial_coordination; }
+//	.print(Me,"  ",Name,"  ",MRole,"  ");
+	if (MyRole == builder ) { !!build::buy_well; }
     .
-    
-+!always_recharge 
-<- 
-	!action::recharge_is_new_skip; 
-	!always_recharge;
-	.
+
