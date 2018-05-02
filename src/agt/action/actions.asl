@@ -71,11 +71,11 @@
 //	!action::commitAction(goto(Lat,Lon));
 //	!goto(Lat, Lon);
 //	.
-	
+
 // Charge
 // No parameters
 +!charge
-	: default::charge(C) & default::role(Role,_,_,CCap,_) & (((Role == truck | Role == car) & C < math.round(CCap / 1.3)) | (Role \== truck & Role \== car & C < CCap))
+	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & (((Role == truck | Role == car) & C < math.round(CCap / 1.3)) | (Role \== truck & Role \== car & C < CCap))
 <-
 	!action::commitAction(charge);
 	!charge;
@@ -323,7 +323,7 @@
 // Recharge
 // No parameters
 +!recharge
-	: default::charge(C) & default::role(_,_,_,CCap,_) & C < math.round(CCap / 5)
+	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & C < math.round(CCap / 5)
 <-
 	!action::commitAction(recharge);
 	!recharge;
@@ -341,7 +341,7 @@
 // Gather
 // No parameters
 +!gather(Vol)
-	: default::role(_,_,LoadCap,_,_) & default::load(Load) & Load + Vol <= LoadCap
+	: default::role(_, _, _, LoadCap, _, _, _, _, _, _, _) & default::load(Load) & Load + Vol <= LoadCap
 <-
 	!action::commitAction(gather);
 	!gather(Vol);

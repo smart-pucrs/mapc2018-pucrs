@@ -10,11 +10,6 @@
 //{ include("strategies/scheme-plans.asl", org) }
 //{ include("strategies/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
-
-+!add_initiator
-<- 
-	.include("strategies/initiator.asl", initiator);
-	.
 	
 +!add_coordinator
 <- 
@@ -49,8 +44,8 @@
 	!action::recharge_is_new_skip;
 	if ( Me \== vehicle1 ) { setMap; }
 	!action::recharge_is_new_skip;
+	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slowers computers
 	if ( Me == vehicle2 ) { !!coordinator::initial_coordination; }
-//	.print(Me,"  ",Name,"  ",MRole,"  ");
 	if (MyRole == builder ) { !!build::buy_well; }
     .
 
