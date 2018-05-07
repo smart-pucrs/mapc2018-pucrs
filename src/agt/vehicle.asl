@@ -2,18 +2,18 @@
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("$jacamoJar/templates/org-obedient.asl", org) }
 { include("action/actions.asl",action) }
-{ include("strategies/build/build.asl",build) }
+{ include("behaviour/build/build.asl",build) }
 { include("common-rules.asl",rules) }
-{ include("strategies/round/new-round.asl") }
-{ include("strategies/gather/gather.asl",gather) }
-{ include("strategies/common-plans.asl", strategies) }
+{ include("behaviour/round/new-round.asl") }
+{ include("behaviour/gather/gather.asl",gather) }
+{ include("behaviour/common-plans.asl", strategies) }
 //{ include("strategies/scheme-plans.asl", org) }
 //{ include("strategies/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
 	
 +!add_coordinator
 <- 
-	.include("strategies/coordinator.asl", coordinator);
+	.include("behaviour/coordinator.asl", coordinator);
 	.
 	
 +!register(E)
