@@ -6,7 +6,7 @@
 { include("common-rules.asl",rules) }
 { include("behaviour/round/new-round.asl") }
 { include("behaviour/gather/gather.asl",gather) }
-{ include("behaviour/common-plans.asl", strategies) }
+{ include("strategy/common-plans.asl", strategies) }
 //{ include("strategies/scheme-plans.asl", org) }
 //{ include("strategies/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
