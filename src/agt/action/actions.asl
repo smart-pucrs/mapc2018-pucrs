@@ -11,6 +11,15 @@
     !action::commitAction(build(Type));
 	.
 
+// ##### DISMANTLE ACTION #####
+// Uses zero (0) parameters to dismantle an existing well. 
++!dismantleWell
+<-		
+	!action::commitAction(dismantle);
+	.
+
+
+
 // Goto (option 1)
 // FacilityId must be a string
 +!goto(FacilityId) : default::facility(FacilityId).
