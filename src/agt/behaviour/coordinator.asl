@@ -15,11 +15,16 @@ init_coord(Vehicle,I,C,N,List,Result,ResultFinal) :- C \== N & .concat("vehicle"
 
 @initCoord[atomic]
 +!initial_coordination
-	: .count(default::resNode(_,_,_,_),N) & resourceList(List)
+	: .count(default::resNode(_,_,_,_),N) & resourceList(List) & List \== []
 <-
 	.print("Number of res nodes ",N);
 	?init_coord("",1,1,N,List,[],Result);
 	for ( .member(order(Vehicle,node(NodeId,Lat,Lon)),Result)) {
 		.send(Vehicle,achieve,gather::go_gather(node(NodeId,Lat,Lon)))
 	}
+	.
+@initCoord2[atomic]
++!initial_coordination
+<-
+	.print("There are no initial resource nodes.");
 	.
