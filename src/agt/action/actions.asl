@@ -349,13 +349,16 @@
 	
 // Gather
 // No parameters
-+!gather(Vol)
-	: default::role(_, _, _, LoadCap, _, _, _, _, _, _, _) & default::load(Load) & Load + Vol <= LoadCap
++!gather(Item)
+	: default::role(_, _, _, LoadCap, _, _, _, _, _, _, _) & default::load(Load) & default::item(Item,Vol,_,_) & Load + Vol <= LoadCap
 <-
 	!action::commitAction(gather);
 	!gather(Vol);
 	.
--!gather(Vol).
++!gather(Item)
+<-
+	.print("My load is full.");
+	.
 
 // Abort
 // No parameters

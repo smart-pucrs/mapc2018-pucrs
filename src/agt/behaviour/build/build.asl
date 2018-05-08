@@ -3,6 +3,7 @@
 <-  
 	!action::build(Type); 
 	!build_well(Type);
+	!strategies::always_recharge; // remove this once the rest of this behaviour is implemented
 	.
 	
 +!build_well(Type,Lat,Lon) 

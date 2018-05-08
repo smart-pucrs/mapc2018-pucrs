@@ -10,7 +10,7 @@ init_coord(Vehicle,I,C,N,List,Result,ResultFinal) :- C \== N & .concat("vehicle"
 	: resourceList(List) & not .member(NodeId,List)
 <- 
 	.print("New resource node: ",NodeId);
-	-+resourceList([node(NodeId,Lat,Lon)|List]);
+	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
 	.
 
 @initCoord[atomic]
@@ -19,8 +19,8 @@ init_coord(Vehicle,I,C,N,List,Result,ResultFinal) :- C \== N & .concat("vehicle"
 <-
 	.print("Number of res nodes ",N);
 	?init_coord("",1,1,N,List,[],Result);
-	for ( .member(order(Vehicle,node(NodeId,Lat,Lon)),Result)) {
-		.send(Vehicle,achieve,gather::go_gather(node(NodeId,Lat,Lon)))
+	for ( .member(order(Vehicle,node(NodeId,Lat,Lon,Item)),Result)) {
+		.send(Vehicle,achieve,gather::go_gather(node(NodeId,Lat,Lon,Item)))
 	}
 	.
 @initCoord2[atomic]
