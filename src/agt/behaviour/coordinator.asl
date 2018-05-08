@@ -20,11 +20,15 @@ init_coord(Vehicle,I,C,N,List,Result,ResultFinal) :- C \== N & .concat("vehicle"
 	.print("Number of res nodes ",N);
 	?init_coord("",1,1,N,List,[],Result);
 	for ( .member(order(Vehicle,node(NodeId,Lat,Lon,Item)),Result)) {
-		.send(Vehicle,achieve,gather::go_gather(node(NodeId,Lat,Lon,Item)))
+		.send(Vehicle,achieve,gather::go_gather(node(NodeId,Lat,Lon,Item)));
 	}
 	.
 @initCoord2[atomic]
 +!initial_coordination
 <-
-	.print("There are no initial resource nodes.");
+	.print("There are no initial resource nodes, sending agents to their nearest charging station.");
+	for ( .range(I,1,26) ) {
+		.concat("vehicle",I,VehicleNew);
+		.send(VehicleNew,achieve,gather::go_explore);
+	}
 	.

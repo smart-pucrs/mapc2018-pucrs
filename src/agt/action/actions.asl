@@ -83,8 +83,10 @@
 
 // Charge
 // No parameters
+//& (((Role == truck | Role == car) & C < math.round(CCap / 1.3)) | (Role \== truck & Role \== car & C < CCap))
+//not sure if the rule above is still effective, since recharge got nerfed, we will have to test it in the future
 +!charge
-	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & (((Role == truck | Role == car) & C < math.round(CCap / 1.3)) | (Role \== truck & Role \== car & C < CCap))
+	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & C < BatteryCap
 <-
 	!action::commitAction(charge);
 	!charge;
