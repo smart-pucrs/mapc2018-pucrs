@@ -193,7 +193,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 	
 	private void updatePerception(String agent, Collection<Percept> previousPercepts, Collection<Percept> percepts) throws JasonException {
 		for (Percept old: previousPercepts) {
-			if ((agent.equals("vehicle1") && step_obs_prop_v1.contains(old.getName()) && !old.getName().equals("job") && !old.getName().equals("mission") ) || step_obs_prop.contains(old.getName())) {
+			if ((agent.equals("vehicle1") && step_obs_prop.contains(old.getName()) && !old.getName().equals("job") && !old.getName().equals("mission") ) || step_obs_prop.contains(old.getName())) {
 				if (!percepts.contains(old) || old.getName().equals("lastAction") || old.getName().equals("lastActionResult")) { // not perceived anymore
 					Literal literal = Translator.perceptToLiteral(old);
 					try{				
@@ -223,7 +223,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 		Literal lastActionResult 	= null;
 		Literal actionID 			= null;
 		for (Percept percept: percepts) {
-			if ((agent.equals("vehicle1") && step_obs_prop_v1.contains(percept.getName())) || step_obs_prop.contains(percept.getName()) ) {
+			if ( step_obs_prop.contains(percept.getName()) ) {
 				if (!previousPercepts.contains(percept) || percept.getName().equals("lastAction") || percept.getName().equals("lastActionResult")) { // really new perception 
 					Literal literal = Translator.perceptToLiteral(percept);
 					if (percept.getName().equals("step")) {
@@ -366,43 +366,15 @@ public class EISArtifact extends Artifact implements AgentListener {
 		"maxBattery",
 		"skill",
 		"vision",
+		"auction",
+		"mission",
+		"job",
 //		"entity",
 //		"lastActionParams",
 //		"timestamp",
 //		"deadline",
 //		"route",
 	}));
-	
-	static Set<String> step_obs_prop_v1 = new HashSet<String>( Arrays.asList(new String[] {
-			"chargingStation",
-			"actionID",
-			"routeLength",
-			"shop",			
-			"storage",
-			"workshop",
-			"resourceNode",
-			"auction",
-			"mission",
-			"job",
-			"dump",
-			"lat",
-			"lon",
-			"charge",
-			"load",
-			"facility",
-			"hasItem",
-			"step",
-			"simEnd",
-			"lastAction",
-			"lastActionResult",
-			"massium",
-			"well",
-//			"entity",
-//			"lastActionParams",
-//			"timestamp",
-//			"deadline",
-//			"route",
-		}));
 	
 	static List<String> location_perceptions = Arrays.asList(new String[] { "shop", "storage", "workshop", "chargingStation", "dump", "entity", "resourceNode", "well" });
 
