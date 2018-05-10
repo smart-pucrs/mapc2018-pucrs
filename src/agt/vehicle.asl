@@ -46,6 +46,7 @@
 	if ( Me \== vehicle1 ) { setMap; }
 	!action::recharge_is_new_skip;
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slowers computers
+	// update the code below
 	if ( Me == vehicle2 ) { !!coordinator::initial_coordination; }
 	if (MyRole == builder ) { !!build::buy_well; }
     .
