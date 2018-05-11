@@ -12,3 +12,8 @@ enough_battery2(FacilityAux, FacilityId1, FacilityId2, Result, Battery) :- defau
 enough_battery2(FacilityAux, Lat, Lon, FacilityId2, Result, Battery) :- default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & actions.route(Role, Speed, FacilityAux, Lat, Lon, RouteLen1) & actions.route(Role, Speed, Lat, Lon, FacilityId2, _, RouteLen2) & ((Battery > (RouteLen1 + RouteLen2) & Result = "true") | (Result = "false")).
 enough_battery_charging(FacilityId, Result) :- default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & actions.route(Role, Speed, FacilityId, RouteLen) & default::charge(Battery) & ((Battery > RouteLen & Result = "true") | (Result = "false")).
 enough_battery_charging2(FacilityAux, FacilityId, Result, Battery) :- default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & actions.route(Role, Speed, FacilityAux, FacilityId, RouteLen) & ((Battery > RouteLen & Result = "true") | (Result = "false")).
+
+getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::shop(FacilityId, LatAux, LonAux) & Flat=LatAux & Flon=LonAux.
+getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::storage(FacilityId, LatAux, LonAux,_,_,_) & Flat=LatAux & Flon=LonAux.
+getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::dump(FacilityId,LatAux,LonAux) & Flat=LatAux & Flon=LonAux.
+getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::workshop(FacilityId,LatAux,LonAux) & Flat=LatAux & Flon=LonAux.

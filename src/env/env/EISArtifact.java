@@ -40,7 +40,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 	private List<Literal> start = new ArrayList<Literal>();
 	private List<Literal> percs = new ArrayList<Literal>();
 	private List<Literal> signalList = new ArrayList<Literal>();
-	private List<Literal> jobDone = new ArrayList<Literal>();
+//	private List<Literal> jobDone = new ArrayList<Literal>();
 	private int mapSet = 0;
 	private int ready = 0;
 //	private long startTime;
@@ -193,7 +193,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 	
 	private void updatePerception(String agent, Collection<Percept> previousPercepts, Collection<Percept> percepts) throws JasonException {
 		for (Percept old: previousPercepts) {
-			if ((agent.equals("vehicle1") && step_obs_prop.contains(old.getName()) && !old.getName().equals("job") && !old.getName().equals("mission") ) || step_obs_prop.contains(old.getName())) {
+			if (step_obs_prop.contains(old.getName())) {
 				if (!percepts.contains(old) || old.getName().equals("lastAction") || old.getName().equals("lastActionResult")) { // not perceived anymore
 					Literal literal = Translator.perceptToLiteral(old);
 					try{				
@@ -207,13 +207,13 @@ public class EISArtifact extends Artifact implements AgentListener {
 					//						logger.info("removing old perception "+literal);
 				}
 			}
-			else if (old.getName().equals("job") || old.getName().equals("mission")) {
-				if (!percepts.contains(old)) {
-//					logger.info("Job/mission failed or completed");
-					Literal literal = Translator.perceptToLiteral(old);
-					jobDone.add(literal);
-				}
-			}
+//			else if (old.getName().equals("job") || old.getName().equals("mission")) {
+//				if (!percepts.contains(old)) {
+////					logger.info("Job/mission failed or completed");
+//					Literal literal = Translator.perceptToLiteral(old);
+//					jobDone.add(literal);
+//				}
+//			}
 		}
 		
 		// compute new perception
@@ -240,7 +240,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 						if (percept.getName().equals("lastActionResult")) {
 							lastActionResult = literal;
 						} 
-						else if (agent.equals("vehicle1") && (percept.getName().equals("job") || percept.getName().equals("mission"))) { signalList.add(literal); }
+//						else if (agent.equals("vehicle1") && (percept.getName().equals("job") || percept.getName().equals("mission"))) { signalList.add(literal); }
 						else if (percept.getName().equals("actionID")) { actionID = literal; }
 						else if (percept.getName().equals("shop") || percept.getName().equals("workshop") || percept.getName().equals("routeLength") || percept.getName().equals("facility")) { percs.add(0,literal); }
 						else { percs.add(literal); }
@@ -289,13 +289,13 @@ public class EISArtifact extends Artifact implements AgentListener {
 //			await_time(100);
 			defineObsProperty(actionID.getFunctor(), (Object[]) actionID.getTermsArray());
 			
-			if (!jobDone.isEmpty()) {
-				await_time(500);
-				for (Literal lit: jobDone) {
-					signal("job_done",(Object[]) lit.getTermsArray());
-				}
-				jobDone.clear();
-			}
+//			if (!jobDone.isEmpty()) {
+//				await_time(500);
+//				for (Literal lit: jobDone) {
+//					signal("job_done",(Object[]) lit.getTermsArray());
+//				}
+//				jobDone.clear();
+//			}
 		}
 	}
 	
