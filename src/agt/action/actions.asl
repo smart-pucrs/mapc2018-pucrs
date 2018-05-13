@@ -35,6 +35,13 @@
 	!continue;
 	!goto(FacilityId);
 	.
+// We should not test battery if we are already going to a charging station	
++!goto(FacilityId)
+: not .desire(action::go_charge(_)) & new::chargingList(List) & .member(FacilityId,List)
+<-	
+    !action::commitAction(goto(FacilityId));
+	!goto(FacilityId);
+	.
 // Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
 +!goto(FacilityId)
 : not .desire(action::go_charge(_)) & new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
