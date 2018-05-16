@@ -7,6 +7,7 @@
 { include("common-rules.asl",rules) }
 { include("behaviour/round/new-round.asl") }
 { include("behaviour/gather/gather.asl",gather) }
+{ include("behaviour/explore/explore.asl",explore) }
 { include("strategy/common-plans.asl", strategies) }
 //{ include("strategies/scheme-plans.asl", org) }
 //{ include("strategies/bidder.asl", bidder) }
@@ -46,8 +47,9 @@
 	if ( Me \== vehicle1 ) { setMap; }
 	!action::recharge_is_new_skip;
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slowers computers
-	// update the code below
-	if ( Me == vehicle2 ) { !!coordinator::initial_coordination; }
-	if (MyRole == builder ) { !!build::buy_well; }
+	// update the code below for a different strategy
+	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
+	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }
+	if ( MyRole == builder ) { !!build::buy_well; }
     .
 

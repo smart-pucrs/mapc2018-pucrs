@@ -2,6 +2,7 @@ compareStrings(Str1,Str2) :- .term2string(Str1,T1) & .term2string(Str2,T2) & (T1
 
 am_I_at_right_position(Lat,Lon) :- default::lat(CurrentLat) & (Lat == CurrentLat) & default::lon(CurrentLon) & (Lon == CurrentLon).
 
+farthest_facility(List, Facility) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.farthest(Role, List, Facility).
 closest_facility(List, Facility) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.closest(Role, List, Facility).
 closest_facility(List, Facility1, Facility2) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.closest(Role, List, Facility1, Facility2).
 closest_facility(List, Lat, Lon, Facility2) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.closest(Role, List, Lat, Lon, Facility2).

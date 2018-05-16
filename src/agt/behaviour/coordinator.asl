@@ -9,7 +9,7 @@ init_coord(Vehicle,I,C,N,List,Result,ResultFinal) :- C \== N & .concat("vehicle"
 +default::resNode(NodeId,Lat,Lon,Item)
 	: resourceList(List) & not .member(NodeId,List)
 <- 
-	.print("New resource node: ",NodeId);
+	.print("New resource node: ",NodeId," for item: ",Item);
 	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
 	.
 
@@ -29,6 +29,6 @@ init_coord(Vehicle,I,C,N,List,Result,ResultFinal) :- C \== N & .concat("vehicle"
 	.print("There are no initial resource nodes, sending agents to their nearest charging station.");
 	for ( .range(I,1,26) ) {
 		.concat("vehicle",I,VehicleNew);
-		.send(VehicleNew,achieve,gather::go_explore);
+		.send(VehicleNew,achieve,explore::go_explore_charging);
 	}
 	.
