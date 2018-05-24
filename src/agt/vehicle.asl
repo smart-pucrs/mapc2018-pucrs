@@ -26,6 +26,29 @@
     register(E);
 	.
 
++default::step(_)
+	: not initiator(_) & .my_name(Me) 
+<-  
+	actions.getAgentNumber(Me,Number);
+	.count(play(_,_,_), NoP);
+	+numberOfPlayers(NoP);
+	+initiator(Number);
+	.
+    
++default::step(Step)
+	: initiator(Number) & Number == Step 
+<- 	
+	?numberOfPlayers(NoP);
+	-+initiator(Number + NoP);
+	.
+	
++default::step(Step)
+	: initiator(Number) & Number < Step 
+<-  
+	?numberOfPlayers(NoP);
+	-+initiator(Number + NoP);
+	.
+
 +default::name(ServerMe)
 	: .my_name(Me)
 <-
@@ -48,8 +71,12 @@
 	!action::recharge_is_new_skip;
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slowers computers
 	// update the code below for a different strategy
-	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
-	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }
-	if ( MyRole == builder ) { !!build::buy_well; }
+	
+//	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
+//	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }
+//	if ( MyRole == builder ) { !!build::buy_well; }
+
     .
 
+
+	
