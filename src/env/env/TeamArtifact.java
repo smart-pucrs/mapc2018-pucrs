@@ -1,10 +1,15 @@
 package env;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import cartago.*;
 
@@ -22,8 +27,39 @@ public class TeamArtifact extends Artifact {
 	private Map<String, ArrayList<String>> availableItems = new HashMap<String,ArrayList<String>>();
 	private Map<String, ArrayList<String>> buyCoordination = new HashMap<String,ArrayList<String>>();
 	
+	private final String USER_AGENT = "Mozilla/5.0";
+	
+	
 	void init(){
 		logger.info("Team Artifact has been created!");
+		readConf();
+	}
+	
+	public void readConf(){
+		
+		JSONParser parser = new JSONParser();		
+		
+		try {
+			
+			Object obj = parser.parse(new FileReader("c:\\CompetitionMas\\mapc2018-pucrs\\conf\\generate\\generate.json"));
+			
+			JSONObject jsonObject 		= (JSONObject) obj;			
+			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
+			JSONObject objWells 		= (JSONObject) objFacilities.get("wells");
+						
+			defineObsProperty("conf_baseEfficiencyMin", objWells.get("baseEfficiencyMin"));
+			defineObsProperty("conf_baseEfficiencyMax", objWells.get("baseEfficiencyMax"));
+			defineObsProperty("conf_efficiencyIncreaseMin", objWells.get("efficiencyIncreaseMin"));
+			defineObsProperty("conf_efficiencyIncreaseMax", objWells.get("efficiencyIncreaseMax"));
+			defineObsProperty("conf_baseIntegrityMin", objWells.get("baseIntegrityMin"));
+			defineObsProperty("conf_baseIntegrityMax", objWells.get("baseIntegrityMax"));
+			defineObsProperty("conf_costFactor", objWells.get("costFactor"));
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@OPERATION void createAvailableList(String storage){
