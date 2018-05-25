@@ -39,9 +39,11 @@ public class TeamArtifact extends Artifact {
 		
 		JSONParser parser = new JSONParser();		
 		
+		String pathProject = "c:\\Competition\\mapc2018-pucrs\\";
+		
 		try {
 			
-			Object obj = parser.parse(new FileReader("c:\\CompetitionMas\\mapc2018-pucrs\\conf\\generate\\generate.json"));
+			Object obj = parser.parse(new FileReader(pathProject+"\\conf\\generate\\generate.json"));
 			
 			JSONObject jsonObject 		= (JSONObject) obj;			
 			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
