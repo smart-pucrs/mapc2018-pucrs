@@ -3,7 +3,9 @@ package env;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import cartago.*;
@@ -21,6 +23,7 @@ public class TeamArtifact extends Artifact {
 	private static Map<String, Integer> duplicateLoads = new HashMap<String, Integer>();
 	private Map<String, ArrayList<String>> availableItems = new HashMap<String,ArrayList<String>>();
 	private Map<String, ArrayList<String>> buyCoordination = new HashMap<String,ArrayList<String>>();
+	private static Map<Integer, Set<String>> actionsByStep = new HashMap<Integer, Set<String>>();
 	
 	void init(){
 		logger.info("Team Artifact has been created!");
@@ -205,4 +208,23 @@ public class TeamArtifact extends Artifact {
 		this.init();
 	}
 	
+	@OPERATION void actionChoosed(int step) {
+		String agent = getCurrentOpAgentId().getAgentName();
+		
+		Set<String> agents = actionsByStep.remove(step);
+		if (agents == null)
+			agents = new HashSet<String>();
+		agents.add(agent);
+		actionsByStep.put(step, agents);
+		
+		if (this.getObsPropertyByTemplate("chosenActions", step,null) != null)
+			this.removeObsPropertyByTemplate("chosenActions", step, null);
+		this.defineObsProperty("chosenActions", step, agents.toArray());
+		
+//		clean belief
+		if (actionsByStep.containsKey(step-1)) {
+			actionsByStep.remove(step-1);
+			this.removeObsPropertyByTemplate("chosenActions", step-1, null);
+		}
+	}
 }
