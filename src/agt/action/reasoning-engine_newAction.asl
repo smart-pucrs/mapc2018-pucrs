@@ -56,17 +56,15 @@
 	.
 +!forget_old_action(Step).
 
-+defaut::chosenActions(Step, Agents) // all the agents have chosen their actions
++default::chosenActions(Step, Agents) // all the agents have chosen their actions
 	: .length(Agents) == 34
 <-
-	.print("liberou");
 	.drop_intention(action::wait_request_for_help(Step));
 	!send_action_to_server(Step);
 	.
 +!wait_request_for_help(Step)
 <-
-	.print("waiting");
-	.wait(2000);
+	.wait(1000);
 	!send_action_to_server(Step);
 	.	
 	
