@@ -246,7 +246,7 @@ public class TeamArtifact extends Artifact {
 		this.init();
 	}
 	
-	@OPERATION void actionChoosed(int step) {
+	@OPERATION void chosenAction(int step) {
 		String agent = getCurrentOpAgentId().getAgentName();
 		
 		Set<String> agents = actionsByStep.remove(step);

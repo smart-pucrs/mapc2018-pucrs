@@ -65,12 +65,13 @@
 	-action::reasoning_about_belief(Id);
 	. 
  +default::help(teste)
- 	: default::step(S)
+ 	: default::actionID(Id) & default::step(S)
  <-
  	.print("I receive a help request ",S);
- 	!action::forget_old_action(S);
+ 	!action::forget_old_action(Id);
  	.print("I forgot my intention ");
+ 	+action::committedToAction(Id);
  	!strategies::always_recharge;
- 	.print("Recharging",S);
+ 	.print("Recharging ",S);
  	.
 
