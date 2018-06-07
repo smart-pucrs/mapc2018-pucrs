@@ -42,11 +42,13 @@ public class TeamArtifact extends Artifact {
 		
 		JSONParser parser = new JSONParser();		
 		
-		String pathProject = "c:\\Competition\\mapc2018-pucrs\\";
+//		String pathProject = "C:\\mapc2018";
+		File currentDir = new File(".");
+		String path = currentDir.getAbsolutePath();
 		
 		try {
 			
-			Object obj = parser.parse(new FileReader(pathProject+"\\conf\\generate\\generate.json"));
+			Object obj = parser.parse(new FileReader(path+"\\conf\\generate\\generate.json"));
 			
 			JSONObject jsonObject 		= (JSONObject) obj;			
 			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
