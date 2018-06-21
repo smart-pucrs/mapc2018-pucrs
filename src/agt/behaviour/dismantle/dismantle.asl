@@ -13,9 +13,9 @@
 	: default::well(Id,_,_,_,_,_)
 <-
 	!action::dismantleWell;
-	!atack(Id);
+	!attack(Id);
 	.
-+!atack(Id)
++!attack(Id)
 <-
-	.print("I have destroyed the opponent's well ",Id);	
+	.print("I have destroyed the opponent's well ",Id);
 	.

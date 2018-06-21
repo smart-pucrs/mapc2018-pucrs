@@ -3,7 +3,7 @@
 <-
 	.print("I've already sent an action at step ",Step,", I cannot send a new one ", Action);
 	-+metrics::next_actions(C+1); 
-	.wait({-default::actionID(_)}); 
+	.wait({+default::actionID(_)}); 
 	!commit_action(Action);
 	.
 +!commit_action(Action)
@@ -37,22 +37,27 @@
 	}
 	.
 +!commit_action(Action) : Action == recharge.
-	
++!commit_action(Action) : .print(">>>>>>>>>>>>>>>>>>> Plano nao encontrado") & False.
+
++!forget_old_action(ActionId) <- !forget_old_action.	
 @forgetAction[atomic]
-+!forget_old_action(ActionId)
-	: action::action(ActionId,Action)
++!forget_old_action
+	: .desire(action::commit_action(Action))
 <-
-	.drop_intention(action::wait_request_for_help(ActionId));
-	.drop_intention(action::commit_action(Action)); // we don't want to follow these plans anymore
-	-action::action(ActionId,Action);
-	!forget_old_action(Step);
+	.print("I Have a desire ",Action,", forgetting it");	
+	.drop_desire(action::commit_action(Action)); // we don't want to follow these plans anymore
+	if(action::action(ActionId,Action)){
+		.drop_desire(action::wait_request_for_help(ActionId));
+		-action::action(ActionId,Action);
+	}
+	!forget_old_action;
 	.
-+!forget_old_action(ActionId).
++!forget_old_action.
 
 +default::chosenActions(ActionId, Agents) // all the agents have chosen their actions
 	: .length(Agents) == 34
 <-
-	.drop_intention(action::wait_request_for_help(ActionId));
+	.drop_desire(action::wait_request_for_help(ActionId));
 	!send_action_to_server(ActionId);
 	.
 +!wait_request_for_help(ActionId)

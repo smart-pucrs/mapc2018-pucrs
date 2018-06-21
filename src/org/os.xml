@@ -11,6 +11,8 @@
  <roles>
   <role id="builder" />
   <role id="worker" />
+  <role id="attacker" />
+  <role id="explorer" />
  </roles>
 </group-specification>
 

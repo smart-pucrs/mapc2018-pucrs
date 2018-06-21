@@ -3,7 +3,7 @@
 { include("$jacamoJar/templates/org-obedient.asl", org) }
 { include("action/actions_newAction.asl",action) }
 { include("behaviour/build/build.asl",build) }
-//{ include("behaviour/dismantle/dismantle.asl",dismantle) }
+{ include("behaviour/dismantle/dismantle.asl",attack) }
 { include("common-rules.asl",rules) }
 { include("behaviour/round/new-round.asl") }
 { include("behaviour/gather/gather.asl",gather) }

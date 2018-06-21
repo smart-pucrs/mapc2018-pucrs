@@ -1,5 +1,7 @@
 compareStrings(Str1,Str2) :- .term2string(Str1,T1) & .term2string(Str2,T2) & (T1==T2).
 
+my_role(Role,CurrentRole):- .my_name(Me) & default::play(Me,CurrentRole,_) & CurrentRole == Role.
+
 am_I_at_right_position(Lat,Lon) :- default::lat(CurrentLat) & (Lat == CurrentLat) & default::lon(CurrentLon) & (Lon == CurrentLon).
 
 farthest_facility(List, Facility) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.farthest(Role, List, Facility).
