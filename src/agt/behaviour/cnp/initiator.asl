@@ -1,4 +1,5 @@
 resourceList([]).
+taskList([]).
 
 verify_bases([],NodesList,Result) :- Result = "true".
 verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesList) & verify_bases(Parts,NodesList,Result).
@@ -14,12 +15,16 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.
 
 +!initiator::create_initial_tasks
-	: resourceList(NodesList)
+	: resourceList(NodesList) & taskList(TaskList)
 <-
 	.findall(item(Item,Parts),default::item(Item,_,_,parts(Parts)) & Parts \== [], AssembledList);
 	for ( .member(item(Item,Parts),AssembledList) ) {
 		?verify_bases(Parts,NodesList,Result);
-		.print(Item," assemble ready result is ",Result);
+		if (Result == "true") {
+			-+taskList([Item|TaskList]);
+		}
 	}
+	?taskList(TaskL);
+	.print("We are able to assemble the following items: ",TaskL);
 	.
 	
