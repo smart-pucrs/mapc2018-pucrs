@@ -48,7 +48,7 @@ public class TeamArtifact extends Artifact {
 		
 		try {
 			
-			Object obj = parser.parse(new FileReader(path+"\\conf\\generate\\generate.json"));
+			Object obj = parser.parse(new FileReader(path+"//conf//generate//generate.json"));
 			
 			JSONObject jsonObject 		= (JSONObject) obj;			
 			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
