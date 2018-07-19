@@ -13,9 +13,14 @@
 //{ include("strategies/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
 	
-+!add_coordinator
+//+!add_coordinator
+//<- 
+//	.include("behaviour/coordinator.asl", coordinator);
+//	.
+	
++!add_initiator
 <- 
-	.include("behaviour/coordinator.asl", coordinator);
+	.include("behaviour/cnp/initiator.asl", initiator);
 	.
 	
 +!register(E)
@@ -69,11 +74,13 @@
 	!action::recharge_is_new_skip;
 	if ( Me \== vehicle1 ) { setMap; }
 	!action::recharge_is_new_skip;
-	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slowers computers
+	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	// update the code below for a different strategy
 	
-	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
-	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }
+	if ( Me == vehicle1 ) { !initiator::create_initial_tasks; }
+	
+//	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
+//	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }
 	if ( MyRole == builder ) { !!build::buy_well; }
 
     .

@@ -21,7 +21,7 @@
 	+metrics::noBids(0);
 	+metrics::missBidAuction(0);
 	
-	!!evaluation_auction::triggerFuturePlan;
+	//!!evaluation_auction::triggerFuturePlan;
 	.
 
 {end}

@@ -3,13 +3,13 @@ mas scenario {
 	agent vehicle1: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle1, vehicleart.team_artifact
-		goals: register("connectionA1")//, add_initiator
+		goals: register("connectionA1"), add_initiator
 		roles: worker in g1
 	}
 	agent vehicle2: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle2, vehicleart.team_artifact
-		goals: register("connectionA2"), add_coordinator
+		goals: register("connectionA2")//, add_coordinator
 		roles: worker in g1
 	}
 	agent vehicle3: vehicle.asl {
