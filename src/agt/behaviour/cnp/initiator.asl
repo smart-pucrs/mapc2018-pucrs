@@ -15,12 +15,13 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.
 
 +!initiator::create_initial_tasks
-	: resourceList(NodesList) & taskList(TaskList)
+	: resourceList(NodesList)
 <-
 	.findall(item(Item,Parts),default::item(Item,_,_,parts(Parts)) & Parts \== [], AssembledList);
 	for ( .member(item(Item,Parts),AssembledList) ) {
 		?verify_bases(Parts,NodesList,Result);
 		if (Result == "true") {
+			?taskList(TaskList);
 			-+taskList([Item|TaskList]);
 		}
 	}
