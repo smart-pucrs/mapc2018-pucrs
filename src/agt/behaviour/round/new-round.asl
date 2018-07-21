@@ -7,7 +7,6 @@
 	+initiator::vehicle_job(truck,2);
 	+initiator::max_bid_time(10000);
 	+initiator::resourceList([]);
-	+initiator::taskList([]);
 	+initiator::free_cars(car,[vehicle1,vehicle2,vehicle3,vehicle4]);
 	+initiator::free_drones(drone,[vehicle5,vehicle6,vehicle7,vehicle8,vehicle9,vehicle10,vehicle11,vehicle12]);
 	+initiator::free_motos(motorcycle,[vehicle13,vehicle14,vehicle15,vehicle16,vehicle17,vehicle18,vehicle19,vehicle20,vehicle21,vehicle22]);
