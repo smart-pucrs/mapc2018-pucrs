@@ -10,7 +10,7 @@
 { include("behaviour/explore/explore.asl",explore) }
 { include("strategy/common-plans.asl", strategies) }
 //{ include("strategies/scheme-plans.asl", org) }
-//{ include("strategies/bidder.asl", bidder) }
+{ include("behaviour/cnp/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
 	
 //+!add_coordinator
