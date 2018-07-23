@@ -46,10 +46,10 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 			if (.length(Roles,N)) {
 				.print("We can assemble the following item: ",Item," which requires these roles: ",Roles," and these bases: ",Parts);
 				for ( .member(Role,Roles) ) {
-					if ( Role == car ) { ?free_cars([Vehicle|ListCNew]); +awarded(Vehicle,Item); -+free_cars(ListCNew); }
-					else { if ( Role == drone ) { ?free_drones([Vehicle|ListDNew]); +awarded(Vehicle,Item); -+free_drones(ListDNew); }
-					else { if ( Role == motorcycle ) { ?free_motos([Vehicle|ListMNew]); +awarded(Vehicle,Item); -+free_motos(ListMNew); }
-					else { if ( Role == truck ) { ?free_trucks([Vehicle|ListTNew]); +awarded(Vehicle,Item); -+free_trucks(ListTNew); }
+					if ( Role == car ) { ?free_cars([Vehicle|ListCNew]); +awarded(Vehicle,car,Item,assist); -+free_cars(ListCNew); }
+					else { if ( Role == drone ) { ?free_drones([Vehicle|ListDNew]); +awarded(Vehicle,drone,Item,assist); -+free_drones(ListDNew); }
+					else { if ( Role == motorcycle ) { ?free_motos([Vehicle|ListMNew]); +awarded(Vehicle,moto,Item,assist); -+free_motos(ListMNew); }
+					else { if ( Role == truck ) { ?free_trucks([Vehicle|ListTNew]); +awarded(Vehicle,truck,Item,assist); -+free_trucks(ListTNew); }
 					}}}
 				}
 				for ( .range(I,1,4-N) ) {
@@ -61,18 +61,25 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 					.length(ListD,FD);
 					.length(ListM,FM);
 					.length(ListT,FT);
-					if (FC >= FD & FC >= FM & FC >= FT) { ?free_cars([Vehicle|ListCNew]); +awarded(Vehicle,Item); -+free_cars(ListCNew); }
-					else { if (FD >= FC & FD >= FM & FD >= FT) { ?free_drones([Vehicle|ListDNew]); +awarded(Vehicle,Item); -+free_drones(ListDNew); }
-					else { if (FM >= FD & FM >= FC & FM >= FT) { ?free_motos([Vehicle|ListMNew]); +awarded(Vehicle,Item); -+free_motos(ListMNew); }
-					else { if (FT >= FD & FT >= FM & FT >= FC) { ?free_trucks([Vehicle|ListTNew]); +awarded(Vehicle,Item); -+free_trucks(ListTNew); }
+					if (FC >= FD & FC >= FM & FC >= FT) { ?free_cars([Vehicle|ListCNew]); +awarded(Vehicle,car,Item,assist); -+free_cars(ListCNew); }
+					else { if (FD >= FC & FD >= FM & FD >= FT) { ?free_drones([Vehicle|ListDNew]); +awarded(Vehicle,drone,Item,assist); -+free_drones(ListDNew); }
+					else { if (FM >= FD & FM >= FC & FM >= FT) { ?free_motos([Vehicle|ListMNew]); +awarded(Vehicle,moto,Item,assist); -+free_motos(ListMNew); }
+					else { if (FT >= FD & FT >= FM & FT >= FC) { ?free_trucks([Vehicle|ListTNew]); +awarded(Vehicle,truck,Item,assist); -+free_trucks(ListTNew); }
 					}}}
 				}
 			}
 			-+role_check(0);
 		}
 	}
+	
+	if ( awarded(Ag,truck,It,Mo) ) { -awarded(Ag,truck,It,Mo); +awarded(Ag,truck,It,assemble) }
+	else { if ( awarded(Ag,car,It,Mo) ) { -awarded(Ag,car,It,Mo); +awarded(Ag,car,It,assemble) }
+	else { if ( awarded(Ag,moto,It,Mo) ) { -awarded(Ag,moto,It,Mo); +awarded(Ag,moto,It,assemble) }
+	else { if ( awarded(Ag,drone,It,Mo) ) { -awarded(Ag,drone,It,Mo); +awarded(Ag,drone,It,assemble) }
+	}}}
+	
 	+countP(-1);
-	for ( initiator::awarded(Agent,I) ) {
+	for ( awarded(Agent,_,I,Mode) ) {
 		?default::item(I,_,_,parts(P));
 		.length(P,NParts);
 		?countP(CP);
@@ -81,10 +88,11 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 		-+countP(CPNew+1);
 		.nth(CPNew+1,P,Part);
 		.print(Agent," was awarded with obtaining the part ",Part," and assembling item ",I);
-		.send(Agent,tell,winner(Part,I));
-		-awarded(Agent,I);
+		.send(Agent,tell,winner(Part,I,Mode));
+		-awarded(Agent,_,I,Mode);
 	}
 	-countP(_);
+	
 	?free_cars(ListCar);
 	?free_drones(ListDrone);
 	?free_motos(ListMoto);
