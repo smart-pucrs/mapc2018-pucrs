@@ -20,3 +20,8 @@ getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::shop(FacilityId, LatA
 getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::storage(FacilityId, LatAux, LonAux,_,_,_) & Flat=LatAux & Flon=LonAux.
 getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::dump(FacilityId,LatAux,LonAux) & Flat=LatAux & Flon=LonAux.
 getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::workshop(FacilityId,LatAux,LonAux) & Flat=LatAux & Flon=LonAux.
+
+// from the predicate list required(ItemName,Qtd), returns a list containing only the items' name
+get_items_names([],Temp,NewItems):- NewItems = Temp.
+get_items_names([required(Item,_)|Items],Temp,NewItems) :- get_items_names(Items,[Item|Temp],NewItems).
+get_items_names(Items,NewItems) :- get_items_names(Items,[],NewItems).

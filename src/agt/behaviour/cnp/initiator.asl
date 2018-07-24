@@ -1,3 +1,79 @@
+// given a list of compound items, return a list o required roles to build those items
+get_required_roles([],Temp,RequiredRoles) 
+:- 	Temp = RequiredRoles.
+get_required_roles([Item | Items],Temp,RequiredRoles) 
+:- 	default::item(Item,_,roles(Roles),parts(Compound)) & 
+	.union(Roles,Temp,AllRoles) &
+	get_required_roles(Compound,AllRoles,RequiredRoles).
+	
+// figures out the roles of the available agents
+get_available_roles(Temp,AvailableRoles) 
+:- AvailableRoles = [drone,motorcycle,car,truck].
+
+// given a list of storages, return the itemized available items; return pattern item(Item,Qtd)
+get_available_items([],Temp,ListItems)
+:- 
+	ListItems = Temp.
+get_available_items([Storage|Storages],Temp,ListItems)
+:-
+	default::available_items(Storage,Items) & 
+	.concat(Items,Temp,NewList)&
+	get_available_items(Storages,NewList,ListItems) 
+	.
+// given a list of items, sums up all items of the same type
+sum_up_items([],Temp,ListItems)
+:-
+	ListItems = Temp
+	.
+sum_up_items([item(Item,Qtd)|Items],Temp,ListItems)
+:- 
+	.member(item(Item,OldQtd),Temp) & 
+	.difference(Temp,[item(Item,OldQtd)],NewList) &
+	sum_up_items(Items,[item(Item,Qtd+OldQtd)|NewList],ListItems)
+	.
+sum_up_items([item(Item,Qtd)|Items],Temp,ListItems)
+:- 
+	not .member(item(Item,_),Temp) & 
+	sum_up_items(Items,[item(Item,Qtd)|Temp],ListItems)
+	.
+// given a list of required items and quantities "required(Item,Qtd)", and another list of available items and quantities "item(Item,Qtd)", evaluates the difference taking into account the quantities
+difference_in_quantities([],_):-true.
+difference_in_quantities([required(Item,ReqQtd)|RequiredItems],AvailableItems)
+:-
+	.member(item(Item,AvaQtd),AvailableItems) &
+	AvaQtd >= ReqQtd &
+	difference_in_quantities(RequiredItems,AvailableItems)
+	.
+
+evaluate_agents(Items)
+:- 
+	get_required_roles(Items,[],RequiredRoles) & 
+	get_available_roles([],AvailableRoles)  & 
+	.difference(RequiredRoles,AvailableRoles,[]).
+evaluate_items(Items,StoragesToLook)
+:- 	
+	get_available_items(StoragesToLook,[],ItemizedAvailableItems)&
+	sum_up_items(ItemizedAvailableItems,[],AvailableItems)&
+	difference_in_quantities(Items,AvailableItems)
+	.
+evaluate_steps
+:-
+	true
+	.
+
++!job_estimate(Id,Items)
+	: rules::get_items_names(Items,NamesItems)
+<-
+	?evaluate_agents(NamesItems); 
+	?evaluate_items(Items,[storage1,storage2]);
+	?evaluate_steps;
+	.print(Id," is feasible");
+	.
+-!job_estimate(Id,Items)[error_msg(Message)]
+<-
+	.print(Id," cannot be accomplished! Reasons: ",Message);
+	.
+
 verify_bases([],NodesList,Result) :- Result = "true".
 verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesList) & verify_bases(Parts,NodesList,Result).
 verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),NodesList) & Result = "false".
