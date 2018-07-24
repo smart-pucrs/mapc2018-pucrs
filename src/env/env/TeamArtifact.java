@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -14,6 +16,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import cartago.*;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+import jason.asSyntax.parser.ParseException;
 
 
 public class TeamArtifact extends Artifact {
@@ -26,7 +31,8 @@ public class TeamArtifact extends Artifact {
 	private static Map<String, String> agentRoles = new HashMap<String, String>();
 	private static Map<String, Integer> loads = new HashMap<String, Integer>();
 	private static Map<String, Integer> duplicateLoads = new HashMap<String, Integer>();
-	private Map<String, ArrayList<String>> availableItems = new HashMap<String,ArrayList<String>>();
+//	private Map<String, ArrayList<String>> availableItems = new HashMap<String,ArrayList<String>>();
+	private Map<String, ArrayList<Literal>> availableItems = new HashMap<String,ArrayList<Literal>>();
 	private Map<String, ArrayList<String>> buyCoordination = new HashMap<String,ArrayList<String>>();
 	private static Map<Integer, Set<String>> actionsByStep = new HashMap<Integer, Set<String>>();
 	
@@ -70,9 +76,10 @@ public class TeamArtifact extends Artifact {
 	}
 	
 	@OPERATION void createAvailableList(String storage){
-		availableItems.put(storage, new ArrayList<String>());
+		availableItems.put(storage, new ArrayList<Literal>());
 		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
-		this.defineObsProperty("available_items", storage, itemsAux);
+//		this.defineObsProperty("available_items", storage, itemsAux);
+		this.defineObsProperty("available_items", Literal.parseLiteral(storage), itemsAux);
 	}
 	
 	@OPERATION void createBuyCoordinationList(String shop){
@@ -81,44 +88,107 @@ public class TeamArtifact extends Artifact {
 		this.defineObsProperty("buy_coordination", shop, itemsAux);
 	}
 	
+//	@OPERATION void addAvailableItem(String storage, String item, int qty){
+//		Literal litStorage = Literal.parseLiteral(storage);
+//		if (availableItems.get(storage).toString().contains(item)) {
+//			for (String s: availableItems.get(storage)) {
+//				if (s.contains(item)) {
+//					int ind = availableItems.get(storage).indexOf(s);
+//					int newqty = qty + Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1));
+//					availableItems.get(storage).set(ind,"item("+item+","+newqty+")");
+////					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
+//				}
+//			}
+//		}
+//		else { availableItems.get(storage).add("item("+item+","+qty+")"); }
+//		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
+////		logger.info("@@@@@@@@@ Adding available item "+item+" to storage "+storage+". Result = "+Arrays.toString(itemsAux)+". Size = "+availableItems.get(storage).size());
+//		this.removeObsPropertyByTemplate("available_items", litStorage, null);
+//		this.defineObsProperty("available_items", litStorage, itemsAux);
+//	}
 	@OPERATION void addAvailableItem(String storage, String item, int qty){
+		Literal litStorage = Literal.parseLiteral(storage);
+		Literal litItem = Literal.parseLiteral("item");
+		
+		int finalQtd = 0;
 		if (availableItems.get(storage).toString().contains(item)) {
-			for (String s: availableItems.get(storage)) {
-				if (s.contains(item)) {
-					int ind = availableItems.get(storage).indexOf(s);
-					int newqty = qty + Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1));
-					availableItems.get(storage).set(ind,"item("+item+","+newqty+")");
-//					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
+			for (Iterator<Literal> iter = availableItems.get(storage).iterator(); iter.hasNext();) {
+				Literal l = iter.next();
+				if (l.toString().contains(item)) {
+					iter.remove();
+					finalQtd = qty +Integer.parseInt(l.getTerm(1).toString());
 				}
 			}
 		}
-		else { availableItems.get(storage).add("item("+item+","+qty+")"); }
-		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
-//		logger.info("@@@@@@@@@ Adding available item "+item+" to storage "+storage+". Result = "+Arrays.toString(itemsAux)+". Size = "+availableItems.get(storage).size());
-		this.removeObsPropertyByTemplate("available_items", storage, null);
-		this.defineObsProperty("available_items", storage, itemsAux);
+		else { 
+			finalQtd = qty;			
+		}
+		try {
+			litItem.addTerm(ASSyntax.parseTerm(item));
+			litItem.addTerm(ASSyntax.parseTerm(String.valueOf(finalQtd)));
+		} catch (ParseException e) { logger.info("@@@@@@@@@ Adding available item "+item+" to storage "+storage+". Result = "+e.getMessage());}
+		
+		availableItems.get(storage).add(litItem);
+		Literal[] itemsAux = availableItems.get(storage).toArray(new Literal[availableItems.get(storage).size()]);
+		
+		this.removeObsPropertyByTemplate("available_items", litStorage, null);
+		this.defineObsProperty("available_items", litStorage, itemsAux);
 	}
 	
+//	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
+//		int remove = -1;
+//		String result = "false";
+//		if (availableItems.get(storage) != null && availableItems.get(storage).toString().contains(item)) {
+//			for (String s: availableItems.get(storage)) {
+//				if (s.contains(item)) {
+//					int ind = availableItems.get(storage).indexOf(s);
+//					int newqty = Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1)) - qty;
+//					if (newqty < 0) { result = "false"; }
+//					else if (newqty != 0) { result = "true"; availableItems.get(storage).set(ind,"item("+item+","+newqty+")"); }
+//					else { result = "true"; remove = ind; }
+////					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
+//				}
+//			}
+//			if (remove != -1) { availableItems.get(storage).remove(remove); }
+//		}
+//		if (result.equals("true")) {
+//			String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
+//			this.removeObsPropertyByTemplate("available_items", storage, null);
+//			this.defineObsProperty("available_items", storage, itemsAux);
+//		}
+//		res.set(result);
+//	}
 	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
-		int remove = -1;
+		Literal litStorage = Literal.parseLiteral(storage);
+		int newqty = 0;
 		String result = "false";
 		if (availableItems.get(storage) != null && availableItems.get(storage).toString().contains(item)) {
-			for (String s: availableItems.get(storage)) {
-				if (s.contains(item)) {
-					int ind = availableItems.get(storage).indexOf(s);
-					int newqty = Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1)) - qty;
-					if (newqty < 0) { result = "false"; }
-					else if (newqty != 0) { result = "true"; availableItems.get(storage).set(ind,"item("+item+","+newqty+")"); }
-					else { result = "true"; remove = ind; }
-//					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
+			for (ListIterator<Literal> iter = availableItems.get(storage).listIterator(); iter.hasNext();) {
+				Literal l = iter.next();
+				if (l.toString().contains(item)) {
+					result = "true"; 
+					newqty = Integer.parseInt(l.getTerm(1).toString()) - qty;					
+					if (newqty > 0) {
+						Literal litItem = Literal.parseLiteral("item");
+						try {							
+							litItem.addTerm(ASSyntax.parseTerm(item));
+							litItem.addTerm(ASSyntax.parseTerm(String.valueOf(newqty)));
+						} catch (ParseException e) { logger.info("@@@@@@@@@ Adding available item "+item+" to storage "+storage+". Result = "+e.getMessage());}
+						iter.set(litItem);						
+					}
+					else if (newqty == 0) {
+						iter.remove();
+					}
+					else {
+						result = "false"; 
+					}
 				}
 			}
-			if (remove != -1) { availableItems.get(storage).remove(remove); }
 		}
 		if (result.equals("true")) {
-			String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
-			this.removeObsPropertyByTemplate("available_items", storage, null);
-			this.defineObsProperty("available_items", storage, itemsAux);
+			Literal[] itemsAux = availableItems.get(storage).toArray(new Literal[availableItems.get(storage).size()]);
+			this.removeObsPropertyByTemplate("available_items", litStorage, null);
+			this.defineObsProperty("available_items", litStorage, itemsAux);
 		}
 		res.set(result);
 	}
