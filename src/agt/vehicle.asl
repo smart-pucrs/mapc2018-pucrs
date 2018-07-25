@@ -9,7 +9,7 @@
 { include("behaviour/gather/gather.asl",gather) }
 { include("behaviour/explore/explore.asl",explore) }
 { include("strategy/common-plans.asl", strategies) }
-//{ include("strategies/scheme-plans.asl", org) }
+{ include("behaviour/org/scheme-plans.asl", org) }
 { include("behaviour/cnp/bidder.asl", bidder) }
 //{ include("strategies/round/end-round.asl") }
 	

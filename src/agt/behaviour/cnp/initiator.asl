@@ -153,6 +153,11 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	else { if ( awarded(Ag,moto,It,Mo) ) { -awarded(Ag,moto,It,Mo); +awarded(Ag,moto,It,assemble) }
 	else { if ( awarded(Ag,drone,It,Mo) ) { -awarded(Ag,drone,It,Mo); +awarded(Ag,drone,It,assemble) }
 	}}}
+	?default::joined(org,OrgId);
+	?taskId(TaskId);
+	.term2string(TaskId,TaskIdS);
+	org::createScheme(TaskIdS, st, SchArtId)[wid(OrgId)];
+	-+taskId(TaskId+1);
 	
 	+countP(-1);
 	for ( awarded(Agent,_,I,Mode) ) {
@@ -164,7 +169,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 		-+countP(CPNew+1);
 		.nth(CPNew+1,P,Part);
 		.print(Agent," was awarded with obtaining the part ",Part," and assembling item ",I);
-		.send(Agent,tell,winner(Part,I,Mode));
+		.send(Agent,tell,winner(Part,I,Mode,TaskIdS));
 		-awarded(Agent,_,I,Mode);
 	}
 	-countP(_);

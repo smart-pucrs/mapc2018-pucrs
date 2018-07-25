@@ -12,6 +12,7 @@
 	+initiator::free_motos([vehicle5,vehicle6,vehicle7,vehicle8,vehicle9,vehicle10,vehicle11,vehicle12]);
 	+initiator::free_trucks([vehicle23,vehicle24,vehicle25,vehicle26]);
 	+initiator::role_check(0);
+	+initiator::taskId(0);
 	
 	+metrics::money(0);
 	+metrics::completedJobs(0);
