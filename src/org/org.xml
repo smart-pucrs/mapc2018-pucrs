@@ -20,18 +20,18 @@
 
 <functional-specification>
 <scheme id="st">
-  <goal id="job_delivered" type="performance">
+  <goal id="task_completed" type="performance">
     <plan operator="sequence">
       <goal id="phase1" type="performance">
         <plan operator="parallel">
           <goal id="assistp1" type="performance">
             <plan operator="sequence">
-              <goal id="buy_items" type="performance"/>
+              <goal id="gather_items" type="performance"/>
             </plan>
           </goal>
           <goal id="assemblep1" type="performance">
             <plan operator="sequence">
-              <goal id="prepare_assemble" type="performance"/>
+              <goal id="gather_items_assemble" type="performance"/>
             </plan>
           </goal>
         </plan>
@@ -56,12 +56,12 @@
 
   <mission id="massemble">
     <goal id="do_assemble"/>
-    <goal id="prepare_assemble"/>
+    <goal id="gather_items_assemble"/>
   </mission>
   <mission id="massist">
     <goal id="stop_assist_assemble"/>
     <goal id="assist_assemble"/>
-    <goal id="buy_items"/>
+    <goal id="gather_items"/>
   </mission>
   
 </scheme>

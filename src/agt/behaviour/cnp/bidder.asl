@@ -1,8 +1,16 @@
-+default::winner(Item,Base,Mode,TaskId)
++winner(Item,Base,assist,TaskId)
 	: default::joined(org,OrgId)
 <-
 	lookupArtifact(TaskId,SchArtId)[wid(OrgId)];
 	org::focus(SchArtId)[wid(OrgId)];
-	.print("I won the task to assemble ",Item," mode: ",Mode," scheme art id: ",SchArtId);
-//	org::commitMission(massist)[artifact_id(SchArtId)];
+	.print("I won the task to assist assemble ",Item);
+	org::commitMission(massist)[artifact_id(SchArtId)];
+	.
++winner(Item,Base,assemble,TaskId)
+	: default::joined(org,OrgId)
+<-
+	lookupArtifact(TaskId,SchArtId)[wid(OrgId)];
+	org::focus(SchArtId)[wid(OrgId)];
+	.print("I won the task to assemble ",Item);
+	org::commitMission(massemble)[artifact_id(SchArtId)];
 	.
