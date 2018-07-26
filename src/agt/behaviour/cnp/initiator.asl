@@ -17,8 +17,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	: resourceList(List) & not .member(NodeId,List)
 <- 
 	.print("New resource node: ",NodeId," for item: ",Item);
-	.term2string(ItemT,Item);
-	-+resourceList([node(NodeId,Lat,Lon,ItemT)|List]);
+	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
 	.
 
 +!accomplished_priced_job(Id,Storage,Items)

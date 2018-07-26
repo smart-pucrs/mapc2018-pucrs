@@ -303,9 +303,12 @@ public class TeamArtifact extends Artifact {
 	}
 		
 	@OPERATION void addResourceNode(String resourceId, double lat, double lon, String resource){
-		ObsProperty prop = this.getObsPropertyByTemplate("resNode", resourceId,lat,lon,resource);
+		Literal litResourceId = Literal.parseLiteral(resourceId);
+		Literal litResource = Literal.parseLiteral(resource);
+		
+		ObsProperty prop = this.getObsPropertyByTemplate("resNode", litResourceId,lat,lon,litResource);
 		if (prop == null) {
-			this.defineObsProperty("resNode",resourceId,lat,lon,resource);
+			this.defineObsProperty("resNode",litResourceId,lat,lon,litResource);
 		}
 	}
 	
