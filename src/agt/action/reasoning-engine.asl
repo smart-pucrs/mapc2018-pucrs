@@ -15,7 +15,7 @@
 //	.wait( default::lastActionResult(Result) );
 	-action::action(S);
 		
-	if (Action \== recharge & Action \== continue & not .substring("deliver",Action) & not .substring("assist_assemble",Action) & not .substring("buy",Action) & not .substring("bid_for_job",Action) & Result \== successful) {
+	if (Action \== recharge & Action \== continue & not .substring("deliver",Action) & not .substring("assist_assemble",Action) & not .substring("buy",Action) & not .substring("bid_for_job",Action) & not .substring("gather",Action) & Result \== successful) {
 		.print("Failed to execute action ",Action," at step ",S,". Executing it again.");
 		!commitAction(Action);
 	}

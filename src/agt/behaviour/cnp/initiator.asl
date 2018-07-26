@@ -19,6 +19,15 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.print("New resource node: ",NodeId," for item: ",Item);
 	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
 	.
+	
++!set_workshop_storage
+	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility(SList, CLat, CLon, Storage) & rules::closest_facility(WList, Storage, Workshop)
+<-
+	+centerStorage(Storage);
+	+centerWorkshop(Workshop);
+	.print("Closest storage from the center is ",Storage);
+	.print("Closest workshop from the center is ",Workshop);
+	.
 
 +!accomplished_priced_job(Id,Storage,Items)
 <-
@@ -30,7 +39,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.
 
 +!create_initial_tasks
-	: resourceList(NodesList)
+	: resourceList(NodesList) & centerStorage(Storage) & centerWorkshop(Workshop)
 <-
 	+taskList([]);
 	.findall(item(Item,Parts),default::item(Item,_,_,parts(Parts)) & Parts \== [], AssembledList);
@@ -112,7 +121,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 		-+countP(CPNew+1);
 		.nth(CPNew+1,P,Part);
 		.print(Agent," was awarded with obtaining the part ",Part," and assembling item ",I);
-		.send(Agent,tell,bidder::winner(Part,I,Mode,TaskIdS));
+		.send(Agent,tell,bidder::winner(Part,I,Mode,Storage,Workshop,TaskIdS));
 		-awarded(Agent,_,I,Mode);
 	}
 	-countP(_);

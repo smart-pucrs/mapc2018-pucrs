@@ -80,7 +80,7 @@
 //  INSERT NEW EXPLORATION CODE HERE
 //	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
 //	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }	
-	if ( Me == vehicle1 ) { !initiator::create_initial_tasks; }
+	if ( Me == vehicle1 ) { !initiator::set_workshop_storage; !initiator::create_initial_tasks; }
 	
 // NOT WORKING, RETURNING NO ACTIONS
 //	if ( MyRole == builder ) { !!build::buy_well; }
