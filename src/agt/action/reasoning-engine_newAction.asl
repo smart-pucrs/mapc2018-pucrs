@@ -28,7 +28,8 @@
 		
 	if (Action \== recharge & Action \== continue & not .substring("deliver",Action) & not .substring("assist_assemble",Action) & not .substring("buy",Action) & not .substring("bid_for_job",Action) & Result \== successful) {
 		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
-		!commit_action(Action);
+//		!commit_action(Action);
+		.fail(action(Action),result(Result));
 	}
 	else {
 		if (.substring("deliver",Action) & Result == failed ) { !commit_action(Action); }

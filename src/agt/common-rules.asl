@@ -25,3 +25,6 @@ getFacility(FacilityId,Flat,Flon,LatAux,LonAux):- default::workshop(FacilityId,L
 get_items_names([],Temp,NewItems):- NewItems = Temp.
 get_items_names([required(Item,_)|Items],Temp,NewItems) :- get_items_names(Items,[Item|Temp],NewItems).
 get_items_names(Items,NewItems) :- get_items_names(Items,[],NewItems).
+
+// has enough money to buy a well
+enough_money :- default::massium(Money) & strategies::minimum_money(RequiredMoney) & Money >= RequiredMoney.

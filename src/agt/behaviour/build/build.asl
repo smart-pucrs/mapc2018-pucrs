@@ -48,11 +48,18 @@ list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency, Integrity), def
 	.
 
 +!buy_well 
-	: ::get_suitable_well_type(Type)
+	: ::get_suitable_well_type(Type) & rules::enough_money
 <-  
 	!action::build(Type); 
-	!build_well(Type);
-	//!strategies::always_recharge; // remove this once the rest of this behaviour is implemented
+	!build_well(Type);	
+	.
++!buy_well 
+<-
+	.print("Not enough money to buy the desired well");
+	.
+-!buy_well[code(.fail(action(Action),result(Result)))]
+<-
+	!recover_from_failure(Action,Result);
 	.
 	
 // we need the Type term to know what is the maximum integrity of a well type
@@ -74,4 +81,19 @@ list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency, Integrity), def
 	: true
 <- 
 	.print("I finished the well of type ",Type);
+	.
+	
++!recover_from_failure(Action, failed_resources)
+<-	
+	.print("Some agent bought the well before me");
+	.
++!recover_from_failure(Action, failed_location)
+	: default::lat(Lat) & default::lon(Lon)
+<-	
+	.print("There is another well/facility here, moving on");
+	!action::goto(Lat + 0.001,Lon + 0.001);
+	.
++!recover_from_failure(Action, Result)
+<-	
+	.print("Action ",Action," failed because of ",Result);
 	.

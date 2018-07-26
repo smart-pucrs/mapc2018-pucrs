@@ -11,13 +11,14 @@
 	.wait( default::actionID(S2) & S2 \== S );
 //	.print("Got out of wait from step ",S);
 	?default::lastActionResult(Result);
-//	.print("Last action result was: ",Result);
+	.print("Last action result was: ",Result);
 //	.wait( default::lastActionResult(Result) );
 	-action::action(S);
 		
 	if (Action \== recharge & Action \== continue & not .substring("deliver",Action) & not .substring("assist_assemble",Action) & not .substring("buy",Action) & not .substring("bid_for_job",Action) & not .substring("gather",Action) & Result \== successful) {
 		.print("Failed to execute action ",Action," at step ",S,". Executing it again.");
-		!commitAction(Action);
+//		!commitAction(Action);
+		.fail(action(Action),result(Result));
 	}
 	else {
 		if (.substring("deliver",Action) & Result == failed ) { !commitAction(Action); }
@@ -26,7 +27,7 @@
 			-action::next_action(Action2);
 //			.print("Removing next action ",Action2);
 		}
-		else { 
+		else { 			
 			if (strategies::free) { !!action::recharge_is_new_skip; }
 		}
 	}
