@@ -8,15 +8,15 @@
    .
    
 +!gather_items
-	: bidder::winner(_,Base,_,_)
+	: bidder::winner(Base,_,_,_)
 <-
-	.print("I am going to gather the base item ",Base);
+	!gather::go_gather(Base);
 	.
 	
 +!gather_items_assemble
-	: bidder::winner(_,Base,_,_)
+	: bidder::winner(Base,_,_,_)
 <-
-	.print("I am going to gather the base item ",Base);
+	!gather::go_gather(Base);
 	.
 	
 +!do_assemble.

@@ -1,4 +1,4 @@
-+winner(Item,Base,assist,TaskId)
++winner(Base,Item,assist,TaskId)
 	: default::joined(org,OrgId)
 <-
 	lookupArtifact(TaskId,SchArtId)[wid(OrgId)];
@@ -6,7 +6,7 @@
 	.print("I won the task to assist assemble ",Item);
 	org::commitMission(massist)[artifact_id(SchArtId)];
 	.
-+winner(Item,Base,assemble,TaskId)
++winner(Base,Item,assemble,TaskId)
 	: default::joined(org,OrgId)
 <-
 	lookupArtifact(TaskId,SchArtId)[wid(OrgId)];

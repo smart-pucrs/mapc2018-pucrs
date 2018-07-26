@@ -52,7 +52,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 		.length(ListMoto,FMoto);
 		.length(ListTruck,FTruck);
 		FreeTotal = FCar + FDrone + FMoto + FTruck;
-		if ( FreeTotal >= 5 ) {
+		if ( FreeTotal >= 4 ) {
 			?default::item(Item,_,roles(Roles),parts(Parts));
 			for ( .member(Role,Roles) ) {
 				if ( (Role == car & not .empty(ListCar)) | (Role == drone & not .empty(ListDrone)) | (Role == motorcycle & not .empty(ListMoto)) | (Role == truck & not .empty(ListTruck)) ) { 
@@ -127,7 +127,13 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.length(ListTruck,FTruck);
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
 	-taskList(_);
-	if ( FreeTotal >= 5 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !create_initial_tasks; }
-	else { .print("Not enough free agents."); }
+	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !create_initial_tasks; }
+	else { 
+		.print("Not enough free agents.");
+		if (FCar > 0) { for ( .member(AgentFree,ListCar) ) { .send(AgentFree,achieve,strategies::always_recharge); } }
+		if (FDrone > 0) { for ( .member(AgentFree,ListDrone) ) { .send(AgentFree,achieve,strategies::always_recharge); } }
+		if (FMoto > 0) { for ( .member(AgentFree,ListMoto) ) { .send(AgentFree,achieve,strategies::always_recharge); } }
+		if (FTruck > 0) { for ( .member(AgentFree,ListTruck) ) { .send(AgentFree,achieve,strategies::always_recharge); } }
+	}
 	.
 	

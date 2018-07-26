@@ -77,11 +77,14 @@
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	// update the code below for a different strategy
 	
+//  INSERT NEW EXPLORATION CODE HERE
+//	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
+//	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }	
 	if ( Me == vehicle1 ) { !initiator::create_initial_tasks; }
 	
-//	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
-//	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }
-	if ( MyRole == builder ) { !!build::buy_well; }
+// NOT WORKING, RETURNING NO ACTIONS
+//	if ( MyRole == builder ) { !!build::buy_well; }
+	if ( MyRole == builder ) { !!strategies::always_recharge; }
 
     .
 
