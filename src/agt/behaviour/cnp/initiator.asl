@@ -38,6 +38,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.print(Id," cannot be accomplished! Reasons: ",Message);
 	.
 
+@create_initial_tasks[atomic]
 +!create_initial_tasks
 	: resourceList(NodesList) & centerStorage(Storage) & centerWorkshop(Workshop)
 <-
@@ -94,6 +95,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 					else { if (FT >= FD & FT >= FM & FT >= FC) { ?free_trucks([Vehicle|ListTNew]); +awarded(Vehicle,truck,Item,assist); -+free_trucks(ListTNew); }
 					}}}
 				}
+				for ( .member(Part,Parts) ) { ?default::item(Part,Vol,_,_); +part(Part,Vol); }
 			}
 			-+role_check(0);
 		}
@@ -111,8 +113,21 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	org::createScheme(TaskIdS, st, SchArtId)[wid(OrgId)];
 	-+taskId(TaskId+1);
 	
+	if ( awarded(_,drone,_,_) ) { ?load_drone(LDrone); +max_load(LDrone); }
+	else { if ( awarded(_,moto,_,_) ) { ?load_drone(LMoto); +max_load(LMoto); }
+	else { if ( awarded(_,car,_,_) ) { ?load_drone(LCar); +max_load(LCar); }
+	else { if ( awarded(_,truck,_,_) ) { ?load_drone(LTruck); +max_load(LTruck); }
+	}}}
+	.findall(N,initiator::part(_,N),L);
+	.max(L,MaxVol);
+	?max_load(MaxLoad);
+	+number_of_items(MaxLoad div MaxVol);
+	?number_of_items(NItems);
+	.abolish(initiator::part(_,_));
+	-max_load(_);
+	
 	+countP(-1);
-	for ( awarded(Agent,_,I,Mode) ) {
+	for ( awarded(Agent,Role,I,Mode) ) {
 		?default::item(I,_,_,parts(P));
 		.length(P,NParts);
 		?countP(CP);
@@ -120,11 +135,12 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 		?countP(CPNew);
 		-+countP(CPNew+1);
 		.nth(CPNew+1,P,Part);
-		.print(Agent," was awarded with obtaining the part ",Part," and assembling item ",I);
-		.send(Agent,tell,bidder::winner(Part,I,Mode,Storage,Workshop,TaskIdS));
-		-awarded(Agent,_,I,Mode);
+		.print(Agent," was awarded with obtaining ",NItems,"# of ",Part," and assembling item ",I);
+		.send(Agent,tell,bidder::winner(Part,NItems,I,Mode,Storage,Workshop,TaskIdS));
+		-awarded(Agent,Role,I,Mode);
 	}
 	-countP(_);
+	-number_of_items(_);
 	
 	?free_cars(ListCar);
 	?free_drones(ListDrone);

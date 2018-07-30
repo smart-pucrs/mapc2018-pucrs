@@ -8,18 +8,18 @@
    .
    
 +!gather_items
-	: bidder::winner(Base,_,_,_,Workshop,_)
+	: bidder::winner(Base,NBase,_,_,_,Workshop,_)
 <-
-	!gather::go_gather(Base);
+	!gather::go_gather(Base,NBase);
 	.print("Finished gathering.");
 	!action::goto(Workshop);
 	!strategies::always_recharge;
 	.
 	
 +!gather_items_assemble
-	: bidder::winner(Base,_,_,_,Workshop,_)
+	: bidder::winner(Base,NBase,_,_,_,Workshop,_)
 <-
-	!gather::go_gather(Base);
+	!gather::go_gather(Base,NBase);
 	.print("Finished gathering.");
 	!action::goto(Workshop);
 	!strategies::always_recharge;

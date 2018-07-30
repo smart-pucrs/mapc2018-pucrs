@@ -368,6 +368,14 @@
 <-
 	.print("My load is full.");
 	.
+	
++!gather(Item,NItem)
+	: not default::hasItem(Item,_) | (default::hasItem(Item,NItemNew) & NItemNew < NItem)
+<-
+	!action::commitAction(gather);
+	!gather(Item,NItem);
+	.
++!gather(Item,NItem).
 
 // Abort
 // No parameters

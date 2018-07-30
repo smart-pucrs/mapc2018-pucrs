@@ -13,6 +13,10 @@
 	+initiator::free_trucks([vehicle23,vehicle24,vehicle25,vehicle26]);
 	+initiator::role_check(0);
 	+initiator::taskId(0);
+	+initiator::load_drone(15);
+	+initiator::load_moto(30);
+	+initiator::load_car(50);
+	+initiator::load_truck(100);
 	
 	+metrics::money(0);
 	+metrics::completedJobs(0);
