@@ -278,50 +278,6 @@
 	!action::commitAction(bid_for_job(JobId,Price));
 	.
 
-// Post job (option 1)
-// MaxPrice must be an integer
-// Fine must be an integer
-// ActiveSteps must be an integer
-// AuctionSteps must be an integer
-// StorageId must be a string
-// Items must be a string "item1=item_id1 amount1=10 item2=item_id2 amount2=5 ..."
-// Example: !post_job_auction(1000, 50, 1, 10, storage1, [item(base1,1), item(material1,2), item(tool1,3)]);
-+!post_job_auction(MaxPrice, Fine, ActiveSteps, AuctionSteps, StorageId, Items)
-	: true
-<-
-	!action::commitAction(
-		post_job(
-			type(auction),
-			max_price(MaxPrice),
-			fine(Fine),
-			active_steps(ActiveSteps),
-			auction_steps(AuctionSteps), 
-			storage(StorageId),
-			Items
-		)
-	);
-	.
-
-// Post job (option 2)
-// Price must be an integer
-// ActiveSteps must be an integer
-// StorageId must be a string
-// Items must be a string "item1=item_id1 amount1=10 item2=item_id2 amount2=5 ..."
-// Example: !post_job_priced(1000, 50, storage1, [item(base1,1), item(material1,2), item(tool1,3)]);
-+!post_job_priced(Price, ActiveSteps, StorageId, Items)
-	: true
-<-
-	!action::commitAction(
-		post_job(
-			type(priced),
-			price(Price),
-			active_steps(ActiveSteps), 
-			storage(StorageId),
-			Items
-		)
-	);
-	.
-
 // Continue
 // No parameters
 +!continue
