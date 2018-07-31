@@ -6,7 +6,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 
 @priced_job[atomic]
 +default::job(Id,Storage,Reward,Start,End,Items)
-	: true
+	: default::step(S) & S >= 50
 <-
  	.print("Received ",Id,", starting the priced job process.");
 	!accomplished_priced_job(Id,Storage,Items);

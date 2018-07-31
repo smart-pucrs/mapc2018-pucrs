@@ -45,8 +45,9 @@ evaluate_steps
 	.
 
 +!priced_estimate(Id,Items)
+	: new::storageList(SList)
 <-
-	?evaluate_items(Items,[storage1,storage2]);
+	?evaluate_items(Items,SList);
 	?evaluate_steps;
 	.print(Id," is feasible");
 	.
