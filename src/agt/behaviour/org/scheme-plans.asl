@@ -1,5 +1,6 @@
 +goalState(TaskId,task_completed,_,_,satisfied)
-	: bidder::winner(_,_,_,Item,assemble,_,_,_,TaskId)
+	: 
+	bidder::winner(_,_,_,_,assemble,_,_,_,_)
 <-
    .print("*** all done! ***");
    .term2string(TaskId,TaskIdS);
@@ -36,7 +37,7 @@
 //			.print("trying to assemble ",Item);
 			!action::assemble(Item);
 	} 
-	!!strategies::go_store;
+	!!store::go_store;
 	.
 	
 +!assist_assemble

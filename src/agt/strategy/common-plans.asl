@@ -54,16 +54,6 @@
 	adoptRole(NewRole);
 	.
 	
-+!strategies::go_store
-	: bidder::winner(_,_,Qty,Item,_,_,Storage,_,_)  & default::role(Role, _, _, _, _, _, _, _, _, _, _)
-<-
-	!action::goto(Storage);
-	!action::store(Item,Qty);
-	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
-	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
-	!!strategies::free;
-	.
-	
 // how do we pick a minimum money to start building wells
 +!choose_minimum_well_price
 	: .findall(Cost,default::wellType(_,Cost,_,_,_),Wells) & .sort(Wells,SortedWells) & .nth(0,SortedWells,MinimumCost)
