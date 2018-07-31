@@ -4,7 +4,7 @@
 	.print("Going to my farthest charging station",Facility," to explore");
 	!action::goto(Facility);
 	!action::charge;
-	!strategies::always_recharge;
+	!strategies::free;
 	.
 	
 +!go_explore_edges
@@ -18,7 +18,7 @@
 	?rules::closest_facility(List,Facility2);
 	!action::goto(Facility2);
 	!action::charge;
-	!strategies::always_recharge;
+	!strategies::free;
 	.
 +!go_explore_edges
 	: .my_name(vehicle2) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::chargingList(List) & rules::closest_facility(List, CLat, MinLon + 0.001, Facility)
@@ -31,7 +31,7 @@
 	?rules::closest_facility(List,Facility2);
 	!action::goto(Facility2);
 	!action::charge;
-	!strategies::always_recharge;
+	!strategies::free;
 	.
 +!go_explore_edges
 	: .my_name(vehicle3) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::chargingList(List) & rules::closest_facility(List, CLat, MaxLon - 0.00001, Facility)
@@ -44,7 +44,7 @@
 	?rules::closest_facility(List,Facility2);
 	!action::goto(Facility2);
 	!action::charge;
-	!strategies::always_recharge;
+	!strategies::free;
 	.
 +!go_explore_edges
 	: .my_name(vehicle4) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::chargingList(List) & rules::closest_facility(List, CLat, MaxLon - 0.00001, Facility)
@@ -57,5 +57,5 @@
 	?rules::closest_facility(List,Facility2);
 	!action::goto(Facility2);
 	!action::charge;
-	!strategies::always_recharge;
+	!strategies::free;
 	.

@@ -6,7 +6,7 @@
 		!action::goto(Lat,Lon);
 	}
 	!attack(Id);
-	!strategies::always_recharge; // remove this once the rest of this behaviour is implemented
+	!strategies::free; // remove this once the rest of this behaviour is implemented
 	.
 	
 +!attack(Id)

@@ -40,10 +40,27 @@
 
 +!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
 
+@free[atomic]
++!free : not free <- +free; !!action::recharge_is_new_skip; .
+//+!free : not free <- .print("free added");+free; !!action::recharge_is_new_skip;.
++!free : free <- !!action::recharge_is_new_skip.
+@notFree[atomic]
++!not_free <- -free.
+//+!not_free <- .print("free removed");-free.
+
 +!change_role(OldRole, NewRole)
 <-
 	leaveRole(OldRole);
 	adoptRole(NewRole);
+	.
+	
++!strategies::go_store
+	: bidder::winner(_,_,Qty,Item,_,_,Storage,_,_)
+<-
+	!action::goto(Storage);
+	!action::store(Item,Qty);
+	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
+	!!strategies::free;
 	.
 	
 // how do we pick a minimum money to start building wells

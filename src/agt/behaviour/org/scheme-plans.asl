@@ -1,5 +1,5 @@
 +goalState(TaskId,task_completed,_,_,satisfied)
-	: bidder::winner(_, _, assemble,_)
+	: bidder::winner(_,_,_,Item,assemble,_,_,_,TaskId)
 <-
    .print("*** all done! ***");
    .term2string(TaskId,TaskIdS);
@@ -8,28 +8,54 @@
    .
    
 +!gather_items
-	: bidder::winner(Base,NBase,_,_,_,Workshop,_)
+	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
 <-
 	!gather::go_gather(Base,NBase);
 	.print("Finished gathering.");
 	!action::goto(Workshop);
-	!strategies::always_recharge;
+	!!check_state;
 	.
 	
 +!gather_items_assemble
-	: bidder::winner(Base,NBase,_,_,_,Workshop,_)
+	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
 <-
 	!gather::go_gather(Base,NBase);
 	.print("Finished gathering.");
 	!action::goto(Workshop);
-	!strategies::always_recharge;
+	!!check_state;
 	.
 	
-+!do_assemble.
-	
-+!assist_assemble.
++!check_state : not goalState(JobId,phase1,_,_,satisfied) <- !!strategies::free.
++!check_state.
 
-+!stop_assist_assemble.
++!do_assemble
+	: bidder::winner(_,_,Qty,Item,_,_,_,Workshop,_)
+<-
+	!strategies::not_free;
+	for ( .range(I,1,Qty) ) {
+//			.print("trying to assemble ",Item);
+			!action::assemble(Item);
+	} 
+	!!strategies::go_store;
+	.
+	
++!assist_assemble
+	: bidder::winner(_,_,_,_,_,Assembler,_,_,_)
+<-
+	!strategies::not_free;
+	+strategies::assembling;
+	!!action::assist_assemble(Assembler);
+	.
+	
++!stop_assist_assemble
+	: bidder::winner(_,_,_,_,_,_,_,_,_)
+<-
+	-strategies::assembling;
+	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
+	for ( default::hasItem(ItemId,Qty) ) { .print(">>>>>>>>> Assist assemble ended, I have #",Qty," of ",ItemId); }
+//	!!strategies::empty_load;
+	!!strategies::free;
+	.
 
 //+!prepare_assemble
 //	: default::winner(_, assemble(Storage, _, TaskList))
