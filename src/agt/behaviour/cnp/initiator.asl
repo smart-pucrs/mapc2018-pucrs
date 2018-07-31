@@ -168,3 +168,34 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	}
 	.
 	
+	
+@addCarFree[atomic]
++!add_agent_to_free(car)[source(Agent)]
+	: initiator::free_cars(FreeCars)
+<-
+	-+initiator::free_cars([Agent|FreeCars]);
+	.
+@addDroneFreeSelf[atomic]
++!add_agent_to_free(drone)[source(self)]
+	: initiator::free_drones(FreeDrones) & .my_name(Me)
+<-
+	-+initiator::free_drones([Me|FreeDrones]);
+	.	
+@addDroneFree[atomic]
++!add_agent_to_free(drone)[source(Agent)]
+	: initiator::free_drones(FreeDrones)
+<-
+	-+initiator::free_drones([Agent|FreeDrones]);
+	.
+@addMotoFree[atomic]
++!add_agent_to_free(motorcycle)[source(Agent)]
+	: initiator::free_motos(FreeMotos)
+<-
+	-+initiator::free_motos([Agent|FreeMotos]);
+	.
+@addTruckFree[atomic]
++!add_agent_to_free(truck)[source(Agent)]
+	: initiator::free_trucks(FreeTrucks)
+<-
+	-+initiator::free_trucks([Agent|FreeTrucks]);
+	.

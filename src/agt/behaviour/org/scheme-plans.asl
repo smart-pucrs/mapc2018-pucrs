@@ -48,12 +48,13 @@
 	.
 	
 +!stop_assist_assemble
-	: bidder::winner(_,_,_,_,_,_,_,_,_)
+	: bidder::winner(_,_,_,_,_,_,_,_,_) & default::role(Role, _, _, _, _, _, _, _, _, _, _)
 <-
 	-strategies::assembling;
 	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
-	for ( default::hasItem(ItemId,Qty) ) { .print(">>>>>>>>> Assist assemble ended, I have #",Qty," of ",ItemId); }
+//	for ( default::hasItem(ItemId,Qty) ) { .print(">>>>>>>>> Assist assemble ended, I have #",Qty," of ",ItemId); }
 //	!!strategies::empty_load;
+	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
 	!!strategies::free;
 	.
 
