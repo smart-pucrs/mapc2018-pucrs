@@ -1,12 +1,31 @@
 +goalState(TaskId,task_completed,_,_,satisfied)
-	: 
-	bidder::winner(_,_,_,_,assemble,_,_,_,_)
+	: bidder::winner(_,_,_,_,assemble,_,_,_,_)
 <-
    .print("*** all done! ***");
    .term2string(TaskId,TaskIdS);
    removeScheme(TaskIdS);
    .abolish(org::_);
    .
+  
+@explorationDone[atomic]
++goalState(_,exploration_completed,_,_,satisfied)
+	: .my_name(vehicle1)
+<-
+	!strategies::not_free;
+	.print("*** exploration all done! ***");
+	!initiator::create_initial_tasks;
+   .
+@explorationDone2[atomic]
++goalState(_,exploration_completed,_,_,satisfied)
+<-
+	!strategies::not_free;
+   .
+   
++!explore
+<-
+	!explore::go_explore_charging;
+	!!strategies::free;
+	.
    
 +!gather_items
 	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)

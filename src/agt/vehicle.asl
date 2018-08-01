@@ -80,11 +80,14 @@
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	// update the code below for a different strategy
 	
-//  INSERT NEW EXPLORATION CODE HERE
-	lookupArtifact("init_exp",SchArtIdNew)[wid(OrgId)];
+	if ( Me == vehicle1 ) { !initiator::set_workshop_storage; }
 
+	if ( MyRole == worker ) {
+		lookupArtifact("init_exp",SchArtIdNew)[wid(OrgId)];
+		org::focus(SchArtIdNew)[wid(OrgId)];
+		org::commitMission(mexplore)[artifact_id(SchArtIdNew)];
+	}
 	
-	if ( Me == vehicle1 ) { !initiator::set_workshop_storage; !initiator::create_initial_tasks; }
 	if ( MyRole == builder ) { !!strategies::build; }
     .
 
