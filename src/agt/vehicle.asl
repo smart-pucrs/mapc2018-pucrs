@@ -73,14 +73,17 @@
 		initMap(Map,CellSize,Proximity);
 	}
 	!action::recharge_is_new_skip;
+	?default::joined(org,OrgId);
 	if ( Me \== vehicle1 ) { setMap; }
+	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
 	!action::recharge_is_new_skip;
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	// update the code below for a different strategy
 	
 //  INSERT NEW EXPLORATION CODE HERE
-//	if ( (MyRole == worker) & (Role \== drone) ) { !!explore::go_explore_charging; }
-//	if ( (MyRole == worker) & (Role == drone) ) { !!explore::go_explore_edges; }	
+	lookupArtifact("init_exp",SchArtIdNew)[wid(OrgId)];
+
+	
 	if ( Me == vehicle1 ) { !initiator::set_workshop_storage; !initiator::create_initial_tasks; }
 	if ( MyRole == builder ) { !!strategies::build; }
     .

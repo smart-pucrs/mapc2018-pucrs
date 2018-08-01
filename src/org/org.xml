@@ -19,6 +19,22 @@
 </structural-specification>
 
 <functional-specification>
+
+<scheme id="exp">
+  <goal id="exploration_completed" type="performance">
+    <plan operator="sequence">
+      <goal id="explore" type="performance">
+      </goal>
+    </plan>
+  </goal>
+
+  <mission id="mexplore">
+    <goal id="explore"/>
+  </mission>
+  
+</scheme>
+
+
 <scheme id="st">
   <goal id="task_completed" type="performance">
     <plan operator="sequence">
