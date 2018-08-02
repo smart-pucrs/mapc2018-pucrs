@@ -4,18 +4,18 @@
 // Uses zero (0) parameters to build up an existing well, or one (i) parameter to build a new well
 +!buildExistingOne
 <-	
-	!action::commitAction(build);
+	!action::commit_action(build);
 	.
 +!build(Type)
 <-	
-    !action::commitAction(build(Type));
+    !action::commit_action(build(Type));
 	.
 
 // ##### DISMANTLE ACTION #####
 // Uses zero (0) parameters to dismantle an existing well. 
 +!dismantleWell
 <-		
-	!action::commitAction(dismantle);
+	!action::commit_action(dismantle);
 	.
 
 
@@ -39,7 +39,7 @@
 +!goto(FacilityId)
 : not .desire(action::go_charge(_)) & new::chargingList(List) & .member(FacilityId,List)
 <-	
-    !action::commitAction(goto(FacilityId));
+    !action::commit_action(goto(FacilityId));
 	!goto(FacilityId);
 	.
 // Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
@@ -47,13 +47,13 @@
 : not .desire(action::go_charge(_)) & new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
 <-	
     if (Result == "false") { !go_charge(FacilityId); }
-    else { !action::commitAction(goto(FacilityId)); }
+    else { !action::commit_action(goto(FacilityId)); }
 	!goto(FacilityId);
 	.
 //+!goto(FacilityId)
 //	: true
 //<-	
-//	!action::commitAction(goto(FacilityId));
+//	!action::commit_action(goto(FacilityId));
 //	!goto(FacilityId);
 //	.
 
@@ -77,14 +77,14 @@
 : not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
 <-	
     if (Result == "false") { !go_charge(Lat, Lon); }
-    else { +going(Lat,Lon); !action::commitAction(goto(Lat,Lon)); }
+    else { +going(Lat,Lon); !action::commit_action(goto(Lat,Lon)); }
 	!goto(Lat, Lon);
 	.
 //+!goto(Lat, Lon)
 //	: true
 //<-
 //	+going(Lat,Lon);
-//	!action::commitAction(goto(Lat,Lon));
+//	!action::commit_action(goto(Lat,Lon));
 //	!goto(Lat, Lon);
 //	.
 
@@ -95,7 +95,7 @@
 +!charge
 	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & C < BatteryCap
 <-
-	!action::commitAction(charge);
+	!action::commit_action(charge);
 	!charge;
 	.
 -!charge.
@@ -118,19 +118,19 @@
 <-
 	if (Amount <= QtyAvailable) {
 //		.print("Trying to buy all.");
-		!action::commitAction(buy(ItemId,Amount));
+		!action::commit_action(buy(ItemId,Amount));
 		if ( default::lastActionResult(successful) ) { !buy_loop(ItemId, Total, Total - Amount, OldAmount); }
 		else { !buy_loop(ItemId, Total, Amount, OldAmount); }
 	}
 	else {
 		if (QtyAvailable == 0) {
-			!action::commitAction(recharge);
+			!action::commit_action(recharge);
 			!buy_loop(ItemId, Total, Amount, OldAmount);
 			
 		}
 		else {
 //			.print("Trying to buy available ",QtyAvailable);
-			!action::commitAction(buy(ItemId,QtyAvailable));
+			!action::commit_action(buy(ItemId,QtyAvailable));
 			if ( default::lastActionResult(successful) ) { !buy_loop(ItemId, Total, Amount - QtyAvailable, OldAmount); }
 			else { !buy_loop(ItemId, Total, Amount, OldAmount); }
 		}
@@ -147,13 +147,13 @@
 <-
 	getServerName(AgentName,ServerName);
 	?default::hasItem(ItemId, OldAmount);
-	!action::commitAction(give(ServerName,ItemId,Amount));
+	!action::commit_action(give(ServerName,ItemId,Amount));
 	!giveLoop(ServerName, ItemId, Amount, OldAmount);
 	.
 +!giveLoop(AgentId, ItemId, Amount, OldAmount)
 	: default::hasItem(ItemId,OldAmount)
 <-
-	!action::commitAction(give(AgentId,ItemId,Amount));
+	!action::commit_action(give(AgentId,ItemId,Amount));
 	!giveLoop(AgentId, ItemId, Amount, OldAmount);
 	.
 -!giveLoop(AgentId, ItemId, Amount, OldAmount).
@@ -164,20 +164,20 @@
 	: default::hasItem(ItemId,OldAmount)
 <-
 	-strategies::free[source(_)];
-	!action::commitAction(receive);
+	!action::commit_action(receive);
 	!receiveLoop(ItemId,Amount,OldAmount);
 	.
 +!receive(ItemId,Amount)
 	: true
 <-
 	-strategies::free[source(_)];
-	!action::commitAction(receive);
+	!action::commit_action(receive);
 	!receiveLoop(ItemId,Amount,0);
 	.
 +!receiveLoop(ItemId, Amount, OldAmount)
 	: not default::hasItem(ItemId,Amount+OldAmount)
 <-
-	!action::commitAction(receive);
+	!action::commit_action(receive);
 	!receiveLoop(ItemId, Amount, OldAmount);
 	.
 -!receiveLoop(ItemId,Amount,OldAmount).
@@ -188,7 +188,7 @@
 +!store(ItemId, Amount)
 	: true
 <-
-	!action::commitAction(store(ItemId,Amount));
+	!action::commit_action(store(ItemId,Amount));
 	.
 
 // Retrieve
@@ -197,7 +197,7 @@
 +!retrieve(ItemId, Amount)
 	: true
 <-
-	!action::commitAction(retrieve(ItemId,Amount));
+	!action::commit_action(retrieve(ItemId,Amount));
 	.
 
 // Retrieve delivered
@@ -206,7 +206,7 @@
 +!retrieve_delivered(ItemId, Amount)
 	: true
 <-
-	!action::commitAction(
+	!action::commit_action(
 		retrieve_delivered(
 			item(ItemId),
 			amount(Amount)
@@ -220,7 +220,7 @@
 +!dump(ItemId, Amount)
 	: true
 <-
-	!action::commitAction(dump(ItemId,Amount));
+	!action::commit_action(dump(ItemId,Amount));
 	.
 
 // Assemble
@@ -228,19 +228,19 @@
 +!assemble(ItemId)
 	: default::hasItem(ItemId,OldAmount)
 <-
-	!action::commitAction(assemble(ItemId));
+	!action::commit_action(assemble(ItemId));
 	!assembleLoop(ItemId,1,OldAmount);
 	.
 +!assemble(ItemId)
 	: true
 <-
-	!action::commitAction(assemble(ItemId));
+	!action::commit_action(assemble(ItemId));
 	!assembleLoop(ItemId,1,0);
 	.
 +!assembleLoop(ItemId, Amount, OldAmount)
 	: not default::hasItem(ItemId,Amount+OldAmount)
 <-
-	!action::commitAction(assemble(ItemId));
+	!action::commit_action(assemble(ItemId));
 	!assembleLoop(ItemId, Amount, OldAmount);
 	.
 -!assembleLoop(ItemId,Amount,OldAmount).
@@ -256,7 +256,7 @@
 +!assist_assemble_loop(ServerName)
 	: strategies::assembling
 <-
-	!action::commitAction(assist_assemble(ServerName));
+	!action::commit_action(assist_assemble(ServerName));
 	!assist_assemble_loop(ServerName);
 	.
 +!assist_assemble_loop(ServerName).
@@ -266,7 +266,7 @@
 +!deliver_job(JobId)
 	: true
 <-
-	!action::commitAction(deliver_job(JobId));
+	!action::commit_action(deliver_job(JobId));
 	.
 
 // Bid for job
@@ -275,7 +275,51 @@
 +!bid_for_job(JobId, Price)
 	: true
 <-
-	!action::commitAction(bid_for_job(JobId,Price));
+	!action::commit_action(bid_for_job(JobId,Price));
+	.
+
+// Post job (option 1)
+// MaxPrice must be an integer
+// Fine must be an integer
+// ActiveSteps must be an integer
+// AuctionSteps must be an integer
+// StorageId must be a string
+// Items must be a string "item1=item_id1 amount1=10 item2=item_id2 amount2=5 ..."
+// Example: !post_job_auction(1000, 50, 1, 10, storage1, [item(base1,1), item(material1,2), item(tool1,3)]);
++!post_job_auction(MaxPrice, Fine, ActiveSteps, AuctionSteps, StorageId, Items)
+	: true
+<-
+	!action::commit_action(
+		post_job(
+			type(auction),
+			max_price(MaxPrice),
+			fine(Fine),
+			active_steps(ActiveSteps),
+			auction_steps(AuctionSteps), 
+			storage(StorageId),
+			Items
+		)
+	);
+	.
+
+// Post job (option 2)
+// Price must be an integer
+// ActiveSteps must be an integer
+// StorageId must be a string
+// Items must be a string "item1=item_id1 amount1=10 item2=item_id2 amount2=5 ..."
+// Example: !post_job_priced(1000, 50, storage1, [item(base1,1), item(material1,2), item(tool1,3)]);
++!post_job_priced(Price, ActiveSteps, StorageId, Items)
+	: true
+<-
+	!action::commit_action(
+		post_job(
+			type(priced),
+			price(Price),
+			active_steps(ActiveSteps), 
+			storage(StorageId),
+			Items
+		)
+	);
 	.
 
 // Continue
@@ -283,7 +327,7 @@
 +!continue
 	: true
 <-
-	!action::commitAction(continue);
+	!action::commit_action(continue);
 	.
 
 // Skip
@@ -291,7 +335,7 @@
 +!skip
 	: true
 <-
-	!action::commitAction(skip);
+	!action::commit_action(skip);
 	.
 	
 // Recharge
@@ -299,7 +343,7 @@
 +!recharge
 	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & C < math.round(CCap / 5)
 <-
-	!action::commitAction(recharge);
+	!action::commit_action(recharge);
 	!recharge;
 	.
 -!recharge <- .print("Fully recharged.").
@@ -309,7 +353,7 @@
 +!recharge_is_new_skip
 	: true
 <-
-	!action::commitAction(recharge);
+	!action::commit_action(recharge);
 	.
 	
 // Gather
@@ -317,7 +361,7 @@
 +!gather(Item)
 	: default::role(_, _, _, LoadCap, _, _, _, _, _, _, _) & default::load(Load) & default::item(Item,Vol,_,_) & Load + Vol <= LoadCap
 <-
-	!action::commitAction(gather);
+	!action::commit_action(gather);
 	!gather(Vol);
 	.
 +!gather(Item)
@@ -328,7 +372,7 @@
 +!gather(Item,NItem)
 	: not default::hasItem(Item,_) | (default::hasItem(Item,NItemNew) & NItemNew < NItem)
 <-
-	!action::commitAction(gather);
+	!action::commit_action(gather);
 	!gather(Item,NItem);
 	.
 +!gather(Item,NItem).
@@ -338,7 +382,7 @@
 +!abort
 	: true
 <-
-	!action::commitAction(abort);
+	!action::commit_action(abort);
 	.
 
 //  for verifying battery and going to charging stations
@@ -363,7 +407,7 @@
 			+impossible;
 			.print("@@@@ Impossible route, going to try anyway.");
 			+going(Flat,Flon);
-			!action::commitAction(goto(Flat,Flon));
+			!action::commit_action(goto(Flat,Flon));
 			!goto(Flat,Flon);
 		}
 		else {
@@ -381,7 +425,7 @@
 				+impossible;
 				.print("@@@@ Impossible route, going to try anyway and hopefully call service breakdown.");
 				+going(Flat,Flon);
-				!action::commitAction(goto(Flat,Flon));
+				!action::commit_action(goto(Flat,Flon));
 				!goto(Flat,Flon);
 			}
 			else {
@@ -407,7 +451,7 @@
 	-onMyWay(Aux2List);
 	if (not action::impossible) {
 		.print("**** Going to charge my battery at ", FacilityAux2);
-		!action::commitAction(goto(FacilityAux2));
+		!action::commit_action(goto(FacilityAux2));
 		!goto(FacilityAux2);
 		!charge;		
 	}
@@ -456,7 +500,7 @@
 		if (Result == "false") {
 			+impossible;
 			.print("@@@@ Impossible route, going to try anyway.");
-			!action::commitAction(goto(FacilityId));
+			!action::commit_action(goto(FacilityId));
 			!goto(FacilityId);
 		}
 		else {
@@ -473,7 +517,7 @@
 			if (Result2 == "false") {
 				+impossible;
 				.print("@@@@ Impossible route, going to try anyway and hopefully call service breakdown.");
-				!action::commitAction(goto(FacilityId));
+				!action::commit_action(goto(FacilityId));
 				!goto(FacilityId);
 			}
 			else {
@@ -499,7 +543,7 @@
 	-onMyWay(Aux2List);
 	if (not action::impossible) {
 		.print("**** Going to charge my battery at ", FacilityAux2);
-		!action::commitAction(goto(FacilityAux2));
+		!action::commit_action(goto(FacilityAux2));
 		!goto(FacilityAux2);
 		!charge;		
 	}

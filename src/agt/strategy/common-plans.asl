@@ -41,9 +41,12 @@
 +!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
 
 @free[atomic]
-+!free : not free <- +free; !!action::recharge_is_new_skip; .
+//+!free : not free <- +free; !!action::recharge_is_new_skip; .
++!free : not free <- +free; !!always_recharge; .
 //+!free : not free <- .print("free added");+free; !!action::recharge_is_new_skip;.
-+!free : free <- !!action::recharge_is_new_skip.
+//+!free : free <- !!action::recharge_is_new_skip.
++!free : free & not .desire(_::always_recharge) <- !!always_recharge.
++!free : free.
 @notFree[atomic]
 +!not_free <- -free.
 //+!not_free <- .print("free removed");-free.
@@ -63,9 +66,11 @@
 	
 // what builders do
 +!build 
-	: not rules::enough_money
+	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
 <-
-	!explore::go_explore_charging;
+	.print("Going to my farthest charging station",Facility," to explore");
+	!action::goto(Facility);
+	!action::charge;
 	!build;
 	.
 +!build

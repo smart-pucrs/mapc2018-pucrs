@@ -51,6 +51,8 @@
 +!do_assemble
 	: bidder::winner(_,_,Qty,Item,_,_,_,Workshop,_)
 <-
+	!action::forget_old_action(Id);
+ 	+action::committedToAction(Id);
 	!strategies::not_free;
 	for ( .range(I,1,Qty) ) {
 //			.print("trying to assemble ",Item);
@@ -62,6 +64,8 @@
 +!assist_assemble
 	: bidder::winner(_,_,_,_,_,Assembler,_,_,_)
 <-
+	!action::forget_old_action(Id);
+ 	+action::committedToAction(Id);
 	!strategies::not_free;
 	+strategies::assembling;
 	!!action::assist_assemble(Assembler);
