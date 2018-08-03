@@ -19,3 +19,12 @@
 <-
 	.print("I have destroyed the opponent's well ",Id);
 	.
+-!attack(Id)[code(.fail(action(Action),result(Result)))]
+<-
+	!recover_from_failure(Action,Result);
+	.
+	
++!recover_from_failure(Action, Result)
+<-	
+	.print("Action ",Action," failed because of ",Result);
+	.
