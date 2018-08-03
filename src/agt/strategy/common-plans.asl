@@ -1,3 +1,5 @@
+{ include("strategy/beliefs_agents.asl") }
+
 !configure_first_strategies.
 
 +!configure_first_strategies

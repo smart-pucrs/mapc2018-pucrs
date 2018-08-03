@@ -14,6 +14,7 @@
 { include("behaviour/store/store.asl", store) }
 { include("behaviour/assemble/assemble.asl", assemble) }
 //{ include("strategies/round/end-round.asl") }
+{ include("behaviour/delivery/delivery.asl", delivery) }
 	
 //+!add_coordinator
 //<- 

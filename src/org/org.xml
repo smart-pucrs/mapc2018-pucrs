@@ -6,6 +6,7 @@
  <role id="builder" />
  <role id="worker" />
  <role id="gatherer" />
+ <role id="deliveryagent" />
 </role-definitions>
 
 <group-specification id="team">
@@ -15,6 +16,7 @@
   <role id="attacker" />
   <role id="explorer" />
   <role id="gatherer" />
+  <role id="deliveryagent" />
  </roles>
 </group-specification>
 

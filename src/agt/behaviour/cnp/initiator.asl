@@ -1,16 +1,44 @@
 { include("behaviour/job/estimate.asl", estimates) }
+{ include("behaviour/job/cnp_delivery.asl", cnpd) }
 
 verify_bases([],NodesList,Result) :- Result = "true".
 verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesList) & verify_bases(Parts,NodesList,Result).
 verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),NodesList) & Result = "false".
 
+// ### PRICED JOBS ###
 @priced_job[atomic]
 +default::job(Id,Storage,Reward,Start,End,Items)
-	: default::step(S) & S >= 50
+	: default::step(S) & S >= 80
 <-
+	+action::reasoning_about_belief(Id);
  	.print("Received ",Id,", starting the priced job process.");
 	!accomplished_priced_job(Id,Storage,Items);
+	-action::reasoning_about_belief(Id);
 	.
++!accomplished_priced_job(Id,Storage,Items)
+<-
+	!estimates::priced_estimate(Id,Items);
+  	.print("vai estimar");
+    !allocate_delivery_tasks(Id,Items,Tasks,Storage);
+    .
+-!accomplished_priced_job(Id,Storage,Items)[error_msg(Message)]
+<-
+	.print(Id," cannot be accomplished! Reasons: ",Message);
+    .
+ 
++!allocate_delivery_tasks(Id,[],Tasks,DeliveryPoint).
++!allocate_delivery_tasks(Id,[required(Item,Qtd)|Items],Tasks,DeliveryPoint)
+<-     
+	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,[vehicle2,vehicle8,vehicle10,vehicle18,vehicle24],CNPBoardName);
+       
+    !cnpd::evaluate_bids(Id,required(Item,Qtd),CNPBoardName,AwardedBids);
+       
+    !cnpd::award_agents(Id,DeliveryPoint,Item,Qtd,AwardedBids);
+       
+    !cnpd::enclose(CNPBoardName);
+
+    !allocate_delivery_tasks(Id,Items,NewTasks,DeliveryPoint);
+    .
 
 @resourceList[atomic]
 +default::resNode(NodeId,Lat,Lon,Item)
