@@ -54,10 +54,7 @@
 	!action::forget_old_action(Id);
  	+action::committedToAction(Id);
 	!strategies::not_free;
-	for ( .range(I,1,Qty) ) {
-//			.print("trying to assemble ",Item);
-			!action::assemble(Item);
-	} 
+	!assemble::assemble(Item,Qty);
 	!!store::go_store;
 	.
 	
@@ -68,7 +65,7 @@
  	+action::committedToAction(Id);
 	!strategies::not_free;
 	+strategies::assembling;
-	!!action::assist_assemble(Assembler);
+	!!assemble::assist_assemble(Assembler);
 	.
 	
 +!stop_assist_assemble

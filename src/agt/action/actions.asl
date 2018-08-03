@@ -225,25 +225,13 @@
 
 // Assemble
 // ItemId must be a string
-+!assemble(ItemId)
-	: default::hasItem(ItemId,OldAmount)
++!assemble(ItemId,Qty)
+	: not default::hasItem(ItemId,Qty)
 <-
 	!action::commit_action(assemble(ItemId));
-	!assembleLoop(ItemId,1,OldAmount);
+	!assemble(ItemId,Qty);
 	.
-+!assemble(ItemId)
-	: true
-<-
-	!action::commit_action(assemble(ItemId));
-	!assembleLoop(ItemId,1,0);
-	.
-+!assembleLoop(ItemId, Amount, OldAmount)
-	: not default::hasItem(ItemId,Amount+OldAmount)
-<-
-	!action::commit_action(assemble(ItemId));
-	!assembleLoop(ItemId, Amount, OldAmount);
-	.
--!assembleLoop(ItemId,Amount,OldAmount).
++!assemble(ItemId,Qty).
 
 // Assist assemble
 // AgentId must be a string

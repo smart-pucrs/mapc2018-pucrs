@@ -12,6 +12,7 @@
 { include("behaviour/org/scheme-plans.asl", org) }
 { include("behaviour/cnp/bidder.asl", bidder) }
 { include("behaviour/store/store.asl", store) }
+{ include("behaviour/assemble/assemble.asl", assemble) }
 //{ include("strategies/round/end-round.asl") }
 	
 //+!add_coordinator
