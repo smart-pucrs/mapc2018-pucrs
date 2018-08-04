@@ -1,3 +1,13 @@
+//+!go_store
+//	: bidder::winner(_,_,Qty,Item,_,_,Storage,_,_)  & default::role(Role, _, _, _, _, _, _, _, _, _, _)
+//<-
+//	!action::goto(Storage);
+//	!action::store(Item,Qty);
+//	addAvailableItem(Storage,Item,Qty);
+//	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
+//	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
+//	!!strategies::free;
+//	.
 {begin namespace(storage, local)}
 // ### RETRIEVE ###
 +!retrieve_items(Type,Item,Qtd)
@@ -25,15 +35,16 @@
 	.
 
 // ### STORE ###
-+!store_items(Item,Qtd)
++!store_items(Storage,Item,Qtd)
 	: default::hasItem(Item,OldQtd)
 <-
 	!action::store(Item,Qtd);
 	if(OldQtd - Qtd == 0){
-		?default::hasItem(Item,_) == false;
+		?not default::hasItem(Item,_);
 	} else{
 		?default::hasItem(Item,OldQtd-Qtd);
 	}	
+	addAvailableItem(Storage,Item,Qtd);	
 	.
 -!store_items(Item,Qtd,CurrentQtd)[code(.fail(action(Action),result(Result)))]
 <-
@@ -79,6 +90,6 @@
 	.
 +!store_items(Item,Qtd,Storage)
 <- 
-	!storage::store_items(Item,Qtd);
+	!storage::store_items(Storage,Item,Qtd);
 	.
 	

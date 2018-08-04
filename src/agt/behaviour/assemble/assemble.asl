@@ -6,7 +6,7 @@
 -!assemble(Item,Qty)[code(.fail(action(Action),result(Result)))]
 <-
 	!recover_from_failure(Action,Result,Item,Qty);
-	.
+	.	
 	
 +!assist_assemble(Assembler)
 	: true
@@ -18,7 +18,7 @@
 	: not default::hasItem(Item,Qty)
 <-	
 	.print("Some agent must have failed assist assemble, trying to assemble again.");
-	!action::assemble(Item,Qty);
+	!assemble(Item,Qty);
 	.
 +!recover_from_failure(Action, Result, Item, Qty)
 <-	

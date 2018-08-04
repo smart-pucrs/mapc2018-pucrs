@@ -49,20 +49,26 @@
 +!check_state.
 
 +!do_assemble
-	: bidder::winner(_,_,Qty,Item,_,_,_,Workshop,_)
+	: bidder::winner(_,_,Qty,Item,_,_,Storage,Workshop,_) & default::actionID(Id)
 <-
 	!action::forget_old_action(Id);
  	+action::committedToAction(Id);
+ 	.print("Ready to perform the assemble");
 	!strategies::not_free;
 	!assemble::assemble(Item,Qty);
-	!!store::go_store;
+//	!!store::go_store;
+	!stock::store_items(Item,Qty,Storage);
+	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
+	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
+	!!strategies::free;
 	.
 	
 +!assist_assemble
-	: bidder::winner(_,_,_,_,_,Assembler,_,_,_)
+	: bidder::winner(_,_,_,_,_,Assembler,_,_,_) & default::actionID(Id)
 <-
 	!action::forget_old_action(Id);
  	+action::committedToAction(Id);
+ 	.print("Ready to perform the assist assemble");
 	!strategies::not_free;
 	+strategies::assembling;
 	!!assemble::assist_assemble(Assembler);
