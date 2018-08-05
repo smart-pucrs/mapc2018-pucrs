@@ -124,57 +124,58 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 					}}}
 				}
 				for ( .member(Part,Parts) ) { ?default::item(Part,Vol,_,_); +part(Part,Vol); }
+				
+				if ( awarded(Ag,truck,It,Mo) ) { -awarded(Ag,truck,It,Mo); +awarded(Ag,truck,It,assemble); +assembler(Ag); }
+				else { if ( awarded(Ag,car,It,Mo) ) { -awarded(Ag,car,It,Mo); +awarded(Ag,car,It,assemble); +assembler(Ag); }
+				else { if ( awarded(Ag,moto,It,Mo) ) { -awarded(Ag,moto,It,Mo); +awarded(Ag,moto,It,assemble); +assembler(Ag); }
+				else { if ( awarded(Ag,drone,It,Mo) ) { -awarded(Ag,drone,It,Mo); +awarded(Ag,drone,It,assemble); +assembler(Ag); }
+				}}}
+				
+				?default::joined(org,OrgId);
+				?taskId(TaskId);
+				.term2string(TaskId,TaskIdS);
+				org::createScheme(TaskIdS, st, SchArtId)[wid(OrgId)];
+				-+taskId(TaskId+1);
+				
+				if ( awarded(_,drone,_,_) ) { ?load_drone(LDrone); +max_load(LDrone); }
+				else { if ( awarded(_,moto,_,_) ) { ?load_drone(LMoto); +max_load(LMoto); }
+				else { if ( awarded(_,car,_,_) ) { ?load_drone(LCar); +max_load(LCar); }
+				else { if ( awarded(_,truck,_,_) ) { ?load_drone(LTruck); +max_load(LTruck); }
+				}}}
+				.findall(Volume,initiator::part(_,Volume),L);
+				.max(L,MaxVol);
+				?max_load(MaxLoad);
+				.count(initiator::part(_,_),NPart);
+				+number_of_items((MaxLoad div MaxVol));
+				+number_of_assemble((4 * (MaxLoad div MaxVol)) div NPart);
+				?number_of_items(NItems);
+				?number_of_assemble(NAssemble);
+				.abolish(initiator::part(_,_));
+				-max_load(_);
+				?assembler(Assembler);
+				
+				+countP(-1);
+				for ( awarded(Agent,Role,I,Mode) ) {
+					?default::item(I,_,_,parts(P));
+					.length(P,NParts);
+					?countP(CP);
+					if ( CP+1 >= NParts ) { -+countP(-1); }
+					?countP(CPNew);
+					-+countP(CPNew+1);
+					.nth(CPNew+1,P,Part);
+					.print(Agent," was awarded with obtaining ",NItems,"# of ",Part," and assembling item ",I);
+					.send(Agent,tell,bidder::winner(Part,NItems,NAssemble,I,Mode,Assembler,Storage,Workshop,TaskIdS));
+					-awarded(Agent,Role,I,Mode);
+				}
+				-countP(_);
+				-number_of_items(_);
+				-number_of_assemble(_);
+				-assembler(_);
+				
 			}
 			-+role_check(0);
 		}
 	}
-	
-	if ( awarded(Ag,truck,It,Mo) ) { -awarded(Ag,truck,It,Mo); +awarded(Ag,truck,It,assemble); +assembler(Ag); }
-	else { if ( awarded(Ag,car,It,Mo) ) { -awarded(Ag,car,It,Mo); +awarded(Ag,car,It,assemble); +assembler(Ag); }
-	else { if ( awarded(Ag,moto,It,Mo) ) { -awarded(Ag,moto,It,Mo); +awarded(Ag,moto,It,assemble); +assembler(Ag); }
-	else { if ( awarded(Ag,drone,It,Mo) ) { -awarded(Ag,drone,It,Mo); +awarded(Ag,drone,It,assemble); +assembler(Ag); }
-	}}}
-	
-	?default::joined(org,OrgId);
-	?taskId(TaskId);
-	.term2string(TaskId,TaskIdS);
-	org::createScheme(TaskIdS, st, SchArtId)[wid(OrgId)];
-	-+taskId(TaskId+1);
-	
-	if ( awarded(_,drone,_,_) ) { ?load_drone(LDrone); +max_load(LDrone); }
-	else { if ( awarded(_,moto,_,_) ) { ?load_drone(LMoto); +max_load(LMoto); }
-	else { if ( awarded(_,car,_,_) ) { ?load_drone(LCar); +max_load(LCar); }
-	else { if ( awarded(_,truck,_,_) ) { ?load_drone(LTruck); +max_load(LTruck); }
-	}}}
-	.findall(N,initiator::part(_,N),L);
-	.max(L,MaxVol);
-	?max_load(MaxLoad);
-	.count(initiator::part(_,_),NPart);
-	+number_of_items((MaxLoad div MaxVol));
-	+number_of_assemble((4 * (MaxLoad div MaxVol)) div NPart);
-	?number_of_items(NItems);
-	?number_of_assemble(NAssemble);
-	.abolish(initiator::part(_,_));
-	-max_load(_);
-	?assembler(Assembler);
-	
-	+countP(-1);
-	for ( awarded(Agent,Role,I,Mode) ) {
-		?default::item(I,_,_,parts(P));
-		.length(P,NParts);
-		?countP(CP);
-		if ( CP+1 >= NParts ) { -+countP(-1); }
-		?countP(CPNew);
-		-+countP(CPNew+1);
-		.nth(CPNew+1,P,Part);
-		.print(Agent," was awarded with obtaining ",NItems,"# of ",Part," and assembling item ",I);
-		.send(Agent,tell,bidder::winner(Part,NItems,NAssemble,I,Mode,Assembler,Storage,Workshop,TaskIdS));
-		-awarded(Agent,Role,I,Mode);
-	}
-	-countP(_);
-	-number_of_items(_);
-	-number_of_assemble(_);
-	-assembler(_);
 	
 	?free_cars(ListCar);
 	?free_drones(ListDrone);
@@ -186,7 +187,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.length(ListTruck,FTruck);
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
 	-taskList(_);
-	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !create_initial_tasks; }
+	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !!create_initial_tasks; }
 	else { 
 		.print("Not enough free agents.");
 		if (FCar > 0) { for ( .member(AgentFree,ListCar) ) { .send(AgentFree,achieve,strategies::free); } }
