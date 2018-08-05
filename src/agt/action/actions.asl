@@ -248,6 +248,7 @@
 	!assist_assemble_loop(ServerName);
 	.
 +!assist_assemble_loop(ServerName).
+-!assist_assemble_loop(ServerName) <- !assist_assemble_loop(ServerName); .
 	
 // Deliver job
 // JobId must be a string
@@ -317,6 +318,7 @@
 <-
 	!action::commit_action(continue);
 	.
+-!continue.
 
 // Skip
 // No parameters
@@ -343,6 +345,7 @@
 <-
 	!action::commit_action(recharge);
 	.
+-!recharge_is_new_skip.
 	
 // Gather
 // No parameters

@@ -27,7 +27,7 @@
 	.print("Last action result was: ",Result);
 		
 	if (Result \== successful & Result \== successful_partial){
-		if (Action == recharge | Action == continue | .substring("assist_assemble",Action) | Result == failed){
+		if (Action \== recharge & Action \== continue & not .substring("assist_assemble",Action) & Result == failed){
 			//		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
 			!commit_action(Action);
 		} else{
