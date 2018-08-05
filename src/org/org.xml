@@ -86,20 +86,6 @@
   
 </scheme>
 
-<scheme id="oneagent">
-  <goal id="job_delivered" type="performance">
-    <plan operator="sequence">
-	    <goal id="prepare_assemble" type="performance"/>
-	    <goal id="do_assemble" type="performance"/>
-    </plan>
-  </goal>
-
-  <mission id="massemble">
-    <goal id="do_assemble"/>
-    <goal id="prepare_assemble"/>
-  </mission>
-  
-</scheme>
 </functional-specification>
 
 <normative-specification>
