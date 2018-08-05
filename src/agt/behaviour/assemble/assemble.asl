@@ -14,12 +14,13 @@
 	!action::assist_assemble(Assembler);
 	.
 	
-+!recover_from_failure(Action, failed_item_amount, Item, Qty)
-	: not default::hasItem(Item,Qty)
++!recover_from_failure(Action, Result, Item, Qty)
+	: not default::hasItem(Item,Qty) & (Result == failed_item_amount | Result == failed_tools)
 <-	
 	.print("Some agent must have failed assist assemble, trying to assemble again.");
 	!assemble(Item,Qty);
 	.
+	
 +!recover_from_failure(Action, Result, Item, Qty)
 <-	
 	.print("Action ",Action," failed because of ",Result);

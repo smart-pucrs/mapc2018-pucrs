@@ -49,7 +49,7 @@
 +!check_state.
 
 +!do_assemble
-	: bidder::winner(_,_,Qty,Item,_,_,Storage,Workshop,_) & default::actionID(Id)
+	: bidder::winner(_,_,Qty,Item,_,_,Storage,Workshop,_)
 <-
 	!action::forget_old_action(Id);
  	+action::committedToAction(Id);
@@ -64,7 +64,7 @@
 	.
 	
 +!assist_assemble
-	: bidder::winner(_,_,_,_,_,Assembler,_,_,_) & default::actionID(Id)
+	: bidder::winner(_,_,_,_,_,Assembler,_,_,_)
 <-
 	!action::forget_old_action(Id);
  	+action::committedToAction(Id);
