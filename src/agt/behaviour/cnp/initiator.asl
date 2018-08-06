@@ -12,24 +12,27 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 <-
 	+action::reasoning_about_belief(Id);
  	.print("Received ",Id,", Items ",Items," starting the priced job process.");
-	!accomplished_priced_job(Id,Storage,Items);
-	-action::reasoning_about_belief(Id);
+	!!accomplished_priced_job(Id,Storage,Items);
+//	-action::reasoning_about_belief(Id);
 	.
 +!accomplished_priced_job(Id,Storage,Items)
 <-
 	!estimates::priced_estimate(Id,Items);
 	.print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ",Id," is feasible! ");
     !allocate_delivery_tasks(Id,Items,Storage);
+    -action::reasoning_about_belief(Id);
     .
 -!accomplished_priced_job(Id,Storage,Items)[error_msg(Message)]
 <-
 	.print(Id," cannot be accomplished! Reasons: ",Message);
+	-action::reasoning_about_belief(Id);
     .
  
 +!allocate_delivery_tasks(Id,[],DeliveryPoint).
 +!allocate_delivery_tasks(Id,[required(Item,Qtd)|Items],DeliveryPoint)
+	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer),ListAgents)
 <-     
-	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,[vehicle2,vehicle8,vehicle10,vehicle18,vehicle24],CNPBoardName);
+	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,ListAgents,CNPBoardName);
        
     !cnpd::evaluate_bids(Id,required(Item,Qtd),CNPBoardName,AwardedBids);
        
