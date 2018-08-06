@@ -92,6 +92,8 @@
 <-
 	!action::forget_old_action(Id);
  	+action::committedToAction(Id);
+ 	
+ 	.print("I was a ",CurrentRole);
 	
 	!strategies::change_role(CurrentRole,deliveryagent);
 	!perform_delivery;
@@ -102,7 +104,7 @@
 	.print("I won the tasks to ",Deliveries," at ",DeliveryPoint);	
 	!delivery::delivery_job(JobId,Deliveries,DeliveryPoint);
 	
-	-::winner(JobId,Storage,QtdS,DeliveryPoint)[source(Initiator)];
+	-::winner(JobId,Deliveries,DeliveryPoint)[source(Initiator)]
 	
 	!perform_delivery;
 	.

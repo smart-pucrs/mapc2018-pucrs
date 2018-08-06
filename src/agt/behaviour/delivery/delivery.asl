@@ -24,15 +24,10 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 :-
 	default::available_items(Storage,Items) &
 	.member(item(Item,_),Items) &
-	.print(Destination," item no ",Storage)&
 	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
-	.print("a ")&
 	default::speed(Speed) &
-	.print("b ")&
 	actions.route(Role, Speed, Storage, RouteStorage) &
-	.print(RouteStorage)&
 	actions.route(Role, Speed, Storage, Destination, StorageDelivery) &
-	.print(StorageDelivery)&
 	steps_to_storages(Destination,Item,Storages,[bid(RouteStorage+StorageDelivery,Storage)|Temp],Result)
 	.
 steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
@@ -42,7 +37,6 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 	
 +task(delivery_task(StorageD,Item,Qtd),CNPBoard,TaskId)
 <-
-	.print("Calculating bid");
 	!create_bid_task(StorageD,Item, Qtd, Bid);
 	.print("My bid for task ",TaskId," is ",Bid);
     manyBids(Bid)[artifact_name(CNPBoard)];
@@ -53,7 +47,6 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 <-
 	.print("CL: ",MyLoad," pred: ",PredLoad);
 	if (LoadCap - (PredLoad + MyLoad) >= Vol * Qty) {
-		.print("vai criar bid");
 		?steps_to_storages(StorageD,ItemId,SList,[],Bid);
 	}
 	else { Bid = []; }

@@ -18,6 +18,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 +!accomplished_priced_job(Id,Storage,Items)
 <-
 	!estimates::priced_estimate(Id,Items);
+	.print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ",Id," is feasible! ");
     !allocate_delivery_tasks(Id,Items,Storage);
     .
 -!accomplished_priced_job(Id,Storage,Items)[error_msg(Message)]
