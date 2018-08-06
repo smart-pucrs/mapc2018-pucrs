@@ -66,8 +66,8 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.print(Id," cannot be accomplished! Reasons: ",Message);
 	.
 
-@create_initial_tasks[atomic]
-+!create_initial_tasks
+@create_item_tasks[atomic]
++!create_item_tasks
 	: resourceList(NodesList) & centerStorage(Storage) & centerWorkshop(Workshop)
 <-
 	+taskList([]);
@@ -191,44 +191,64 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.length(ListTruck,FTruck);
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
 	-taskList(_);
-	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !!create_initial_tasks; }
-	else { 
-		.print("Not enough free agents.");
-		if (FCar > 0) { for ( .member(AgentFree,ListCar) ) { .send(AgentFree,achieve,strategies::free); } }
-		if (FDrone > 0) { for ( .member(AgentFree,ListDrone) ) { .send(AgentFree,achieve,strategies::free); } }
-		if (FMoto > 0) { for ( .member(AgentFree,ListMoto) ) { .send(AgentFree,achieve,strategies::free); } }
-		if (FTruck > 0) { for ( .member(AgentFree,ListTruck) ) { .send(AgentFree,achieve,strategies::free); } }
-	}
+	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !create_item_tasks; }
+	else { .print("Not enough free agents."); }
+	.
+	
++!send_free
+	: free_cars(ListCar) & free_drones(ListDrone) & free_motos(ListMoto) & free_trucks(ListTruck)
+<-
+	for ( .member(AgentFree,ListCar) ) { .send(AgentFree,achieve,strategies::free); }
+	for ( .member(AgentFree,ListDrone) ) { .send(AgentFree,achieve,strategies::free); }
+	for ( .member(AgentFree,ListMoto) ) { .send(AgentFree,achieve,strategies::free); }
+	for ( .member(AgentFree,ListTruck) ) { .send(AgentFree,achieve,strategies::free); }
 	.
 	
 	
 @addCarFree[atomic]
 +!add_agent_to_free(car)[source(Agent)]
-	: initiator::free_cars(FreeCars)
+	: free_cars(FreeCars)
 <-
-	-+initiator::free_cars([Agent|FreeCars]);
+	-+free_cars([Agent|FreeCars]);
+	!check_free;
 	.
 @addDroneFreeSelf[atomic]
 +!add_agent_to_free(drone)[source(self)]
-	: initiator::free_drones(FreeDrones) & .my_name(Me)
+	: free_drones(FreeDrones) & .my_name(Me)
 <-
-	-+initiator::free_drones([Me|FreeDrones]);
+	-+free_drones([Me|FreeDrones]);
+	!check_free;
 	.	
 @addDroneFree[atomic]
 +!add_agent_to_free(drone)[source(Agent)]
-	: initiator::free_drones(FreeDrones)
+	: free_drones(FreeDrones)
 <-
-	-+initiator::free_drones([Agent|FreeDrones]);
+	-+free_drones([Agent|FreeDrones]);
+	!check_free;
 	.
 @addMotoFree[atomic]
 +!add_agent_to_free(motorcycle)[source(Agent)]
-	: initiator::free_motos(FreeMotos)
+	: free_motos(FreeMotos)
 <-
-	-+initiator::free_motos([Agent|FreeMotos]);
+	-+free_motos([Agent|FreeMotos]);
+	!check_free;
 	.
 @addTruckFree[atomic]
 +!add_agent_to_free(truck)[source(Agent)]
-	: initiator::free_trucks(FreeTrucks)
+	: free_trucks(FreeTrucks)
 <-
-	-+initiator::free_trucks([Agent|FreeTrucks]);
+	-+free_trucks([Agent|FreeTrucks]);
+	!check_free;
+	.
+
+@checkFree[atomic]	
++!check_free
+	: free_cars(FreeCars) & free_drones(FreeDrones) & free_motos(FreeMotos) & free_trucks(FreeTrucks)
+<-
+	.length(FreeCars,FCar);
+	.length(FreeDrones,FDrone);
+	.length(FreeMotos,FMoto);
+	.length(FreeTrucks,FTruck);
+	FreeTotal = FCar + FDrone + FMoto + FTruck;
+	if (FreeTotal >= 15) { !!create_item_tasks; }
 	.

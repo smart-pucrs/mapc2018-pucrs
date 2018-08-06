@@ -14,7 +14,8 @@
 	.print("*** exploration all done! ***");
 	.term2string(TaskId,TaskIdS);
 	removeScheme(TaskIdS);
-	!initiator::create_initial_tasks;
+	!initiator::create_item_tasks;
+	!initiator::send_free;
    .
 @explorationDone2[atomic]
 +goalState(_,exploration_completed,_,_,satisfied)
@@ -31,6 +32,7 @@
 +!gather_items
 	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
 <-
+ 	!strategies::not_free;
 	!gather::go_gather(Base,NBase);
 	.print("Finished gathering.");
 	!action::goto(Workshop);
@@ -40,6 +42,7 @@
 +!gather_items_assemble
 	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
 <-
+ 	!strategies::not_free;
 	!gather::go_gather(Base,NBase);
 	.print("Finished gathering.");
 	!action::goto(Workshop);
@@ -64,6 +67,7 @@
 <-
 	!stock::store_items(Item,Qty,Storage);
 	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
+	!strategies::change_role(gatherer,worker);
 	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
 	!!strategies::free;
 	.
@@ -84,6 +88,7 @@
 <-
 	-strategies::assembling;
 	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
+	!strategies::change_role(gatherer,worker);
 //	for ( default::hasItem(ItemId,Qty) ) { .print(">>>>>>>>> Assist assemble ended, I have #",Qty," of ",ItemId); }
 //	!!strategies::empty_load;
 	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
