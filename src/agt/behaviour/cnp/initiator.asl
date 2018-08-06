@@ -11,7 +11,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	: default::step(S) & S >= 80
 <-
 	+action::reasoning_about_belief(Id);
- 	.print("Received ",Id,", starting the priced job process.");
+ 	.print("Received ",Id,", Items ",Items," starting the priced job process.");
 	!accomplished_priced_job(Id,Storage,Items);
 	-action::reasoning_about_belief(Id);
 	.
@@ -70,8 +70,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 +!create_item_tasks
 	: resourceList(NodesList) & centerStorage(Storage) & centerWorkshop(Workshop)
 <-
-	!action::forget_old_action(Id);
- 	+action::committedToAction(Id);
+	if (not bidder::winner(_,_,_,_,_,_,_,_,_)) { !action::forget_old_action(Id); +action::committedToAction(Id); }
 	!strategies::not_free;
 	+taskList([]);
 	.findall(item(Item,Parts),default::item(Item,_,_,parts(Parts)) & Parts \== [], AssembledList);
