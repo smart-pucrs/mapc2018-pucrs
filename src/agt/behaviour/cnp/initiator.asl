@@ -90,8 +90,12 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 		.length(ListMoto,FMoto);
 		.length(ListTruck,FTruck);
 		FreeTotal = FCar + FDrone + FMoto + FTruck;
-		if ( FreeTotal >= 4 ) {
-			?default::item(Item,_,roles(Roles),parts(Parts));
+		?default::item(Item,_,roles(Roles),parts(Parts));
+		.length(Parts,NumberParts);
+		if (NumberParts == 2) { NumberAgents = 4; }
+		else { if (NumberParts == 3) { NumberAgents = 6; }
+		else { NumberAgents = NumberParts } }
+		if ( FreeTotal >= NumberAgents ) {
 			for ( .member(Role,Roles) ) {
 				if ( (Role == car & not .empty(ListCar)) | (Role == drone & not .empty(ListDrone)) | (Role == motorcycle & not .empty(ListMoto)) | (Role == truck & not .empty(ListTruck)) ) { 
 					?role_check(N); 
@@ -108,7 +112,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 					else { if ( Role == truck ) { ?free_trucks([Vehicle|ListTNew]); +awarded(Vehicle,truck,Item,assist); -+free_trucks(ListTNew); }
 					}}}
 				}
-				for ( .range(I,1,4-N) ) {
+				for ( .range(I,1,NumberAgents-N) ) {
 					?free_cars(ListC);
 					?free_drones(ListD);
 					?free_motos(ListM);
@@ -147,7 +151,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 				?max_load(MaxLoad);
 				.count(initiator::part(_,_),NPart);
 				+number_of_items((MaxLoad div MaxVol));
-				+number_of_assemble((4 * (MaxLoad div MaxVol)) div NPart);
+				+number_of_assemble((NumberAgents * (MaxLoad div MaxVol)) div NPart);
 				?number_of_items(NItems);
 				?number_of_assemble(NAssemble);
 				.abolish(initiator::part(_,_));
