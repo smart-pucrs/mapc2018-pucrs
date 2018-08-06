@@ -1,3 +1,21 @@
+current_load_item([],0).
+current_load_item([item(Item,Qtd)|Items],(Vol*Qtd)+Load)
+:-
+	default::item(Item,Vol,_,_) &
+	current_load_item(Items,Load)
+	.
+current_load([],0).
+current_load([delivery(_,Items,_)|Deliveries],ItemsLoad+Load)
+:-
+	current_load_item(Items,ItemsLoad) &
+	current_load(Deliveries,Load)
+	.
+predicted_load(Load)
+:-
+	.findall(Delivery,strategies::winner(_,Delivery,_),Deliveries) &
+	current_load(Delivery,Load)
+	.
+
 steps_to_storages(Destination,Item,[],Temp,Result)
 :-
 	Result = Temp
@@ -31,9 +49,10 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 	ceaseBids[artifact_name(CNPBoard)];
 	.
 +!create_bid_task(StorageD, ItemId, Qty, Bid)
-	: default::load(MyLoad) & default::maxLoad(LoadCap) & default::item(ItemId,Vol,_,_) & new::storageList(SList)
+	: default::load(MyLoad) & predicted_load(PredLoad) & default::maxLoad(LoadCap) & default::item(ItemId,Vol,_,_) & new::storageList(SList)
 <-
-	if (LoadCap - MyLoad >= Vol * Qty) {
+	.print("CL: ",MyLoad," pred: ",PredLoad);
+	if (LoadCap - (PredLoad + MyLoad) >= Vol * Qty) {
 		.print("vai criar bid");
 		?steps_to_storages(StorageD,ItemId,SList,[],Bid);
 	}
