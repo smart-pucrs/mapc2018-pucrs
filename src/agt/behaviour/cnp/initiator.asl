@@ -70,6 +70,9 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 +!create_item_tasks
 	: resourceList(NodesList) & centerStorage(Storage) & centerWorkshop(Workshop)
 <-
+	!action::forget_old_action(Id);
+ 	+action::committedToAction(Id);
+	!strategies::not_free;
 	+taskList([]);
 	.findall(item(Item,Parts),default::item(Item,_,_,parts(Parts)) & Parts \== [], AssembledList);
 	for ( .member(item(Item,Parts),AssembledList) ) {
