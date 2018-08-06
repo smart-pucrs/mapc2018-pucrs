@@ -46,7 +46,7 @@ public class ContractNet extends Artifact {
 			try {
 			String ag = getCurrentOpAgentId().getAgentName();		
 			for(int i=0;i<bids.length;i++) {
-				logger.info(bids[i].toString());
+//				logger.info(bids[i].toString());
 				Literal lbid = Literal.parseLiteral(bids[i].toString()).addTerms(ASSyntax.parseTerm(ag));
 				this.bids.add(lbid);
 			}
