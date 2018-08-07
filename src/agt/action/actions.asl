@@ -190,6 +190,15 @@
 <-
 	!action::commit_action(store(ItemId,Amount));
 	.
+	
+// Trade
+// ItemId must be a string
+// Amount must be an integer
++!trade(ItemId, Amount)
+	: true
+<-
+	!action::commit_action(trade(ItemId,Amount));
+	.
 
 // Retrieve
 // ItemId must be a string

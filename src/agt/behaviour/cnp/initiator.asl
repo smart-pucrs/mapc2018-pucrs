@@ -164,6 +164,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 				?assembler(Assembler);
 				
 				+countP(-1);
+				if (not awarded(vehicle1,_,_,_)) { +skip; }
 				for ( awarded(Agent,Role,I,Mode) ) {
 					?default::item(I,_,_,parts(P));
 					.length(P,NParts);
@@ -197,18 +198,17 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
 	-taskList(_);
 	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !create_item_tasks; }
-	else { .print("Not enough free agents."); !!send_free; }
+	else { .print("Not enough free agents."); if (skip) { -skip; !!strategies::free; } }
 	.
 	
-+!send_free
-	: free_cars(ListCar) & free_drones(ListDrone) & free_motos(ListMoto) & free_trucks(ListTruck)
-<-
-	for ( .member(AgentFree,ListCar) ) { .send(AgentFree,achieve,strategies::free); }
-	for ( .member(AgentFree,ListDrone) ) { .send(AgentFree,achieve,strategies::free); }
-	for ( .member(AgentFree,ListMoto) ) { .send(AgentFree,achieve,strategies::free); }
-	for ( .member(AgentFree,ListTruck) ) { .send(AgentFree,achieve,strategies::free); }
-	.
-	
+//+!send_free
+//	: free_cars(ListCar) & free_drones(ListDrone) & free_motos(ListMoto) & free_trucks(ListTruck)
+//<-
+//	for ( .member(AgentFree,ListCar) ) { .send(AgentFree,achieve,strategies::free); }
+//	for ( .member(AgentFree,ListDrone) ) { .send(AgentFree,achieve,strategies::free); }
+//	for ( .member(AgentFree,ListMoto) ) { .send(AgentFree,achieve,strategies::free); }
+//	for ( .member(AgentFree,ListTruck) ) { .send(AgentFree,achieve,strategies::free); }
+//	.
 	
 @addCarFree[atomic]
 +!add_agent_to_free(car)[source(Agent)]

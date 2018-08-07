@@ -59,9 +59,10 @@
  	.print("Ready to perform the assemble");
 	!strategies::not_free;
 	!assemble::assemble(Item,Qty);
-	!!go_store(Item,Qty,Storage);
+	!!trade::go_trade(Item,Qty);
+//	!!go_store(Item,Qty,Storage);
 	.
-	
+
 +!go_store(Item,Qty,Storage)
 <-
 	!stock::store_items(Item,Qty,Storage);
