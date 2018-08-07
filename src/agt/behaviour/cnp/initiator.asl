@@ -197,7 +197,7 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
 	-taskList(_);
 	if ( FreeTotal >= 4 & FCar > 0 & FDrone > 0 & FMoto > 0 & FTruck > 0 ) { !create_item_tasks; }
-	else { .print("Not enough free agents."); }
+	else { .print("Not enough free agents."); !!send_free; }
 	.
 	
 +!send_free
@@ -255,5 +255,5 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
 	.length(FreeMotos,FMoto);
 	.length(FreeTrucks,FTruck);
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
-	if (FreeTotal >= 15) { !!create_item_tasks; }
+	if (FreeTotal >= 25) { !!create_item_tasks; }
 	.

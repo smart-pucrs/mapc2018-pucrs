@@ -15,7 +15,6 @@
 	.term2string(TaskId,TaskIdS);
 	removeScheme(TaskIdS);
 	!initiator::create_item_tasks;
-	!initiator::send_free;
    .
 @explorationDone2[atomic]
 +goalState(_,exploration_completed,_,_,satisfied)
