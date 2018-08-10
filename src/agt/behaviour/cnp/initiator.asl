@@ -43,23 +43,6 @@ verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),Node
     !allocate_delivery_tasks(Id,Items,DeliveryPoint);
     .
 
-@resourceList[atomic]
-+default::resNode(NodeId,Lat,Lon,Item)
-	: resourceList(List) & not .member(NodeId,List)
-<- 
-	.print("New resource node: ",NodeId," for item: ",Item);
-	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
-	.
-	
-+!set_workshop_storage
-	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility(SList, CLat, CLon, Storage) & rules::closest_facility(WList, Storage, Workshop)
-<-
-	+centerStorage(Storage);
-	+centerWorkshop(Workshop);
-	.print("Closest storage from the center is ",Storage);
-	.print("Closest workshop from the center is ",Workshop);
-	.
-
 +!accomplished_priced_job(Id,Storage,Items)
 <-
 	!estimates::priced_estimate(Id,Items);

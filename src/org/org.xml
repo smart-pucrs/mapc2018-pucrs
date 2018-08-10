@@ -15,6 +15,7 @@
   <role id="worker" />
   <role id="attacker" />
   <role id="explorer" />
+  <role id="explorer_drone" />
   <role id="gatherer" />
   <role id="deliveryagent" />
  </roles>

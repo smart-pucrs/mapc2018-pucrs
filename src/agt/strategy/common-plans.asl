@@ -8,6 +8,15 @@
 	.wait( default::actionID(S) & S \== 0 );
 	!choose_minimum_well_price;
 	.
+	
++!set_center_storage_workshop
+	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility(SList, CLat, CLon, Storage) & rules::closest_facility(WList, Storage, Workshop)
+<-
+	+centerStorage(Storage);
+	+centerWorkshop(Workshop);
+	.print("Closest storage from the center is ",Storage);
+	.print("Closest workshop from the storage above is ",Workshop);
+	.
 
 +default::well(Well, Lat, Lon, Type, Team, Integrity)
 //	: not ataque & .print("aqui") & default::team(MyTeam) & MyTeam == Team & my_role(builder) & default::actionID(Id) 

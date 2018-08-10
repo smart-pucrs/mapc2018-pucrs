@@ -22,12 +22,6 @@
 	!strategies::not_free;
    .
    
-+!explore
-<-
-	!explore::go_explore_charging;
-	!!strategies::free;
-	.
-   
 +!gather_items
 	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
 <-

@@ -22,10 +22,10 @@
 //	.include("behaviour/coordinator.asl", coordinator);
 //	.
 	
-+!add_initiator
-<- 
-	.include("behaviour/cnp/initiator.asl", initiator);
-	.
+//+!add_initiator
+//<- 
+//	.include("behaviour/cnp/initiator.asl", initiator);
+//	.
 	
 +!register(E)
 	: .my_name(Me)
@@ -35,28 +35,28 @@
     register(E);
 	.
 
-+default::step(_)
-	: not initiator(_) & .my_name(Me) 
-<-  
-	actions.getAgentNumber(Me,Number);
-	.count(play(_,_,_), NoP);
-	+numberOfPlayers(NoP);
-	+initiator(Number);
-	.
-    
-+default::step(Step)
-	: initiator(Number) & Number == Step 
-<- 	
-	?numberOfPlayers(NoP);
-	-+initiator(Number + NoP);
-	.
-	
-+default::step(Step)
-	: initiator(Number) & Number < Step 
-<-  
-	?numberOfPlayers(NoP);
-	-+initiator(Number + NoP);
-	.
+//+default::step(_)
+//	: not initiator(_) & .my_name(Me) 
+//<-  
+//	actions.getAgentNumber(Me,Number);
+//	.count(play(_,_,_), NoP);
+//	+numberOfPlayers(NoP);
+//	+initiator(Number);
+//	.
+//    
+//+default::step(Step)
+//	: initiator(Number) & Number == Step 
+//<- 	
+//	?numberOfPlayers(NoP);
+//	-+initiator(Number + NoP);
+//	.
+//	
+//+default::step(Step)
+//	: initiator(Number) & Number < Step 
+//<-  
+//	?numberOfPlayers(NoP);
+//	-+initiator(Number + NoP);
+//	.
 
 +default::name(ServerMe)
 	: .my_name(Me)
@@ -78,18 +78,16 @@
 	!action::recharge_is_new_skip;
 	?default::joined(org,OrgId);
 	if ( Me \== vehicle1 ) { setMap; }
-	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
+//	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
 	!action::recharge_is_new_skip;
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	// update the code below for a different strategy
 	
-	if ( Me == vehicle1 ) { !initiator::set_workshop_storage; }
+	!strategies::set_center_storage_workshop;
 
-	if ( MyRole == worker ) {
-		lookupArtifact("init_exp",SchArtIdNew)[wid(OrgId)];
-		org::focus(SchArtIdNew)[wid(OrgId)];
-		org::commitMission(mexplore)[artifact_id(SchArtIdNew)];
-	}
+	if ( MyRole == explorer_drone ) { !!explore::explore; }
+	
+	if ( MyRole == gatherer ) { !!strategies::always_recharge; }
 	
 	if ( MyRole == builder ) { !!strategies::build; }
     .

@@ -47,6 +47,7 @@
 	+storageList([]);
 	+shopList([]);
 	+workshopList([]);
+	+resourceList([]);
 	
 	
 	+noActionCount(0);
@@ -61,7 +62,7 @@
 	+default::separateItemTool([],[],[]);
 	+default::removeDuplicateTool([],[]);
 	
-	if (Me == vehicle1) { !lNewRound::add_initiator_beliefs; }
+//	if (Me == vehicle1) { !lNewRound::add_initiator_beliefs; }
 	setReady;
 	.
 
@@ -112,6 +113,14 @@
 	: not default::resNode(NodeId,Lat,Lon,Item)
 <-
 	addResourceNode(NodeId,Lat,Lon,Item);
+	.
+	
+@resourceList[atomic]
++default::resNode(NodeId,Lat,Lon,Item)
+	: resourceList(List) & not .member(NodeId,List)
+<- 
+	.print("New resource node: ",NodeId," for item: ",Item);
+	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
 	.
 	
 {end}

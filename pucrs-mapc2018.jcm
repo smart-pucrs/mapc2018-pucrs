@@ -3,170 +3,170 @@ mas scenario {
 	agent vehicle1: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle1, vehicleart.team_artifact
-		goals: register("connectionA1"), add_initiator
-		roles: worker in g1
+		goals: register("connectionA1")//, add_initiator
+		roles: explorer_drone in g1
 	}
 	agent vehicle2: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle2, vehicleart.team_artifact
 		goals: register("connectionA2")//, add_coordinator
-		roles: worker in g1
+		roles: explorer_drone in g1
 	}
 	agent vehicle3: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle3, vehicleart.team_artifact
 		goals: register("connectionA3")
-		roles: worker in g1
+		roles: explorer_drone in g1
 	}
 	agent vehicle4: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle4, vehicleart.team_artifact
 		goals: register("connectionA4")
-		roles: worker in g1
+		roles: explorer_drone in g1
 	}
 	agent vehicle5: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle5, vehicleart.team_artifact
 		goals: register("connectionA5")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle6: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle6, vehicleart.team_artifact
 		goals: register("connectionA6")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle7: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle7, vehicleart.team_artifact
 		goals: register("connectionA7")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle8: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle8, vehicleart.team_artifact
 		goals: register("connectionA8")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle9: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle9, vehicleart.team_artifact
 		goals: register("connectionA9")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle10: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle10, vehicleart.team_artifact
 		goals: register("connectionA10")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle11: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle11, vehicleart.team_artifact
 		goals: register("connectionA11")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle12: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle12, vehicleart.team_artifact
 		goals: register("connectionA12")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle13: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle13, vehicleart.team_artifact
 		goals: register("connectionA13")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle14: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle14, vehicleart.team_artifact
 		goals: register("connectionA14")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle15: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle15, vehicleart.team_artifact
 		goals: register("connectionA15")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle16: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle16, vehicleart.team_artifact
 		goals: register("connectionA16")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle17: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle17, vehicleart.team_artifact
 		goals: register("connectionA17")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle18: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle18, vehicleart.team_artifact
 		goals: register("connectionA18")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle19: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle19, vehicleart.team_artifact
 		goals: register("connectionA19")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle20: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle20, vehicleart.team_artifact
 		goals: register("connectionA20")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle21: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle21, vehicleart.team_artifact
 		goals: register("connectionA21")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle22: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle22, vehicleart.team_artifact
 		goals: register("connectionA22")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle23: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle23, vehicleart.team_artifact
 		goals: register("connectionA23")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle24: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle24, vehicleart.team_artifact
 		goals: register("connectionA24")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle25: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle25, vehicleart.team_artifact
 		goals: register("connectionA25")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle26: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle26, vehicleart.team_artifact
 		goals: register("connectionA26")
-		roles: worker in g1
+		roles: gatherer in g1
 	}
 	agent vehicle27: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle27, vehicleart.team_artifact
 		goals: register("connectionA27")
-		roles: builder in g1
+		roles: gatherer in g1
 	}
 	agent vehicle28: vehicle.asl {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact
 		goals: register("connectionA28")
-		roles: builder in g1
+		roles: gatherer in g1
 	}
 	agent vehicle29: vehicle.asl {
 		join: vehicleart
