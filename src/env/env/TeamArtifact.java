@@ -11,6 +11,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,8 +41,11 @@ public class TeamArtifact extends Artifact {
 	private Map<String, ArrayList<Literal>> availableItems = new HashMap<String,ArrayList<Literal>>();
 	private Map<String, ArrayList<String>> buyCoordination = new HashMap<String,ArrayList<String>>();
 	private static Map<Integer, Set<String>> actionsByStep = new HashMap<Integer, Set<String>>();
-	private Map<String, Literal> desiredBase 		= new HashMap<String, Literal>();
-	private Map<String, Literal> desiredCompound 	= new HashMap<String, Literal>();
+//	private Map<String, Literal> desiredBase 		= new HashMap<String, Literal>();
+//	private Map<String, Literal> desiredCompound 	= new HashMap<String, Literal>();
+	private Map<String, DesiredItem> desiredBase 		= new HashMap<String, DesiredItem>();
+	private Map<String, DesiredItem> desiredCompound 	= new HashMap<String, DesiredItem>();
+//	private Map<String, > totalItems 		= new HashMap<String, Integer>();
 	
 	private final String USER_AGENT = "Mozilla/5.0";
 	
@@ -120,19 +125,17 @@ public class TeamArtifact extends Artifact {
 	@OPERATION void setDesiredCompound(String item, int qty)  {
 		setDesiredItem(this.desiredCompound, this.obspDesiredCompound, item, qty);
 	}
-	private void setDesiredItem(Map<String,Literal> desiredItems, String obspName, String item, int qty)  {
-		Literal l = null;
-		try {
-			l = ASSyntax.parseLiteral("item");
-			l.addTerm(ASSyntax.parseTerm(item));
-			l.addTerm(ASSyntax.parseTerm(String.valueOf(qty)));
-			
-		} catch (ParseException e) {
-			logger.info(e.getMessage());
-		}
+	private void setDesiredItem(Map<String,DesiredItem> desiredItems, String obspName, String item, int qty)  {
+		if (!desiredItems.containsKey(item))
+			desiredItems.put(item, new DesiredItem(item));
 		
-		desiredItems.put(item, l);
-		Literal[] itemsAux = desiredItems.values().toArray(new Literal[desiredItems.size()]);
+		DesiredItem desired = desiredItems.get(item);
+		desired.setDesiredQty(qty);
+		
+		updateDesiredItems(desiredItems, obspName);
+	}
+	private void updateDesiredItems(Map<String,DesiredItem> desiredItems, String obspName) {
+		Literal[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral()).toArray(Literal[]::new);
 		this.removeObsProperty(obspName);
 		this.defineObsProperty(obspName, itemsAux);
 	}
@@ -160,6 +163,14 @@ public class TeamArtifact extends Artifact {
 		
 		availableItems.get(storage).add(litItem);
 		Literal[] itemsAux = availableItems.get(storage).toArray(new Literal[availableItems.get(storage).size()]);
+		
+		if (this.desiredBase.containsKey(item)) {
+			this.desiredBase.get(item).addCurrentQty(qty);
+			updateDesiredItems(this.desiredBase, this.obspDesiredBase);
+		} else {
+			this.desiredCompound.get(item).addCurrentQty(qty);
+			updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
+		}
 		
 		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 		this.defineObsProperty("available_items", litStorage, itemsAux);
@@ -216,6 +227,14 @@ public class TeamArtifact extends Artifact {
 			}
 		}
 		if (result.equals("true")) {
+			if (this.desiredBase.containsKey(item)) {
+				this.desiredBase.get(item).removeCurrentQty(qty);
+				updateDesiredItems(this.desiredBase, this.obspDesiredBase);
+			} else {
+				this.desiredCompound.get(item).removeCurrentQty(qty);
+				updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
+			}
+			
 			Literal[] itemsAux = availableItems.get(storage).toArray(new Literal[availableItems.get(storage).size()]);
 			this.removeObsPropertyByTemplate("available_items", litStorage, null);
 			this.defineObsProperty("available_items", litStorage, itemsAux);
@@ -368,6 +387,53 @@ public class TeamArtifact extends Artifact {
 		if (actionsByStep.containsKey(step-1)) {
 			actionsByStep.remove(step-1);
 			this.removeObsPropertyByTemplate("chosenActions", step-1, null);
+		}
+	}
+	
+	class DesiredItem{
+		private String name;
+		private int desiredQty;
+		private int currentQty;
+		private int percentual;
+		
+		public DesiredItem(String name) {
+			this.name = name;
+			this.desiredQty = 0;
+			this.currentQty = 0;
+		}
+		
+		public void setDesiredQty(int desiredQty) {
+			this.desiredQty = desiredQty;
+			updatePercentual();
+		}
+//		public void setCurrentQty(int currentQty) {
+//			this.currentQty = currentQty;
+//			updatePercentual();
+//		}
+		public void addCurrentQty(int qty) {
+			this.currentQty = this.currentQty+qty;
+			updatePercentual();
+		}
+		public void removeCurrentQty(int qty) {
+			this.currentQty = this.currentQty-qty;
+			updatePercentual();
+		}
+		
+		private void updatePercentual() {
+			this.percentual = (this.currentQty*100)/this.desiredQty;
+		}
+
+		public Literal getLiteral() {
+			Literal l = null;
+			try {
+				l = ASSyntax.parseLiteral("item");
+				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.percentual)));
+				l.addTerm(ASSyntax.parseTerm(this.name));
+				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.desiredQty)));				
+			} catch (ParseException e) {
+				logger.info(e.getMessage());
+			}
+			return l;
 		}
 	}
 }
