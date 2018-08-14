@@ -87,7 +87,7 @@
 
 	if ( MyRole == explorer_drone ) { !!explore::explore; }
 	
-	if ( MyRole == gatherer ) { !!strategies::always_recharge; }
+	if ( MyRole == gatherer ) { ?default::resNode(ResourceNode,_,_,_); !!strategies::gather(ResourceNode); }
 	
 	if ( MyRole == builder ) { !!strategies::build; }
     .

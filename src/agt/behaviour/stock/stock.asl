@@ -81,6 +81,13 @@
 	!storage::retrieve_items(normal,Item,Qtd);
 	.
 	
++!store_all_items(Storage)
+	: default::hasItem(Item,Qty)
+<-
+	!store_items(Item,Qty,Storage)
+	!store_all_items(Storage);
+	.
++!store_all_items(Storage).
 +!store_items(Item,Qtd,Storage)
 	: not default::facility(Storage)
 <- 

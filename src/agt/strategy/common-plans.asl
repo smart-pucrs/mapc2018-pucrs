@@ -124,3 +124,25 @@
 	!strategies::always_recharge;
 	.
 	
+// what gathers do
++!gather
+	: select_resource_node(SelectedResource)
+<-
+	!gather(SelectedResource);
+	.
++!gather(ResourceNode)
+	: default::resNode(ResourceNode,Lat,Lon,Base)
+<-
+	.print("Going to resource node ",ResourceNode," to gather ",Base);
+	!action::goto(Lat,Lon);
+	!gather::gather_full(Base);
+	?new::storageList(SList);
+	?default::centerLat(CLat);
+	?default::centerLon(CLon);
+	?rules::closest_facility(SList,CLat,CLon,Storage);
+	.print("Going to storage ",Storage," to store items");
+	!action::goto(Storage);
+	!stock::store_all_items(Storage);
+	!gather;
+	.
+	

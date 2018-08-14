@@ -3,24 +3,27 @@ package env;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import cartago.*;
+import cartago.Artifact;
+import cartago.OPERATION;
+import cartago.ObsProperty;
+import cartago.OpFeedbackParam;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
+import jason.stdlib.list;
 
 
 public class TeamArtifact extends Artifact {
@@ -135,9 +138,9 @@ public class TeamArtifact extends Artifact {
 		updateDesiredItems(desiredItems, obspName);
 	}
 	private void updateDesiredItems(Map<String,DesiredItem> desiredItems, String obspName) {
-		Literal[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral()).toArray(Literal[]::new);
+		Object[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral()).toArray(Literal[]::new);
 		this.removeObsProperty(obspName);
-		this.defineObsProperty(obspName, itemsAux);
+		this.defineObsProperty(obspName, new Object[] {itemsAux});
 	}
 	@OPERATION void addAvailableItem(String storage, String item, int qty){
 		Literal litStorage = Literal.parseLiteral(storage);
@@ -420,7 +423,11 @@ public class TeamArtifact extends Artifact {
 		}
 		
 		private void updatePercentual() {
-			this.percentual = (this.currentQty*100)/this.desiredQty;
+			int percent = (this.currentQty*100)/this.desiredQty;
+			if (percent >= 100) 
+				this.percentual = 99;
+			else
+				this.percentual = percent;
 		}
 
 		public Literal getLiteral() {
