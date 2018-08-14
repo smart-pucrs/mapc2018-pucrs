@@ -22,10 +22,10 @@
 //	.include("behaviour/coordinator.asl", coordinator);
 //	.
 	
-//+!add_initiator
-//<- 
-//	.include("behaviour/cnp/initiator.asl", initiator);
-//	.
++!add_initiator
+<- 
+	.include("behaviour/cnp/initiator.asl", initiator);
+	.
 	
 +!register(E)
 	: .my_name(Me)

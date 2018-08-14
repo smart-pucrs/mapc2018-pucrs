@@ -24,6 +24,10 @@ import jason.asSyntax.parser.ParseException;
 public class TeamArtifact extends Artifact {
 
 	private static Logger logger = Logger.getLogger(TeamArtifact.class.getName());
+	
+	private final String obspDesiredCompound 	= "desired_compound";
+	private final String obspDesiredBase 		= "desired_base";
+	
 	private static Map<String, Integer> shopItemsQty = new HashMap<String, Integer>();
 	private static Map<String, Integer> itemsQty = new HashMap<String, Integer>();
 	private static Map<String, Integer> itemsPrice = new HashMap<String, Integer>();
@@ -35,6 +39,8 @@ public class TeamArtifact extends Artifact {
 	private Map<String, ArrayList<Literal>> availableItems = new HashMap<String,ArrayList<Literal>>();
 	private Map<String, ArrayList<String>> buyCoordination = new HashMap<String,ArrayList<String>>();
 	private static Map<Integer, Set<String>> actionsByStep = new HashMap<Integer, Set<String>>();
+	private Map<String, Literal> desiredBase 		= new HashMap<String, Literal>();
+	private Map<String, Literal> desiredCompound 	= new HashMap<String, Literal>();
 	
 	private final String USER_AGENT = "Mozilla/5.0";
 	
@@ -42,6 +48,8 @@ public class TeamArtifact extends Artifact {
 	void init(){
 		logger.info("Team Artifact has been created!");
 		readConf();
+		this.defineObsProperty(this.obspDesiredCompound, new Object[0]);
+		this.defineObsProperty(this.obspDesiredBase, new Object[0]);
 	}
 	
 	public void readConf(){
@@ -106,6 +114,28 @@ public class TeamArtifact extends Artifact {
 //		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 //		this.defineObsProperty("available_items", litStorage, itemsAux);
 //	}
+	@OPERATION void setDesiredBase(String item, int qty)  {
+		setDesiredItem(this.desiredBase, this.obspDesiredBase, item, qty);
+	}
+	@OPERATION void setDesiredCompound(String item, int qty)  {
+		setDesiredItem(this.desiredCompound, this.obspDesiredCompound, item, qty);
+	}
+	private void setDesiredItem(Map<String,Literal> desiredItems, String obspName, String item, int qty)  {
+		Literal l = null;
+		try {
+			l = ASSyntax.parseLiteral("item");
+			l.addTerm(ASSyntax.parseTerm(item));
+			l.addTerm(ASSyntax.parseTerm(String.valueOf(qty)));
+			
+		} catch (ParseException e) {
+			logger.info(e.getMessage());
+		}
+		
+		desiredItems.put(item, l);
+		Literal[] itemsAux = desiredItems.values().toArray(new Literal[desiredItems.size()]);
+		this.removeObsProperty(obspName);
+		this.defineObsProperty(obspName, itemsAux);
+	}
 	@OPERATION void addAvailableItem(String storage, String item, int qty){
 		Literal litStorage = Literal.parseLiteral(storage);
 		Literal litItem = Literal.parseLiteral("item");
@@ -116,7 +146,7 @@ public class TeamArtifact extends Artifact {
 				Literal l = iter.next();
 				if (l.toString().contains(item)) {
 					iter.remove();
-					finalQtd = qty +Integer.parseInt(l.getTerm(1).toString());
+					finalQtd 	= qty +Integer.parseInt(l.getTerm(1).toString());
 				}
 			}
 		}
