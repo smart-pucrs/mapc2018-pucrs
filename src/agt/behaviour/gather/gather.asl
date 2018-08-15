@@ -29,9 +29,9 @@ can_gather(Base)
 	: not default::hasItem(Base,_) | (default::hasItem(Base,NItemNew) & NItemNew < NItem)
 <-
 	!action::gather;
-	!gather(Item,NItem);
+	!gather(Base,NItem);
 	.
-+!gather(Item,NItem).
++!gather(Base,NItem).
 
 +!gather_full(Base)
 	: ::can_gather(Base)

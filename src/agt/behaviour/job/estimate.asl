@@ -44,6 +44,17 @@ evaluate_steps
 	true
 	.
 
++!global_stock
+	: new::storageList(SList)
+<-
+	.print("Building global stock of compound items");
+	?get_available_items(SList,[],ItemizedAvailableItems);
+	?sum_up_items(ItemizedAvailableItems,[],AvailableItems);	
+	for(.member(item(Item,Qtd),AvailableItems)){
+		+::partial_stock(Qtd,Item);
+	} 	
+	.	
+
 +!priced_estimate(Id,Items)
 	: new::storageList(SList)
 <-
@@ -56,3 +67,52 @@ evaluate_steps
 //	maybe perform the metrics for failed evaluation here
 //	.fail;
 //	.
+
+calculate_lot(Item,DesiredQty,Lot)
+:-
+	Lot = math.ceil(DesiredQty*0.5)
+	.
++!compound_estimate(Items)
+	: new::storageList(SList) & default::desired_compound(CList) & .sort(CList,SCList)
+<-
+	!global_stock;
+	!compound_priority(SCList);
+	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),Items);
+	.print("We have items to assemble ",Items);
+	.abolish(::partial_stock(_,_));
+	.abolish(::must_assemble(_,_));
+	.
++!compound_priority([]).
++!compound_priority([item(_,Item,DesiredQty)|List])
+	: default::item(Item,_,_,parts(Parts)) & ::calculate_lot(Item,DesiredQty,Lot)
+<-		
+	.findall(item(TQtd,TItem),::partial_stock(TQtd,TItem),TItems);
+	.print("Our production lot for ",Item," is ",Lot);
+	!compound_tracking(Parts,Lot,MinimumQty);
+	+::must_assemble(MinimumQty,Item);
+	!compound_priority(List);
+	.
+-!compound_priority([item(_,_,_)|List])
+<-	
+	!compound_priority(List);
+	.
++!compound_tracking([],Lot,MinimumQty)
+<-
+	MinimumQty = Lot;
+	.
++!compound_tracking([Part|Parts],Lot,MinimumQty)
+	: not ::partial_stock(_,Part)
+<-
+	.fail;
+	.
++!compound_tracking([Part|Parts],Lot,MinimumQty)
+	: ::partial_stock(Qty,Part)
+<-
+	if (Qty < Lot){
+		!compound_tracking(Parts,Qty,MinimumQty);
+	} else{
+		!compound_tracking(Parts,Lot,MinimumQty);
+	}
+	-::partial_stock(_,Part);
+	+::partial_stock(Qty-MinimumQty,Part);
+	.

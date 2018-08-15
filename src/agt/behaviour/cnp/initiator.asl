@@ -1,9 +1,11 @@
 { include("behaviour/job/estimate.asl", estimates) }
 { include("behaviour/job/cnp_delivery.asl", cnpd) }
+{ include("behaviour/job/cnp_assemble.asl", cnpa) }
 
 verify_bases([],NodesList,Result) :- Result = "true".
 verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesList) & verify_bases(Parts,NodesList,Result).
 verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),NodesList) & Result = "false".
+
 
 // ### LIST PRIORITY ###
 get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
@@ -53,6 +55,28 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 		+::final_qty_item(PartItem,(OldQty+CurrentQty+Qty));
 	}
 	.
+	
+// ### ASSEMBLE COMPOUND ITEMS ###
++default::desired_base(_) // something has changed in the quantity of base items
+	: not ::must_check_compound
+<-
+	+::must_check_compound;
+//	addAvailableItem(storage0,item0,10); // pode ser util para fazer os testes da aloção do assemble
+//	addAvailableItem(storage0,item1,10);
+//	addAvailableItem(storage0,item2,10);
+//	addAvailableItem(storage0,item3,10);
+//	addAvailableItem(storage0,item4,10);
+	.wait(default::actionID(_));
+	!check_compound;
+	-::must_check_compound;
+	.
++!check_compound
+	: default::desired_base(Base)
+<-
+	.print("*************************************** Checking if we can assemble compound items");
+//	.print(Base);
+	!estimates::compound_estimate(Items);
+    .
 
 // ### PRICED JOBS ###
 @priced_job[atomic]

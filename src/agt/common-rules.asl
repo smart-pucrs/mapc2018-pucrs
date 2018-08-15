@@ -32,7 +32,7 @@ enough_money :- default::massium(Money) & strategies::minimum_money(RequiredMone
 // select what base item is needed most and pick a resource node to go
 select_resource_node(SelectedResource)
 :-
-	default::desired_base(List) & 
+	default::desired_base(List) &
 	.sort(List,SortedList) & 
 	.nth(0,SortedList,item(_,Base,_)) & 
 	.findall(ResourceNode,default::resNode(ResourceNode,Lat,Lon,Base),Resources) & 

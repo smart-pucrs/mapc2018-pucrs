@@ -126,7 +126,7 @@
 	
 // what gathers do
 +!gather
-	: select_resource_node(SelectedResource)
+	: rules::select_resource_node(SelectedResource)
 <-
 	!gather(SelectedResource);
 	.
