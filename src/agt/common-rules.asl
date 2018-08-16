@@ -9,6 +9,9 @@ closest_facility(List, Facility) :- default::role(Role, _, _, _, _, _, _, _, _, 
 closest_facility(List, Facility1, Facility2) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.closest(Role, List, Facility1, Facility2).
 closest_facility(List, Lat, Lon, Facility2) :- default::role(Role, _, _, _, _, _, _, _, _, _, _) & actions.closest(Role, List, Lat, Lon, Facility2).
 
+closest_facility_truck(List, Facility1, Facility2) :-actions.closest(truck, List, Facility1, Facility2).
+closest_facility_truck(List, Lat, Lon, Facility2) :- actions.closest(truck, List, Lat, Lon, Facility2).
+
 enough_battery(FacilityId1, FacilityId2, Result) :- default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & actions.route(Role, Speed, FacilityId1, RouteLen1) & actions.route(Role, Speed, FacilityId1, FacilityId2, RouteLen2) & default::charge(Battery) & ((Battery > (RouteLen1 + RouteLen2) & Result = "true") | (Result = "false")).
 enough_battery(Lat, Lon, FacilityId2, Result) :- default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & actions.route(Role, Speed, Lat, Lon, _, _, _, RouteLen1) & actions.route(Role, Speed, Lat, Lon, FacilityId2, _, RouteLen2)  & default::charge(Battery) & ((Battery > (RouteLen1 + RouteLen2) & Result = "true") | (Result = "false")).
 enough_battery2(FacilityAux, FacilityId1, FacilityId2, Result, Battery) :- default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & actions.route(Role, Speed, FacilityAux, FacilityId1, RouteLen1) & actions.route(Role, Speed, FacilityId1, FacilityId2, RouteLen2) & ((Battery > (RouteLen1 + RouteLen2) & Result = "true") | (Result = "false")).

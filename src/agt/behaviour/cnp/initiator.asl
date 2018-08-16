@@ -1,6 +1,5 @@
 { include("behaviour/job/estimate.asl", estimates) }
 { include("behaviour/job/cnp_delivery.asl", cnpd) }
-{ include("behaviour/job/cnp_assemble.asl", cnpa) }
 
 verify_bases([],NodesList,Result) :- Result = "true".
 verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesList) & verify_bases(Parts,NodesList,Result).

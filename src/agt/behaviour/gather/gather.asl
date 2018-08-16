@@ -2,7 +2,7 @@ can_gather(Base)
 :- 
 	default::load(Load) & 
 	default::item(Base,Vol,_,_) &
-	default::role(_,_,_,Capacity,_,_,_,_,_,_,_)&
+	default::maxLoad(Capacity) &
 	(Load+Vol) <= Capacity
 	.
 

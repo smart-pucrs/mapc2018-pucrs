@@ -10,7 +10,7 @@
 	.
 	
 +!set_center_storage_workshop
-	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility(SList, CLat, CLon, Storage) & rules::closest_facility(WList, Storage, Workshop)
+	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility_truck(SList, CLat, CLon, Storage) & rules::closest_facility_truck(WList, Storage, Workshop)
 <-
 	+centerStorage(Storage);
 	+centerWorkshop(Workshop);
@@ -131,15 +131,11 @@
 	!gather(SelectedResource);
 	.
 +!gather(ResourceNode)
-	: default::resNode(ResourceNode,Lat,Lon,Base)
+	: default::resNode(ResourceNode,Lat,Lon,Base) & strategies::centerStorage(Storage)
 <-
 	.print("Going to resource node ",ResourceNode," to gather ",Base);
 	!action::goto(Lat,Lon);
 	!gather::gather_full(Base);
-	?new::storageList(SList);
-	?default::centerLat(CLat);
-	?default::centerLon(CLon);
-	?rules::closest_facility(SList,CLat,CLon,Storage);
 	.print("Going to storage ",Storage," to store items");
 	!action::goto(Storage);
 	!stock::store_all_items(Storage);

@@ -120,7 +120,7 @@
 	: resourceList(List) & not .member(NodeId,List)
 <- 
 	.print("New resource node: ",NodeId," for item: ",Item);
-	-+resourceList([node(NodeId,Lat,Lon,Item)|List]);
+	-+resourceList([NodeId|List]);
 	.
 	
 {end}
