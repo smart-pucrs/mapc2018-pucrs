@@ -327,8 +327,6 @@ public class EISArtifact extends Artifact implements AgentListener {
 		"upgrade",
 		"wellType",
 		"role",
-		"centerLat",
-		"centerLon",
 		"cellSize",
 		"proximity",
 		"seedCapital",
