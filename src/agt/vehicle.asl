@@ -87,14 +87,7 @@
 
 	if ( MyRole == explorer_drone ) { !!explore::explore; }
 	
-	if ( MyRole == gatherer ) {
-		if ( default::resNode(_,_,_,_) ) {
-			?new::resourceList(List);
-			?rules::closest_facility(List,ResourceNode);
-			!!strategies::gather(ResourceNode);
-		} 
-		else { } // add code for when no resource nodes are known
-	}
+	if ( MyRole == gatherer ) { !!gather::initial_gather; }
 	
 	if ( MyRole == builder ) { !!strategies::build; }
     .
