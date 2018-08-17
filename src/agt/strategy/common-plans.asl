@@ -128,8 +128,10 @@
 +!gather
 	: rules::select_resource_node(SelectedResource)
 <-
+//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",SelectedResource);
 	!gather(SelectedResource);
 	.
++!gather <- !gather::initial_gather.
 +!gather(ResourceNode)
 	: default::resNode(ResourceNode,Lat,Lon,Base) & strategies::centerStorage(Storage)
 <-

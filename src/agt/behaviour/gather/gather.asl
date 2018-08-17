@@ -39,7 +39,7 @@ can_gather(Base)
 	!strategies::change_role(gatherer,explorer);
 	!explore::go_explore_charging;
 	!strategies::change_role(explorer,gatherer);
-	!!initial_gather;
+	!!strategies::gather;
 	.
 
 +!gather(Base,NItem)

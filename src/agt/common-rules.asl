@@ -37,7 +37,10 @@ select_resource_node(SelectedResource)
 :-
 	default::desired_base(List) &
 	.sort(List,SortedList) & 
+//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",SortedList) &
 	.nth(0,SortedList,item(_,Base,_)) & 
+//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",Base) &
 	.findall(ResourceNode,default::resNode(ResourceNode,Lat,Lon,Base),Resources) & 
-	.nth(0,Resources,SelectedResource)
+//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",Resources) &
+	closest_facility(Resources,SelectedResource)
 	.

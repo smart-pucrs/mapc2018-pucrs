@@ -87,7 +87,7 @@
 
 	if ( MyRole == explorer_drone ) { !!explore::explore; }
 	
-	if ( MyRole == gatherer ) { !!gather::initial_gather; }
+	if ( MyRole == gatherer ) { !!strategies::gather; }
 	
 	if ( MyRole == builder ) { !!strategies::build; }
     .
