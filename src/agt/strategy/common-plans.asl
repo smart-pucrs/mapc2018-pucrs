@@ -126,9 +126,8 @@
 	
 // what gathers do
 +!gather
-	: rules::select_resource_node(SelectedResource)
+	: rules::select_resource_node(SelectedResource) & .literal(SelectedResource)
 <-
-//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",SelectedResource);
 	!gather(SelectedResource);
 	.
 +!gather <- !gather::initial_gather.

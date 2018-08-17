@@ -36,11 +36,14 @@ enough_money :- default::massium(Money) & strategies::minimum_money(RequiredMone
 select_resource_node(SelectedResource)
 :-
 	default::desired_base(List) &
-	.sort(List,SortedList) & 
-//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",SortedList) &
+	remove_unknown_bases(List,[],PrunedList) &
+	.sort(PrunedList,SortedList) & 
 	.nth(0,SortedList,item(_,Base,_)) & 
-//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",Base) &
 	.findall(ResourceNode,default::resNode(ResourceNode,Lat,Lon,Base),Resources) & 
-//	.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ",Resources) &
 	closest_facility(Resources,SelectedResource)
 	.
+
+remove_unknown_bases([],AuxList,PrunedList) :- PrunedList = AuxList.	
+remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- default::resNode(_,_,_,Base) & remove_unknown_bases(List,[item(X,Base,Y)|AuxList],PrunedList).
+remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- remove_unknown_bases(List,AuxList,PrunedList).
+
