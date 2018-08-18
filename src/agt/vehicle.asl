@@ -17,11 +17,6 @@
 { include("behaviour/delivery/delivery.asl", delivery) }
 { include("behaviour/trade/trade.asl", trade) }
 	
-//+!add_coordinator
-//<- 
-//	.include("behaviour/coordinator.asl", coordinator);
-//	.
-	
 +!add_initiator
 <- 
 	.include("behaviour/cnp/initiator.asl", initiator);
