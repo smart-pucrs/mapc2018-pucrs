@@ -78,7 +78,6 @@ calculate_lot(Item,DesiredQty,Lot)
 	!global_stock;
 	!compound_priority(SCList);
 	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),Items);
-	.print("We have items to assemble ",Items);
 	.abolish(::partial_stock(_,_));
 	.abolish(::must_assemble(_,_));
 	.

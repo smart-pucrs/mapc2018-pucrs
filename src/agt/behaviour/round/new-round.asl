@@ -5,18 +5,8 @@
 <-
 //	+initiator::completed_jobs(0); // debugging
 //	+initiator::vehicle_job(truck,2);
-//	+initiator::max_bid_time(10000);
-	+initiator::resourceList([]);
-	+initiator::free_cars([vehicle13,vehicle14,vehicle15,vehicle16,vehicle17,vehicle18,vehicle19,vehicle20,vehicle21,vehicle22]);
-	+initiator::free_drones([vehicle1,vehicle2,vehicle3,vehicle4]);
-	+initiator::free_motos([vehicle5,vehicle6,vehicle7,vehicle8,vehicle9,vehicle10,vehicle11,vehicle12]);
-	+initiator::free_trucks([vehicle23,vehicle24,vehicle25,vehicle26]);
-	+initiator::role_check(0);
-	+initiator::taskId(0);
-	+initiator::load_drone(15);
-	+initiator::load_moto(30);
-	+initiator::load_car(50);
-	+initiator::load_truck(100);
+	+initiator::max_bid_time(2000);
+	+initiator::max_bidders(28);
 	
 	+metrics::money(0);
 	+metrics::completedJobs(0);
@@ -62,7 +52,7 @@
 	+default::separateItemTool([],[],[]);
 	+default::removeDuplicateTool([],[]);
 	
-//	if (Me == vehicle1) { !lNewRound::add_initiator_beliefs; }
+	if (Me == vehicle1) { !lNewRound::add_initiator_beliefs; }
 	setReady;
 	.
 

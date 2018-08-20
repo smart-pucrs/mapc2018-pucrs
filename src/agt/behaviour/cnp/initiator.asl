@@ -56,26 +56,26 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	.
 	
 // ### ASSEMBLE COMPOUND ITEMS ###
-+default::desired_base(_) // something has changed in the quantity of base items
-	: not ::must_check_compound
-<-
-	+::must_check_compound;
-//	addAvailableItem(storage0,item0,10); // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item1,10);
-//	addAvailableItem(storage0,item2,10);
-//	addAvailableItem(storage0,item3,10);
-//	addAvailableItem(storage0,item4,10);
-	.wait(default::actionID(_));
-	!check_compound;
-	-::must_check_compound;
-	.
-+!check_compound
-	: default::desired_base(Base)
-<-
-	.print("*************************************** Checking if we can assemble compound items");
-//	.print(Base);
-	!estimates::compound_estimate(Items);
-    .
+//+default::desired_base(_) // something has changed in the quantity of base items
+//	: not ::must_check_compound
+//<-
+//	+::must_check_compound;
+////	addAvailableItem(storage0,item0,10); // pode ser util para fazer os testes da aloção do assemble
+////	addAvailableItem(storage0,item1,10);
+////	addAvailableItem(storage0,item2,10);
+////	addAvailableItem(storage0,item3,10);
+////	addAvailableItem(storage0,item4,10);
+//	.wait(default::actionID(_));
+//	!check_compound;
+//	-::must_check_compound;
+//	.
+//+!check_compound
+//	: default::desired_base(Base)
+//<-
+//	.print("*************************************** Checking if we can assemble compound items");
+////	.print(Base);
+//	!estimates::compound_estimate(Items);
+//    .
 
 // ### PRICED JOBS ###
 @priced_job[atomic]
@@ -313,3 +313,28 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	FreeTotal = FCar + FDrone + FMoto + FTruck;
 	if (FreeTotal >= 25) { !!create_item_tasks; }
 	.
+
+@checkAssemble[atomic]
++default::available_items(Storage,Its)
+	: Its \== []
+<-
+	.print("Storage ",Storage," updated stock: ",Its);
+	!estimates::compound_estimate(Items);
+	if (Items \== []) { 
+		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 
+		.term2string(Items,ItemsS);
+		+action::reasoning_about_belief(Storage);
+		!!announce(Storage,ItemsS);
+	}
+	else { .print("££££££££££ Can't assemble anything yet."); }
+ 	.
+ 	
++!announce(Id,ItemsS)
+	: max_bid_time(Deadline) & max_bidders(Agents)
+<-
+	default::announce(ItemsS,Deadline,Agents,ContractNetName);
+	getBidsTask(Bids) [artifact_name(ContractNetName)];
+	.print("%%%%%%%%%%%%%%%% Bids ",Bids);
+	-action::reasoning_about_belief(Id);
+	.
+	

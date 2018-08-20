@@ -1,42 +1,66 @@
 package cnp;
 
-import jason.asSyntax.Literal;
-
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
-import cartago.*;
+import cartago.Artifact;
+import cartago.GUARD;
+import cartago.INTERNAL_OPERATION;
+import cartago.OPERATION;
+import cartago.OpFeedbackParam;
+import cartago.OperationException;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+import jason.asSyntax.parser.ParseException;
 
-public class ContractNetBoard extends Artifact {
-	
+public class ContractNetBoard extends Artifact {	
 	private Logger logger = null;
 	Boolean state;
 	
-	private List<Bid> bids;
+	private Set<String> bidders;
+	private ArrayList<Literal> bids;
 	
 	void init(String taskDescr, long duration, int agents){
 		logger = Logger.getLogger(""+this.getId());
 		state = true;
-		bids = new ArrayList<Bid>();
+		bids = new ArrayList<Literal>();
+		bidders = new HashSet<String>();
 		this.execInternalOp("checkDeadline", duration);
 		this.execInternalOp("checkAllBids", agents);
 	}
 	
-	@OPERATION void bid(String agent, int distance){
-		if (state){
-			bids.add(new Bid(agent,distance));
+	@OPERATION void bid(String bid) throws ParseException{
+		if (state){	
+			String ag = getCurrentOpAgentId().getAgentName();
+			Literal lbid = Literal.parseLiteral(bid).addTerms(ASSyntax.parseTerm(ag));
+			bids.add(lbid);
 		} else {
 			this.failed("cnp_closed");
 		}
 	}
 	
-	@OPERATION void bid(String agent, int distance, String shop, String item, int taskid){
-		if (state){
-			bids.add(new Bid(agent,distance,shop,item,taskid));
+	@OPERATION void manyBids(Object[] bids) throws ParseException{
+		if (state){	
+			try {
+			String ag = getCurrentOpAgentId().getAgentName();		
+			for(int i=0;i<bids.length;i++) {
+//				logger.info(bids[i].toString());
+				Literal lbid = Literal.parseLiteral(bids[i].toString()).addTerms(ASSyntax.parseTerm(ag));
+				this.bids.add(lbid);
+			}
+			}
+			catch (Exception e) {
+				logger.info(e.getMessage());
+			}
 		} else {
 			this.failed("cnp_closed");
 		}
+	}
+	
+	@OPERATION void ceaseBids(){
+		bidders.add(getCurrentOpAgentId().getAgentName());
 	}
 	
 	@INTERNAL_OPERATION void checkDeadline(long dt){
@@ -57,25 +81,10 @@ public class ContractNetBoard extends Artifact {
 		}
 	}
 	
-	@OPERATION void getBidsJob(OpFeedbackParam<Literal[]> bidList){
-		await("biddingClosed");
-		int i = 0;
-		Literal[] aux= new Literal[bids.size()];
-		for (Bid p: bids){
-			aux[i] = Literal.parseLiteral("bid("+p.getAgent()+","+p.getDistance()+")");
-			i++;
-		}
-		bidList.set(aux);
-	}
-	
 	@OPERATION void getBidsTask(OpFeedbackParam<Literal[]> bidList){
 		await("biddingClosed");
-		int i = 0;
 		Literal[] aux= new Literal[bids.size()];
-		for (Bid p: bids){
-			aux[i] = Literal.parseLiteral("bid("+p.getAgent()+","+p.getDistance()+","+p.getShop()+","+p.getItem()+","+p.getTaskId()+")");
-			i++;
-		}
+		bids.toArray(aux);
 		bidList.set(aux);
 	}
 	
@@ -83,8 +92,7 @@ public class ContractNetBoard extends Artifact {
 		try {
 			this.dispose(this.getId());
 		} catch (OperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 	}
 	
@@ -100,32 +108,7 @@ public class ContractNetBoard extends Artifact {
 		 return bids.size() == agents;
 	}
 	
-	static public class Bid {
-		
-		private String agent;
-		private int distance;
-		private String shop;
-		private int taskid;
-		private String item;
-		
-		public Bid(String agent, int distance){
-			this.agent = agent;
-			this.distance = distance;
-		}
-		
-		public Bid(String agent, int distance, String shop, String item, int taskid){
-			this.agent = agent;
-			this.distance = distance;
-			this.shop = shop;
-			this.taskid = taskid;
-			this.item = item;
-		}
-		
-		public String getAgent(){ return agent; }
-		public int getDistance(){ return distance; }
-		public String getShop(){ return shop; }
-		public int getTaskId(){ return taskid; }
-		public String getItem(){ return item; }
+	private boolean allAgentsMadeTheirMultipleBid(int agents){
+		 return bidders.size() == agents;
 	}
-	
 }
