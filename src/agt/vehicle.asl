@@ -72,20 +72,27 @@
 	}
 	!action::recharge_is_new_skip;
 	?default::joined(org,OrgId);
+	
 	if ( Me \== vehicle1 ) { setMap; }
 //	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
 	!action::recharge_is_new_skip;
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
-	// update the code below for a different strategy
 	
+	// update the code below for a different strategy
+
 	!strategies::set_center_storage_workshop;
 
-	if ( MyRole == explorer_drone ) { !!explore::explore; }
+	if ( MyRole == explorer_drone ) { 
+//		!!explore::go_map_size;
+		!!explore::go_walk;
+  }
 	
 	if ( MyRole == gatherer ) { !!strategies::gather; }
 	
 	if ( MyRole == builder ) { !!strategies::build; }
     .
+
+
 
 
 	

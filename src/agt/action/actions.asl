@@ -57,6 +57,7 @@
 //	!goto(FacilityId);
 //	.
 
+
 // Goto (option 2)
 // Lat and Lon must be floats
 +!goto(Lat, Lon) : going(Lat,Lon) & default::routeLength(R) & R == 0 <- -going(Lat,Lon).
