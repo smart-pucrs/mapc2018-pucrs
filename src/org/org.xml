@@ -17,6 +17,7 @@
   <role id="explorer" />
   <role id="explorer_drone" />
   <role id="gatherer" />
+  <role id="assembler" />
   <role id="deliveryagent" />
  </roles>
 </group-specification>
@@ -83,8 +84,47 @@
     <goal id="stop_assist_assemble"/>
     <goal id="assist_assemble"/>
     <goal id="gather_items"/>
+  </mission>  
+</scheme>
+
+<scheme id="assembly">
+  <goal id="assembly_completed" type="performance">
+  	<argument id="Assembler" />
+	<plan operator="parallel">
+       <goal id="assist" type="performance"/>
+       <goal id="assemble_item" type="performance">
+        <plan operator="sequence">
+         <goal id="assemble"></goal>
+         <goal id="stop_assist"/>
+        </plan>
+       </goal>
+	</plan>
+  </goal>
+
+  <mission id="massemble" min="1">
+    <goal id="assemble"/>
   </mission>
-  
+  <mission id="massist">
+    <goal id="assist"/>
+    <goal id="stop_assist"/>
+  </mission>  
+</scheme>
+
+<scheme id="retrieve">
+  <goal id="retrieve_completed" type="performance">
+  	<argument id="Workshop" />
+	<plan operator="parallel">
+       <goal id="retrive_items" type="performance"/>
+       <goal id="retrive_items_assemble" type="performance"/>
+	</plan>
+  </goal>
+
+  <mission id="massemble">
+    <goal id="retrive_items_assemble"/>
+  </mission>
+  <mission id="massist">
+    <goal id="retrive_items"/>
+  </mission>
 </scheme>
 
 </functional-specification>
