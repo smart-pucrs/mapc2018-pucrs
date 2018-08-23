@@ -1,5 +1,6 @@
 { include("behaviour/job/estimate.asl", estimates) }
 { include("behaviour/job/cnp_delivery.asl", cnpd) }
+{ include("behaviour/job/cnp_assemble.asl", cnpa) }
 
 verify_bases([],NodesList,Result) :- Result = "true".
 verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesList) & verify_bases(Parts,NodesList,Result).
@@ -56,26 +57,28 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	.
 	
 // ### ASSEMBLE COMPOUND ITEMS ###
-//+default::desired_base(_) // something has changed in the quantity of base items
-//	: not ::must_check_compound
-//<-
-//	+::must_check_compound;
-////	addAvailableItem(storage0,item0,10); // pode ser util para fazer os testes da aloção do assemble
-////	addAvailableItem(storage0,item1,10);
-////	addAvailableItem(storage0,item2,10);
-////	addAvailableItem(storage0,item3,10);
-////	addAvailableItem(storage0,item4,10);
-//	.wait(default::actionID(_));
-//	!check_compound;
+//@checkAssemble[atomic]
++default::baseStored
+	: not ::must_check_compound  & strategies::centerStorage(Storage)
+<-
+	+::must_check_compound;
+	.wait(default::actionID(_));
+//	addAvailableItem(storage0,item0,10); // pode ser util para fazer os testes da aloção do assemble
+//	addAvailableItem(storage0,item1,10);
+//	addAvailableItem(storage0,item2,10);
+//	addAvailableItem(storage0,item3,10);
+//	addAvailableItem(storage0,item4,10);
+	!estimates::compound_estimate(Items);
+	if (Items \== []) { 
+		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 
+		.term2string(Items,ItemsS);
+		+action::reasoning_about_belief(Storage);
+		!allocate_tasks(cnpa,none,assemble(Items),[gatherer,explorer_drone],Storage);
+		-action::reasoning_about_belief(Storage);
+	}
+	else { .print("££££££££££ Can't assemble anything yet."); -::must_check_compound; }
 //	-::must_check_compound;
-//	.
-//+!check_compound
-//	: default::desired_base(Base)
-//<-
-//	.print("*************************************** Checking if we can assemble compound items");
-////	.print(Base);
-//	!estimates::compound_estimate(Items);
-//    .
+ 	.
 
 // ### PRICED JOBS ###
 @priced_job[atomic]
@@ -89,7 +92,9 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 //	-action::reasoning_about_belief(Id);
 	.
 +!accomplished_priced_job(Id,Storage,Items)
+	: not entroo
 <-
+	+entroo;
 	!estimates::priced_estimate(Id,Items);
 	.print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ",Id," is feasible! ");
     !allocate_delivery_tasks(Id,Items,Storage);
@@ -101,19 +106,43 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	-action::reasoning_about_belief(Id);
     .
  
-+!allocate_delivery_tasks(Id,[],DeliveryPoint).
-+!allocate_delivery_tasks(Id,[required(Item,Qtd)|Items],DeliveryPoint)
-	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer),ListAgents)
+//+!allocate_delivery_tasks(Id,[],DeliveryPoint).
+//+!allocate_delivery_tasks(Id,[required(Item,Qtd)|Items],DeliveryPoint)
+//	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer),ListAgents)
+//<-     
+//	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,ListAgents,CNPBoardName);
+//       
+//    !cnpd::evaluate_bids(Id,required(Item,Qtd),CNPBoardName,AwardedBids);
+//       
+//    !cnpd::award_agents(Id,DeliveryPoint,Item,Qtd,AwardedBids);
+//       
+//    !cnpd::enclose(CNPBoardName);
+//
+//    !allocate_delivery_tasks(Id,Items,DeliveryPoint);
+//    .
+    
++!allocate_tasks(Module,Id,Task,Roles,DeliveryPoint)
+	: .findall(Agent,default::play(Agent,Role,_) & .member(Role,Roles),ListAgents)
 <-     
-	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,ListAgents,CNPBoardName);
+//	announce(Task,10000,ListAgents,CNPBoardName);
+//	announce(Task,10000,[vehicle1,vehicle3,vehicle5,vehicle14,vehicle28],CNPBoardName);
+	announce(Task,10000,ListAgents,CNPBoardName);
+//	!Module::announce(Task,10000,Id,ListAgents,CNPBoardName);
        
-    !cnpd::evaluate_bids(Id,required(Item,Qtd),CNPBoardName,AwardedBids);
+    getBidsTask(Bids) [artifact_name(CNPBoardName)];
+	if (.length(Bids) \== 0) {		
+		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> evaluating bids");
+		!Module::evaluate_bids(Id,Task,Bids);
        
-    !cnpd::award_agents(Id,DeliveryPoint,Item,Qtd,AwardedBids);
-       
-    !cnpd::enclose(CNPBoardName);
-
-    !allocate_delivery_tasks(Id,Items,DeliveryPoint);
+	    !Module::award_agents(CNPBoardName,DeliveryPoint,Winners);
+	    .print("Winners: ",Winners);
+	    award(Winners);
+	}
+	else {
+		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
+		.fail(noBids);
+	} 
+	clear(CNPBoardName);  
     .
 
 +!accomplished_priced_job(Id,Storage,Items)
@@ -314,27 +343,5 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	if (FreeTotal >= 25) { !!create_item_tasks; }
 	.
 
-@checkAssemble[atomic]
-+default::available_items(Storage,Its)
-	: Its \== []
-<-
-	.print("Storage ",Storage," updated stock: ",Its);
-	!estimates::compound_estimate(Items);
-	if (Items \== []) { 
-		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 
-		.term2string(Items,ItemsS);
-		+action::reasoning_about_belief(Storage);
-		!!announce(Storage,ItemsS);
-	}
-	else { .print("££££££££££ Can't assemble anything yet."); }
- 	.
- 	
-+!announce(Id,ItemsS)
-	: max_bid_time(Deadline) & max_bidders(Agents)
-<-
-	default::announce(ItemsS,Deadline,Agents,ContractNetName);
-	getBidsTask(Bids) [artifact_name(ContractNetName)];
-	.print("%%%%%%%%%%%%%%%% Bids ",Bids);
-	-action::reasoning_about_belief(Id);
-	.
+
 	

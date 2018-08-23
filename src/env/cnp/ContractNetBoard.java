@@ -23,7 +23,7 @@ public class ContractNetBoard extends Artifact {
 	private ArrayList<Literal> bids;
 	
 	void init(String taskDescr, long duration, int agents){
-		logger = Logger.getLogger(""+this.getId());
+		logger = Logger.getLogger(""+this.getId()+" ag "+agents);
 		state = true;
 		bids = new ArrayList<Literal>();
 		bidders = new HashSet<String>();

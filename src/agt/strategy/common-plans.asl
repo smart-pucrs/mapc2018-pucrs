@@ -75,6 +75,72 @@
 	-+minimum_money(MinimumCost);
 	.
 	
+// ### AWARD ###
++default::winner(Me,assembly,Duty,Tasks,TaskId)
+	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_) & default::actionID(Id)
+<-
+	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
+	+::winner(Me,assembly,Duty,Tasks,TaskId);
+	
+	org::focusWhenAvailable(STaskId)[wid(OrgId)];
+//	lookupArtifact(STaskId,SchArtId)[wid(OrgId)];
+//	org::focus(SchArtId)[wid(OrgId)];
+	!action::forget_old_action(Id);
+	
+ 	!change_role(CurrentRole,assembler);
+ 	
+ 	if (.member(assemble(_,_),Duty)){
+ 		.print("commit assemble");
+ 		org::commitMission(massemble)[artifact_id(SchArtId)];
+ 	} else{
+ 		.print("commit assist");
+ 		org::commitMission(massist)[artifact_id(SchArtId)];
+ 	}	
+	.
+//+default::winner(Me,assembly,Duty,Tasks,TaskId)
+//	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_)
+//<-
+//	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
+//	+::winner(Me,assembly,Duty,Tasks,TaskId);
+//	
+//	!action::forget_old_action(Id);
+//	
+//	!prepare_assembly(TaskId,Duty);
+//	
+// 	!change_role(CurrentRole,assembler);
+// 	
+//// 	?::scheme_to_commit(SchemeToCommit);
+//// 	if (.member(assemble(_,_),Duty)){
+//// 		.print("commited to scheme assemble ",SchemeToCommit);
+//// 		org::commitMission(retrieve_assemble)[artifact_name(SchemeToCommit)];
+//// 	} else{
+//// 		.print("commited to scheme assit ",SchemeToCommit);
+//// 		org::commitMission(retrieve_assist)[artifact_name(SchemeToCommit)];
+//// 	}	
+//// 	-::scheme_to_commit(_);
+//	.	
+//+!prepare_assembly(TaskId,[]).
+//+!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
+//	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,NewId) & .my_name(Me)
+//<-
+//	.print("created scheme for ",Item," ",Qty);
+//	org::createScheme(NewId, assembly, SchArtId)[wid(OrgId)];
+//	org::focus(SchArtId)[wid(OrgId)];
+//	setArgumentValue(assembly_completed,"Assembler",Me)[artifact_id(SchArtId)];
+//	org::commitMission(retrieve_assemble)[artifact_id(SchArtId)];
+////	-+::scheme_to_commit(NewId);
+//   	!prepare_assembly(TaskId,Duty);
+//	.
+//+!prepare_assembly(TaskId,[assist(Assembler,Item)|Duty])
+//	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,NewId)
+//<-	
+//	org::focusWhenAvailable(NewId)[wid(OrgId)];
+//	org::commitMission(retrieve_assist)[artifact_name(NewId)];
+//	.print("commited to mission ",NewId);
+////	-+::scheme_to_commit(NewId);
+//   	!prepare_assembly(TaskId,Duty);
+//	.
+	
 // what builders do
 +!build 
 	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
