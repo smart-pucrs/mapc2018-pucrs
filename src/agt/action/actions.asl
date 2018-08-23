@@ -251,7 +251,7 @@
 	!assist_assemble_loop(ServerName);
 	.
 +!assist_assemble_loop(ServerName)
-	: strategies::assembling
+//	: strategies::assembling
 <-
 	!action::commit_action(assist_assemble(ServerName));
 	!assist_assemble_loop(ServerName);
