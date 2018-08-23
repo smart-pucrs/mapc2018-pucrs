@@ -22,12 +22,12 @@
 +!retrieve_items(delivered,Item,Qtd,OldQtd)
 <-
 	!action::retrieve_delivered(Item,Qtd);
-	?hasItem(Item,Qtd+OldQtd);
+	?default::hasItem(Item,Qtd+OldQtd);
 	.
 +!retrieve_items(Type,Item,Qtd,OldQtd)
 <-
 	!action::retrieve(Item,Qtd);
-	?hasItem(Item,Qtd+OldQtd);
+	?default::hasItem(Item,Qtd+OldQtd);
 	.
 -!retrieve_items(Type,Item,Qtd,CurrentQtd)[code(.fail(action(Action),result(Result)))]
 <-
