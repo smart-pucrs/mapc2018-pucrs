@@ -170,6 +170,7 @@ public class TeamArtifact extends Artifact {
 		if (this.desiredBase.containsKey(item)) {
 			this.desiredBase.get(item).addCurrentQty(qty);
 			updateDesiredItems(this.desiredBase, this.obspDesiredBase);
+			signal("baseStored");
 		} else {
 			this.desiredCompound.get(item).addCurrentQty(qty);
 			updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
