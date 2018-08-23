@@ -9,7 +9,7 @@
     "shops" : {
       "density" : 0.8,
       "tradeModMin" : 1,
-      "tradeModMax" : 4
+      "tradeModMax" : 2
     },
     "dumps" : {
       "density" : 0.6
@@ -19,13 +19,13 @@
     },
     "storage" : {
       "density" : 0.8,
-      "capacityMin" : 7500,
+      "capacityMin" : 100,
       "capacityMax" : 15000
     },
     "resourceNodes" : {
-      "density" : 0.7,
-      "thresholdMin" : 10,
-      "thresholdMax" : 20
+      "density" : 0.9,
+      "thresholdMin" : 6,
+      "thresholdMax" : 18
     },
     "wells" : {
       "wellTypesMin" : 3,
@@ -36,34 +36,20 @@
       "efficiencyIncreaseMax" : 5,
       "baseIntegrityMin" : 50,
       "baseIntegrityMax" : 100,
-      "costFactor" : 100
+      "costFactor" : 80
     }
   },
   "items" : {
-    "resourcesMin" : 4,
-    "resourcesMax" : 6,
+    "resourcesMin" : 10,
+    "resourcesMax" : 20,
     "levelDecreaseMin" : 1,
-    "levelDecreaseMax" : 2,
+    "levelDecreaseMax" : 1,
     "graphDepthMin" : 3,
-    "graphDepthMax" : 4,
+    "graphDepthMax" : 3,
     "volMin" : 5,
     "volMax" : 10,
-    "partsMin" : 2,
-    "partsMax" : 8
+    "partsMin" : 3,
+    "partsMax" : 5
   },
-  "jobs" : {
-    "jobProbability" : 0.2,
-    "auctionProbability" : 0.1,
-    "missionProbability" : 0.01,
-    "jobDurationMin" : 50,
-    "jobDurationMax" : 100,
-    "rewardScale" : 5,
-    "rewardModMin" : 100,
-    "rewardModMax" : 200,
-    "itemCountMin" : 2,
-    "itemCountMax" : 10,
-    "auctions" : {
-      "auctionTime" : 5
-    }
-  }
+  "jobs" : "$(jobs/diverseJobs.json)"
 }
