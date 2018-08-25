@@ -180,6 +180,15 @@ public class TeamArtifact extends Artifact {
 		this.defineObsProperty("available_items", litStorage, itemsAux);
 	}
 	
+	@OPERATION void addManufactoredItem(String storage, String item, int qty){		
+		this.desiredCompound.get(item).removeCurrentQty(qty);
+		
+		addAvailableItem(storage, item, qty);
+	}
+	@OPERATION void manufactureItem(String item, int qty){
+		this.desiredCompound.get(item).addCurrentQty(qty);
+	}
+	
 //	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
 //		int remove = -1;
 //		String result = "false";

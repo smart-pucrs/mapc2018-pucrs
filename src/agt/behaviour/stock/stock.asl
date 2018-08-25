@@ -100,3 +100,10 @@
 	!storage::store_items(Storage,Item,Qtd);
 	.
 	
++!store_manufactored_item(Item,Qty,Storage)
+	: default::joined(vehicleart,WArtId)
+<- 
+	default::addManufactoredItem(Storage,Item,Qty)[wid(WArtId)];
+	!storage::store_items(Storage,Item,Qty);
+	.
+	

@@ -46,8 +46,16 @@
 //		if (strategies::free) { !!action::recharge_is_new_skip; }
 //	}
 	.
-+!commit_action(Action) : Action == recharge.
-+!commit_action(Action) : .print(">>>>>>>>>>>>>>>>>>> Plano nao encontrado") & False.
+//+!commit_action(Action) : Action == recharge <- .wait({+default::actionID(_)});.
++!commit_action(Action) : Action == recharge <- .suspend;.
+//+!commit_action(Action) : .print(">>>>>>>>>>>>>>>>>>> Plano nao encontrado ",Action) & False.
++!commit_action(Action)
+	: default::actionID(Id) & action::action(Id,ChosenAction) 
+<-
+	.print("I've already picked an action ",ChosenAction," for ",Id," trying ",Action," next");
+	.wait({+default::actionID(_)}); 
+	!commit_action(Action);
+	.
 
 +!forget_old_action(ActionId) <- !forget_old_action.	
 @forgetAction[atomic]

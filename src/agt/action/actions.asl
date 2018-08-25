@@ -238,7 +238,7 @@
 	: not default::hasItem(ItemId,Qty)
 <-
 	!action::commit_action(assemble(ItemId));
-	!assemble(ItemId,Qty);
+//	!assemble(ItemId,Qty);
 	.
 +!assemble(ItemId,Qty).
 
@@ -248,7 +248,8 @@
 	: true
 <-
 	getServerName(AgentName,ServerName);
-	!assist_assemble_loop(ServerName);
+	!action::commit_action(assist_assemble(ServerName));
+//	!assist_assemble_loop(ServerName);
 	.
 +!assist_assemble_loop(ServerName)
 //	: strategies::assembling

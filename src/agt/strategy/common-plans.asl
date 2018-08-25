@@ -63,9 +63,10 @@
 //+!not_free <- .print("free removed");-free.
 
 +!change_role(OldRole, NewRole)
+	: default::group(_,team,GroupId)
 <-
-	leaveRole(OldRole);
-	adoptRole(NewRole);
+	leaveRole(OldRole)[artifact_id(GroupId)];
+	adoptRole(NewRole)[artifact_id(GroupId)];
 	.
 	
 // how do we pick a minimum money to start building wells
@@ -81,65 +82,46 @@
 <-
 	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
 	+::winner(Me,assembly,Duty,Tasks,TaskId);
-	
-	org::focusWhenAvailable(STaskId)[wid(OrgId)];
-//	lookupArtifact(STaskId,SchArtId)[wid(OrgId)];
-//	org::focus(SchArtId)[wid(OrgId)];
+
 	!action::forget_old_action(Id);
 	
  	!change_role(CurrentRole,assembler);
+
+ 	!prepare_assembly(TaskId,Duty);
+ 	.print("waiting for schemes to start");
  	
- 	if (.member(assemble(_,_),Duty)){
- 		.print("commit assemble");
- 		org::commitMission(massemble)[artifact_id(SchArtId)];
- 	} else{
- 		.print("commit assist");
- 		org::commitMission(massist)[artifact_id(SchArtId)];
- 	}	
+// 	!!strategies::always_recharge;// this is necessary because moise is taking too long to start
 	.
-//+default::winner(Me,assembly,Duty,Tasks,TaskId)
-//	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_)
-//<-
-//	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
-//	+::winner(Me,assembly,Duty,Tasks,TaskId);
-//	
-//	!action::forget_old_action(Id);
-//	
-//	!prepare_assembly(TaskId,Duty);
-//	
-// 	!change_role(CurrentRole,assembler);
-// 	
-//// 	?::scheme_to_commit(SchemeToCommit);
-//// 	if (.member(assemble(_,_),Duty)){
-//// 		.print("commited to scheme assemble ",SchemeToCommit);
-//// 		org::commitMission(retrieve_assemble)[artifact_name(SchemeToCommit)];
-//// 	} else{
-//// 		.print("commited to scheme assit ",SchemeToCommit);
-//// 		org::commitMission(retrieve_assist)[artifact_name(SchemeToCommit)];
-//// 	}	
-//// 	-::scheme_to_commit(_);
-//	.	
-//+!prepare_assembly(TaskId,[]).
-//+!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
-//	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,NewId) & .my_name(Me)
-//<-
-//	.print("created scheme for ",Item," ",Qty);
-//	org::createScheme(NewId, assembly, SchArtId)[wid(OrgId)];
-//	org::focus(SchArtId)[wid(OrgId)];
-//	setArgumentValue(assembly_completed,"Assembler",Me)[artifact_id(SchArtId)];
-//	org::commitMission(retrieve_assemble)[artifact_id(SchArtId)];
-////	-+::scheme_to_commit(NewId);
-//   	!prepare_assembly(TaskId,Duty);
-//	.
-//+!prepare_assembly(TaskId,[assist(Assembler,Item)|Duty])
-//	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,NewId)
-//<-	
-//	org::focusWhenAvailable(NewId)[wid(OrgId)];
-//	org::commitMission(retrieve_assist)[artifact_name(NewId)];
-//	.print("commited to mission ",NewId);
-////	-+::scheme_to_commit(NewId);
-//   	!prepare_assembly(TaskId,Duty);
-//	.
++!prepare_assembly(TaskId,[]).
++!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
+	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
+<-
+	.print("created group and scheme for ",Item," ",Qty);
+	
+	org::createGroup(GroupName, manufactory, GroupId)[artifact_id(OrgId)];
+	org::focus(GroupId)[wid(OrgId)];
+	org::adoptRole(assembler)[artifact_name(GroupName)];
+	org::createScheme(SchemeName, assembly, SchArtId)[wid(OrgId)];	
+	org::setArgumentValue(item_manufactured,"Item",Item)[artifact_id(SchArtId)];
+	org::setArgumentValue(item_manufactured,"Qty",Qty)[artifact_id(SchArtId)];
+	org::focus(SchArtId)[wid(OrgId)];
+	org::addScheme(SchemeName)[artifact_name(GroupName)];
+	org::commitMission(mretrieve)[artifact_id(SchArtId)];
+	org::commitMission(massemble)[artifact_id(SchArtId)];
+   	!prepare_assembly(TaskId,Duty);
+	.
++!prepare_assembly(TaskId,[assist(Assembler,Item)|Duty])
+	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName)
+<-	
+ 	.print("fazendo assist");
+	org::focusWhenAvailable(GroupName)[wid(OrgId)];
+	org::adoptRole(assistant)[artifact_name(GroupName),wid(OrgId)];
+	org::focusWhenAvailable(SchemeName)[wid(OrgId)];
+	org::commitMission(mretrieve)[artifact_name(SchemeName),wid(OrgId)];
+	org::commitMission(massist)[artifact_name(SchemeName),wid(OrgId)];
+	.print("finished assist");
+   	!prepare_assembly(TaskId,Duty);
+	.
 	
 // what builders do
 +!build 

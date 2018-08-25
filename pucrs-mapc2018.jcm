@@ -244,8 +244,8 @@ mas scenario {
 		artifact task_board: cnp.TaskBoard()
 	}
 	
-	organisation org {
-		group g1 : team
+	organisation org : org.xml{
+		group g1 : team		
 	}
 
     asl-path: src/agt

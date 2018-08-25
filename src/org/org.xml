@@ -2,30 +2,43 @@
 <organisational-specification xmlns="http://moise.sourceforge.net/os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="autoId_0" os-version="0.7" xsi:schemaLocation="http://moise.sourceforge.net/os http://moise.sourceforge.net/xml/os.xsd">
 
 <structural-specification>
-<role-definitions>
- <role id="builder" />
- <role id="worker" />
- <role id="gatherer" />
- <role id="deliveryagent" />
-</role-definitions>
-
-<group-specification id="team">
- <roles>
-  <role id="builder" />
-  <role id="worker" />
-  <role id="attacker" />
-  <role id="explorer" />
-  <role id="explorer_drone" />
-  <role id="gatherer" />
-  <role id="assembler" />
-  <role id="deliveryagent" />
- </roles>
-</group-specification>
-
+	<role-definitions>
+	 <role id="builder" />
+	 <role id="worker" />
+	 <role id="attacker" />
+	 <role id="explorer" />
+	 <role id="explorer_drone" />
+	 <role id="gatherer" />	 
+	 <role id="deliveryagent" />
+	 <role id="assembler" />
+	 <role id="assistant" />	
+	</role-definitions>
+	
+	<group-specification id="smart_jacamo">
+	 <subgroups>
+	 	<group-specification id="manufactory">
+	 		<roles>
+	 		  <role id="assembler" min="1" max="1"/>
+			  <role id="assistant" />			  
+			 </roles>
+	 	</group-specification>
+	 	<group-specification id="team">
+	 		<roles>
+			  <role id="builder" />
+			  <role id="worker" />
+			  <role id="attacker" />
+			  <role id="explorer" />
+			  <role id="explorer_drone" />
+			  <role id="gatherer" />
+			  <role id="assembler" />
+			  <role id="deliveryagent" />
+			 </roles>
+	 	</group-specification>
+	 </subgroups>
+	</group-specification>
 </structural-specification>
 
 <functional-specification>
-
 <scheme id="exp">
   <goal id="exploration_completed" type="performance">
     <plan operator="sequence">
@@ -36,39 +49,25 @@
 
   <mission id="mexplore">
     <goal id="explore"/>
-  </mission>
-  
+  </mission>  
 </scheme>
 
-
-<scheme id="st">
-  <goal id="task_completed" type="performance">
+<scheme id="assembly">
+  <goal id="item_manufactured" type="performance">
     <plan operator="sequence">
-      <goal id="phase1" type="performance">
-        <plan operator="parallel">
-          <goal id="assistp1" type="performance">
-            <plan operator="sequence">
-              <goal id="gather_items" type="performance"/>
-            </plan>
-          </goal>
-          <goal id="assemblep1" type="performance">
-            <plan operator="sequence">
-              <goal id="gather_items_assemble" type="performance"/>
-            </plan>
-          </goal>
-        </plan>
-      </goal>
-      <goal id="phase2" type="performance">
-        <plan operator="parallel">
-          <goal id="assistp2" type="performance">
+      <goal id="retrive_items" type="performance"/>
+      <goal id="prepare" type="performance">
+        <plan operator="parallel">          
+          <goal id="prepare_assist" type="performance">
             <plan operator="sequence">
               <goal id="assist_assemble" type="performance"/>
             </plan>
           </goal>
-          <goal id="assemblep2" type="performance">
+          <goal id="prepare_assemble" type="performance">
             <plan operator="sequence">
-              <goal id="do_assemble" type="performance"/>
-              <goal id="stop_assist_assemble" type="performance"/>
+              <goal id="assemble" type="performance"/>
+              <goal id="stop_assist" type="performance"/>
+              <goal id="delivery" type="performance"/>
             </plan>
           </goal>
         </plan>
@@ -76,57 +75,18 @@
     </plan>
   </goal>
 
+  <mission id="mretrieve">
+  	<goal id="retrive_items"/>  	
+  </mission>
   <mission id="massemble">
-    <goal id="do_assemble"/>
-    <goal id="gather_items_assemble"/>
-  </mission>
-  <mission id="massist">
-    <goal id="stop_assist_assemble"/>
-    <goal id="assist_assemble"/>
-    <goal id="gather_items"/>
-  </mission>  
-</scheme>
-
-<scheme id="assembly">
-  <goal id="assembly_completed" type="performance">
-  	<argument id="Assembler" />
-	<plan operator="parallel">
-       <goal id="assist" type="performance"/>
-       <goal id="assemble_item" type="performance">
-        <plan operator="sequence">
-         <goal id="assemble"></goal>
-         <goal id="stop_assist"/>
-        </plan>
-       </goal>
-	</plan>
-  </goal>
-
-  <mission id="massemble" min="1">
     <goal id="assemble"/>
+    <goal id="delivery"/>
   </mission>
   <mission id="massist">
-    <goal id="assist"/>
+    <goal id="assist_assemble"/>
     <goal id="stop_assist"/>
   </mission>  
 </scheme>
-
-<scheme id="retrieve">
-  <goal id="retrieve_completed" type="performance">
-  	<argument id="Workshop" />
-	<plan operator="parallel">
-       <goal id="retrive_items" type="performance"/>
-       <goal id="retrive_items_assemble" type="performance"/>
-	</plan>
-  </goal>
-
-  <mission id="massemble">
-    <goal id="retrive_items_assemble"/>
-  </mission>
-  <mission id="massist">
-    <goal id="retrive_items"/>
-  </mission>
-</scheme>
-
 </functional-specification>
 
 <normative-specification>

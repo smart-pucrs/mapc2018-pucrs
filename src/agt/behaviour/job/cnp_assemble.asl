@@ -132,21 +132,11 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 	!award_task(DeliveryPoint,RBids);
 	
 	.findall(winner(Name,assembly,Duty,Tasks,TaskId),::awarded_agent(Name,Role,Load,Duty,Tasks) & not (Duty == [] & Tasks == []),Winners);
-	
-	!create_scheme(TaskId);
-	
+		
 	.abolish(::selected_bids(_));
 	.abolish(::awarded_agent(_,_,_,_,_));
 	.abolish(::constraint_role(_,_));
 	.abolish(::selected_task(_,_,_));
-	.
-
-+!create_scheme(Id)
-	: default::joined(org,OrgId) & .term2string(Id,SId) & strategies::centerWorkshop(Workshop)
-<-
-	org::createScheme(SId, retrieve, SchArtId)[wid(OrgId)];
-//	setArgumentValue(goto_meeting_point,"Workshop",Workshop)[artifact_id(SchArtId)];
-	.print("created scheme for ",Id);
 	.
 	
 assembler(Compound,Qty,Name)

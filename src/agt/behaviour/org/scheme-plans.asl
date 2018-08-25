@@ -1,102 +1,119 @@
-{ include("behaviour/org/scheme-retrieve.asl") }
-{ include("behaviour/org/scheme-assembly.asl") }
-
 +!remove_scheme(TaskId)	
 	: default::joined(org,OrgId) & .term2string(TaskId,TaskIdS)
 <-
 	removeScheme(TaskIdS)[wid(OrgId)];
+	
 //	destroy[artifact_name(TaskId)];
 	.
 -!remove_scheme(TaskId).
 
++goalState(Scheme,item_manufactured,_,_,satisfied)
+//	: ::schemes(Schemes)[artifact_id(GroupId)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(OId)] & default::joined(org,OrgId)
+	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(OId)] & default::joined(org,OrgId)
+<-
+   .print("*** Compound Item done for ",Scheme,"! ***");   
+   	.print("vai retirar scheme");
+   	org::removeScheme(Scheme)[wid(OrgId)];
+   	.print("vai destruir grupo ",OId," ",GroupId);
+//   	org::destroyGroup(GroupId)[artifact_id(OrgId)];
+//	org::destroy[artifact_id(GroupId)];
+//	org::destroyGroup(GroupName)[artifact_id(OrgId)];
+//   	destroyGroup(GroupId)[artifact_id(OId),wid(OrgId)];
+//   	.print("vai remover focus");
+//	destroy[artifact_name(TaskId)];
+//	-focused(TaskId,_,_);
+   	.
 
-//+goalState(TaskId,task_completed,_,_,satisfied)
-//	: bidder::winner(_,_,_,_,assemble,_,_,_,_)
-//<-
-//   .print("*** all done! ***");
-//   .term2string(TaskId,TaskIdS);
-//   removeScheme(TaskIdS);
-//   .
-//  
-//@explorationDone[atomic]
-//+goalState(TaskId,exploration_completed,_,_,satisfied)
-//	: .my_name(vehicle1)
-//<-
-//	!strategies::not_free;
-//	.print("*** exploration all done! ***");
-//	.term2string(TaskId,TaskIdS);
-//	removeScheme(TaskIdS);
-//	!initiator::create_item_tasks;
-//   .
-//@explorationDone2[atomic]
-//+goalState(_,exploration_completed,_,_,satisfied)
-//<-
-//	!strategies::not_free;
-//   .
-//   
-//+!gather_items
-//	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
-//<-
-// 	!strategies::not_free;
-//	!gather::go_gather(Base,NBase);
-//	.print("Finished gathering.");
-//	!action::goto(Workshop);
-//	!!check_state;
-//	.
-//	
-//+!gather_items_assemble
-//	: bidder::winner(Base,NBase,_,_,_,_,_,Workshop,_)
-//<-
-// 	!strategies::not_free;
-//	!gather::go_gather(Base,NBase);
-//	.print("Finished gathering.");
-//	!action::goto(Workshop);
-//	!!check_state;
-//	.
-//	
-//+!check_state : not goalState(JobId,phase1,_,_,satisfied) <- !!strategies::free.
-//+!check_state.
-//
-//+!do_assemble
-//	: bidder::winner(_,_,Qty,Item,_,_,Storage,Workshop,_)
-//<-
-//	!action::forget_old_action(Id);
-// 	+action::committedToAction(Id);
-// 	.print("Ready to perform the assemble");
-//	!strategies::not_free;
-//	!assemble::assemble(Item,Qty);
-//	!!trade::go_trade(Item,Qty);
-////	!!go_store(Item,Qty,Storage);
-//	.
-//
-//+!go_store(Item,Qty,Storage)
-//<-
-//	!stock::store_items(Item,Qty,Storage);
-//	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
-//	!strategies::change_role(gatherer,worker);
-//	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
-//	!!strategies::free;
-//	.
-//	
-//+!assist_assemble
-//	: bidder::winner(_,_,_,_,_,Assembler,_,_,_)
-//<-
-//	!action::forget_old_action(Id);
-// 	+action::committedToAction(Id);
-// 	.print("Ready to perform the assist assemble");
-//	!strategies::not_free;
-//	+strategies::assembling;
-//	!!assemble::assist_assemble(Assembler);
-//	.
-//	
-//+!stop_assist_assemble
-//	: bidder::winner(_,_,_,_,_,_,_,_,_) & default::role(Role, _, _, _, _, _, _, _, _, _, _)
-//<-
-//	-strategies::assembling;
-//	-bidder::winner(_,_,_,_,_,_,_,_,_)[source(_)];
-//	!strategies::change_role(gatherer,worker);
-////	for ( default::hasItem(ItemId,Qty) ) { .print(">>>>>>>>> Assist assemble ended, I have #",Qty," of ",ItemId); }
-////	!!strategies::empty_load;
-//	.send(vehicle1,achieve,initiator::add_agent_to_free(Role));
-//	!!strategies::free;
-//	.
++!retrive_items
+	: .intend(::retrive_items)
+<-
+	.print("I'm already collecting items");
+	.suspend;
+	.
++!retrive_items
+	: strategies::winner(Name,Type,Duty,Tasks,TaskId) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop)
+<-
+	!action::goto(Storage);
+	!stock::store_all_items(Storage);
+	!go_retrieve(Tasks);
+	!action::goto(Workshop);	
+	-strategies::winner(Name,Type,Duty,Tasks,TaskId); // at this point we won't use this belief anymore	
+	!!strategies::always_recharge;
+	.resume(::retrive_items);
+	.
++!go_retrieve([])
+<-
+	.print("I've collected all items");	
+	.
++!go_retrieve([retrieve(Storage,Item,Qty)|Tasks])
+<-
+	.print("My team needs ",Item," ",Qty);
+	!action::goto(Storage);
+	!stock::retrieve_items(Item,Qty,Storage);
+	!go_retrieve(Tasks);
+	.
+
++!assist_assemble[scheme(Scheme)]
+	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName)
+<-
+	.print("doing assisting ",Assembler);
+	!assemble::assist_assemble(Assembler);
+	!assist_assemble[scheme(Scheme)];
+	.
++!stop_assist[scheme(Scheme)]
+	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName) & default::joined(org,OrgId) 
+<-
+	.print("stop assisting to ",Assembler);
+//	.succeed_goal(assemble::assist_assemble(Assembler));
+    .drop_desire(assemble::assist_assemble(Assembler));
+    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
+	.print("stopped ",Assembler);
+	
+	if (not .desire(::assemble) & not .desire(::assist_assemble) ){
+		!!go_back_to_work;
+	}
+	.
+	   
++!assemble[scheme(Scheme)]
+	: ::goalArgument(Scheme,_,"Item",SItem) & .term2string(Item,SItem) & ::goalArgument(Scheme,_,"Qty",Qty)
+<-
+	!do_assemble(Scheme,Item,Qty);
+	. 
++!do_assemble(Scheme,Item,Qty)
+	: default::hasItem(Item,Qty)
+	.  
++!do_assemble(Scheme,Item,Qty)
+	: default::joined(org,OrgId) 
+<-
+//	org::resetGoal(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
+	!assemble::assemble(Item,Qty);
+	!do_assemble(Scheme,Item,Qty);
+	.    
+	
++!delivery[scheme(Scheme)]
+	: .desire(::assemble) | .desire(::assist_assemble) 
+<-
+	.print("I still have to help my teammates");
+	.suspend;	
+	.
++!delivery[scheme(Scheme)]
+	: default::hasItem(_,_) & strategies::centerStorage(Storage)
+<-
+	.print("I'm going to delivery items");
+	!action::forget_old_action(Id);
+	!action::goto(Storage);
+	for(default::hasItem(Item,Qty)){
+		!stock::store_manufactored_item(Item,Qty,Storage)
+	}	
+	.resume(::delivery);
+	!!go_back_to_work;
+	.
+	
++!go_back_to_work
+	: .my_name(Me) & default::play(Me,CurrentRole,_)
+<-
+	.print("I'm going back to work");
+	!action::forget_old_action(Id);
+	!strategies::change_role(CurrentRole,gatherer);
+	!strategies::gather;
+	.
