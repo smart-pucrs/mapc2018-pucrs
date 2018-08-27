@@ -58,11 +58,34 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	
 // ### ASSEMBLE COMPOUND ITEMS ###
 //@checkAssemble[atomic]
++!criar_grupo
+<-
+	.print("Testando o grupo");
+	?default::joined(org,OrgId);
+//	?default::focused(_,org,OId);
+	lookupArtifact(org,OId)[wid(OrgId)];
+	org::createGroup(oteste, manufactory, GroupId)[artifact_id(OId),wid(OrgId)];
+	org::createScheme(steste, assembly, SchArtId)[wid(OrgId)];
+	org::focus(GroupId)[wid(OrgId)];	
+//	org::debug("teste")[artifact_name(oteste)];
+	org::adoptRole(assembler)[artifact_name(oteste)];
+	org::addScheme(steste)[artifact_name(oteste)];
+	.print("grupo criado");
+//	org::destroy[artifact_name(oteste)];
+//	.abolish(org::focused(_,oteste,_)); // why do I have to use abolish?
+	.print("destrui local");	
+	org::removeScheme(steste)[wid(OrgId)];
+	org::destroyGroup(oteste)[artifact_id(OId),wid(OrgId)];
+	.print("FIm do teste");
+	.
 +default::baseStored
 	: not ::must_check_compound  & strategies::centerStorage(Storage)
 <-
 	+::must_check_compound;
 	.wait(default::actionID(_));
+	
+//	!!criar_grupo;
+	
 //	addAvailableItem(storage0,item0,10); // pode ser util para fazer os testes da aloção do assemble
 //	addAvailableItem(storage0,item1,10);
 //	addAvailableItem(storage0,item2,10);

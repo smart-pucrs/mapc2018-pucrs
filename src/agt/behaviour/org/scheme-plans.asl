@@ -1,27 +1,23 @@
-+!remove_scheme(TaskId)	
-	: default::joined(org,OrgId) & .term2string(TaskId,TaskIdS)
++!clean_scheme(Scheme,AOrgId,WOrgId)	
 <-
-	removeScheme(TaskIdS)[wid(OrgId)];
-	
-//	destroy[artifact_name(TaskId)];
+//	.abolish(org::focused(_,Scheme,_)); 
+	org::destroyScheme(Scheme)[artifact_id(AOrgId),wid(WOrgId)];
 	.
--!remove_scheme(TaskId).
+-!clean_scheme(Scheme,AOrgId,WOrgId).
+
++!clean_group(GroupName,AOrgId,WOrgId)	
+<-   	
+//	.abolish(org::focused(_,GroupName,_)); // why do I have to use abolish?
+   	org::destroyGroup(GroupName)[artifact_id(AOrgId),wid(WOrgId)];   	
+	.
+-!clean_group(GroupName,AOrgId,WOrgId).
 
 +goalState(Scheme,item_manufactured,_,_,satisfied)
-//	: ::schemes(Schemes)[artifact_id(GroupId)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(OId)] & default::joined(org,OrgId)
-	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(OId)] & default::joined(org,OrgId)
+	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(AOrgId)] & default::joined(org,WOrgId)
 <-
-   .print("*** Compound Item done for ",Scheme,"! ***");   
-   	.print("vai retirar scheme");
-   	org::removeScheme(Scheme)[wid(OrgId)];
-   	.print("vai destruir grupo ",OId," ",GroupId);
-//   	org::destroyGroup(GroupId)[artifact_id(OrgId)];
-//	org::destroy[artifact_id(GroupId)];
-//	org::destroyGroup(GroupName)[artifact_id(OrgId)];
-//   	destroyGroup(GroupId)[artifact_id(OId),wid(OrgId)];
-//   	.print("vai remover focus");
-//	destroy[artifact_name(TaskId)];
-//	-focused(TaskId,_,_);
+   	.print("*** Compound Item deliveried for ",Scheme,"! ***");  
+   	!clean_scheme(Scheme,AOrgId,WOrgId); 
+   	!clean_group(GroupName,AOrgId,WOrgId);
    	.
 
 +!retrive_items
@@ -74,8 +70,13 @@
 	}
 	.
 	   
+//+!assemble[scheme(Scheme)]
+//	: ::goalArgument(Scheme,_,"Item",SItem) & .term2string(Item,SItem) & ::goalArgument(Scheme,_,"Qty",Qty)
+//<-
+//	!do_assemble(Scheme,Item,Qty);
+//	. 
 +!assemble[scheme(Scheme)]
-	: ::goalArgument(Scheme,_,"Item",SItem) & .term2string(Item,SItem) & ::goalArgument(Scheme,_,"Qty",Qty)
+	: ::goalArgument(Scheme,_,"Item",Item) & ::goalArgument(Scheme,_,"Qty",Qty)
 <-
 	!do_assemble(Scheme,Item,Qty);
 	. 

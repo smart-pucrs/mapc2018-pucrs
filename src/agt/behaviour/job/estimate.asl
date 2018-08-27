@@ -86,7 +86,7 @@ calculate_lot(Item,DesiredQty,Lot)
 	: default::item(Item,_,_,parts(Parts)) & ::calculate_lot(Item,DesiredQty,Lot)
 <-		
 	.findall(item(TQtd,TItem),::partial_stock(TQtd,TItem),TItems);
-	.print("Our production lot for ",Item," is ",Lot);
+//	.print("Our production lot for ",Item," is ",Lot);
 	!compound_tracking(Parts,Lot,MinimumQty);
 	+::must_assemble(MinimumQty,Item);
 	!compound_priority(List);

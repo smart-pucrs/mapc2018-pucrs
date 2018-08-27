@@ -57,6 +57,20 @@
 	!commit_action(Action);
 	.
 
+//+!forget_old_action(ActionId) <- !forget_old_action.	
+//@forgetAction[atomic]
+//+!forget_old_action
+//	: .desire(action::commit_action(Action))
+//<-
+//	.print("I Have a desire ",Action,", forgetting it");	
+//	.drop_desire(action::commit_action(Action)); // we don't want to follow these plans anymore
+//	if(action::action(ActionId,Action)){
+//		.drop_desire(action::wait_request_for_help(ActionId));
+//		-action::action(ActionId,Action);
+//	}
+//	!forget_old_action;
+//	.
+//+!forget_old_action.
 +!forget_old_action(ActionId) <- !forget_old_action.	
 @forgetAction[atomic]
 +!forget_old_action
@@ -69,6 +83,11 @@
 		-action::action(ActionId,Action);
 	}
 	!forget_old_action;
+	.
++!forget_old_action
+	: .desire(action::SomethingElse) & forget_old_action[source(self)]\==SomethingElse
+<-
+	.print("I forgot my action, but I still have something in mind ",SomethingElse);
 	.
 +!forget_old_action.
 

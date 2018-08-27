@@ -78,7 +78,7 @@
 	
 // ### AWARD ###
 +default::winner(Me,assembly,Duty,Tasks,TaskId)
-	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_) & default::actionID(Id)
+	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_)
 <-
 	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
 	+::winner(Me,assembly,Duty,Tasks,TaskId);
@@ -88,16 +88,11 @@
  	!change_role(CurrentRole,assembler);
 
  	!prepare_assembly(TaskId,Duty);
- 	.print("waiting for schemes to start");
- 	
-// 	!!strategies::always_recharge;// this is necessary because moise is taking too long to start
 	.
 +!prepare_assembly(TaskId,[]).
 +!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
 	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
 <-
-	.print("created group and scheme for ",Item," ",Qty);
-	
 	org::createGroup(GroupName, manufactory, GroupId)[artifact_id(OrgId)];
 	org::focus(GroupId)[wid(OrgId)];
 	org::adoptRole(assembler)[artifact_name(GroupName)];
@@ -113,13 +108,11 @@
 +!prepare_assembly(TaskId,[assist(Assembler,Item)|Duty])
 	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName)
 <-	
- 	.print("fazendo assist");
 	org::focusWhenAvailable(GroupName)[wid(OrgId)];
 	org::adoptRole(assistant)[artifact_name(GroupName),wid(OrgId)];
 	org::focusWhenAvailable(SchemeName)[wid(OrgId)];
 	org::commitMission(mretrieve)[artifact_name(SchemeName),wid(OrgId)];
 	org::commitMission(massist)[artifact_name(SchemeName),wid(OrgId)];
-	.print("finished assist");
    	!prepare_assembly(TaskId,Duty);
 	.
 	

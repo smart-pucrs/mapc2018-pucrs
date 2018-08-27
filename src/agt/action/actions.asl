@@ -59,7 +59,7 @@
 
 // Goto (option 2)
 // Lat and Lon must be floats
-+!goto(Lat, Lon) : going(Lat,Lon) & default::routeLength(R) & R == 0 <- -going(Lat,Lon).
++!goto(Lat, Lon) : default::lat(Lat) & default::lon(Lon).
 +!goto(Lat, Lon)
 	: default::charge(0)
 <-
@@ -67,7 +67,7 @@
 	!goto(Lat, Lon);
 	.
 +!goto(Lat, Lon)
-	: going(Lat,Lon) & default::routeLength(R) & R \== 0
+	: default::routeLength(R) & R \== 0
 <-	
 	!continue;
 	!goto(Lat, Lon);
@@ -77,14 +77,30 @@
 : not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
 <-	
     if (Result == "false") { !go_charge(Lat, Lon); }
-    else { +going(Lat,Lon); !action::commit_action(goto(Lat,Lon)); }
+    else { !action::commit_action(goto(Lat,Lon)); }
 	!goto(Lat, Lon);
 	.
+//// Goto (option 2)
+//// Lat and Lon must be floats
+//+!goto(Lat, Lon) : going(Lat,Lon) & default::routeLength(R) & R == 0 <- -going(Lat,Lon).
 //+!goto(Lat, Lon)
-//	: true
+//	: default::charge(0)
 //<-
-//	+going(Lat,Lon);
-//	!action::commit_action(goto(Lat,Lon));
+//	!recharge;
+//	!goto(Lat, Lon);
+//	.
+//+!goto(Lat, Lon)
+//	: going(Lat,Lon) & default::routeLength(R) & R \== 0
+//<-	
+//	!continue;
+//	!goto(Lat, Lon);
+//	.
+//// Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
+//+!goto(Lat, Lon)
+//: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
+//<-	
+//    if (Result == "false") { !go_charge(Lat, Lon); }
+//    else { +going(Lat,Lon); !action::commit_action(goto(Lat,Lon)); }
 //	!goto(Lat, Lon);
 //	.
 
