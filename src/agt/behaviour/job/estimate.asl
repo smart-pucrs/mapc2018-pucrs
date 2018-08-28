@@ -68,9 +68,16 @@ evaluate_steps
 //	.fail;
 //	.
 
+//calculate_lot(Item,DesiredQty,Lot)
+//:-
+//	Lot = math.ceil(DesiredQty*0.5)
+//	.
 calculate_lot(Item,DesiredQty,Lot)
 :-
-	Lot = math.ceil(DesiredQty*0.5)
+	default::item(Item,Vol,_,_) &
+	MaxQty = math.ceil(100/Vol) & // truck load
+	HalfQty = math.ceil(DesiredQty*0.5) &
+	Lot = math.min(HalfQty,MaxQty)	
 	.
 +!compound_estimate(Items)
 	: new::storageList(SList) & default::desired_compound(CList) & .sort(CList,SCList)
@@ -100,7 +107,7 @@ calculate_lot(Item,DesiredQty,Lot)
 	MinimumQty = Lot;
 	.
 +!compound_tracking([Part|Parts],Lot,MinimumQty)
-	: not ::partial_stock(_,Part)
+	: not ::partial_stock(_,Part) | ::partial_stock(0,Part)
 <-
 	.fail;
 	.
