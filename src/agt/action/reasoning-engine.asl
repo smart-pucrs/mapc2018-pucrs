@@ -18,7 +18,9 @@
 //	}
 	
 	!!wait_request_for_help(Id)
-	.wait( default::actionID(Id2) & Id2 \== Id & not action::reasoning_about_belief(_)); 
+//	.wait( default::actionID(Id2) & Id2 \== Id & not action::reasoning_about_belief(_)); 
+	.wait({+default::actionID(_)}); 
+	.wait(not action::reasoning_about_belief(_)); 
 	
 	-action::action(Id,Action);
 	-action::action_sent(Id);
@@ -57,39 +59,55 @@
 	!commit_action(Action);
 	.
 
-//+!forget_old_action(ActionId) <- !forget_old_action.	
-//@forgetAction[atomic]
-//+!forget_old_action
-//	: .desire(action::commit_action(Action))
-//<-
-//	.print("I Have a desire ",Action,", forgetting it");	
-//	.drop_desire(action::commit_action(Action)); // we don't want to follow these plans anymore
-//	if(action::action(ActionId,Action)){
-//		.drop_desire(action::wait_request_for_help(ActionId));
-//		-action::action(ActionId,Action);
-//	}
-//	!forget_old_action;
-//	.
-//+!forget_old_action.
-+!forget_old_action(ActionId) <- !forget_old_action.	
-@forgetAction[atomic]
-+!forget_old_action
-	: .desire(action::commit_action(Action))
++!update_percepts
+	: ::action_sent(Id)
 <-
-	.print("I Have a desire ",Action,", forgetting it");	
-	.drop_desire(action::commit_action(Action)); // we don't want to follow these plans anymore
+//	if(.desire(action::commit_action(Action))){
+//		.print("I feel an action ",Action);
+//	}
+	
+	.print("An action has been sent to the Server, I have to wait for the perceptions to be updated");
+	.wait(default::actionID(Id2) & Id2 \== Id)
+	. 
++!update_percepts.
+@forgetParticularGoal[atomic]
++!forget_old_action(Module,Goal) 
+	: not ::action_sent(_)
+<- 
+	.print("I Have a desire ",Goal,", forgetting it");
+	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
 	if(action::action(ActionId,Action)){
 		.drop_desire(action::wait_request_for_help(ActionId));
 		-action::action(ActionId,Action);
 	}
-	!forget_old_action;
+	.	
++!forget_old_action(Module,Goal) 
+<-	
+	!update_percepts;
+	!forget_old_action(Module,Goal) ;
+	.
+@forgetCommitAction[atomic]
++!forget_old_action
+	: not ::action_sent(_)
+<-
+	.print("Dropping all intentions that aim to send an action to the Server");
+//	if(.desire(strategies::G) | .desire(explore::G)){
+//		.print("I feel a goal ",G);
+//	}
+	.drop_future_intention(action::commit_action(_)); // we don't want to follow these plans anymore
+//	if(.desire(strategies::G2)|.desire(explore::G2)){
+//		.print("I feel a goal2 ",G2);
+//	}
+	if(action::action(ActionId,Action)){
+		.drop_desire(action::wait_request_for_help(ActionId));
+		-action::action(ActionId,Action);
+	}
 	.
 +!forget_old_action
-	: .desire(action::SomethingElse) & forget_old_action[source(self)]\==SomethingElse
-<-
-	.print("I forgot my action, but I still have something in mind ",SomethingElse);
+<-	
+	!update_percepts;
+	!forget_old_action;
 	.
-+!forget_old_action.
 
 +default::chosenActions(ActionId, Agents) // all the agents have chosen their actions
 	: .length(Agents) == 34

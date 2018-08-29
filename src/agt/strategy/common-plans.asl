@@ -23,7 +23,7 @@
 : default::team(MyTeam) & not .substring(MyTeam, Team) & rules::my_role(builder,CurrentRole) & default::actionID(Id)
 <-
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Id);
-	!action::forget_old_action(Id);
+	!action::forget_old_action;
  	+action::committedToAction(Id);
 	
 	!change_role(CurrentRole,attacker);
@@ -42,7 +42,7 @@
 +default::massim(Money)
 	: rules::my_role(builder,CurrentRole) & not .desire(build::_) & rules::enough_money
 <-
-	!action::forget_old_action(Id);
+	!action::forget_old_action;
  	+action::committedToAction(Id);
 	
 	!build;
@@ -80,14 +80,18 @@
 +default::winner(Me,assembly,Duty,Tasks,TaskId)
 	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_)
 <-
+//	+action::reasoning_about_belief(TaskId);
 	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
 	+::winner(Me,assembly,Duty,Tasks,TaskId);
 
-	!action::forget_old_action(Id);
+	!action::forget_old_action;
+	.drop_desire(::gather(_));
+//	.drop_desire(explore::_);
 	
  	!change_role(CurrentRole,assembler);
 
  	!prepare_assembly(TaskId,Duty);
+// 	-action::reasoning_about_belief(TaskId);
 	.
 +!prepare_assembly(TaskId,[]).
 +!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
@@ -140,7 +144,7 @@
 +!prepare_to_delivery
 	: .my_name(Me) & default::play(Me,CurrentRole,_)
 <-
-	!action::forget_old_action(Id);
+	!action::forget_old_action;
  	+action::committedToAction(Id);
  	
  	.print("I was a ",CurrentRole);

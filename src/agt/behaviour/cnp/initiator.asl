@@ -82,7 +82,9 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	: not ::must_check_compound  & strategies::centerStorage(Storage)
 <-
 	+::must_check_compound;
-	.wait(default::actionID(_));
+	.print("Chamou o Based Stored");
+	+action::reasoning_about_belief(Storage);
+	.wait({+default::actionID(_)});
 	
 //	!!criar_grupo;
 	
@@ -91,18 +93,19 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 //	addAvailableItem(storage0,item2,10);
 //	addAvailableItem(storage0,item3,10);
 //	addAvailableItem(storage0,item4,10);
+	
 	!estimates::compound_estimate(Items);
 	if (Items \== []) { 
 		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 
 		.term2string(Items,ItemsS);
-		+action::reasoning_about_belief(Storage);
-		!allocate_tasks(cnpa,none,assemble(Items),[gatherer,explorer_drone],Storage);
-		-action::reasoning_about_belief(Storage);
+		
+		!allocate_tasks(cnpa,none,assemble(Items),[gatherer,explorer_drone],Storage);		
 	}
 	else { 
 		.print("££££££££££ Can't assemble anything yet."); 
 //		-::must_check_compound;
 	}
+	-action::reasoning_about_belief(Storage);
 	-::must_check_compound;
  	.
 
@@ -160,7 +163,7 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 		!Module::evaluate_bids(Id,Task,Bids);
        
 	    !Module::award_agents(CNPBoardName,DeliveryPoint,Winners);
-	    .print("Winners: ",Winners);
+	    .print("### Winners: ",Winners);
 	    award(Winners);
 	}
 	else {

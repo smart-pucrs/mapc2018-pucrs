@@ -93,7 +93,8 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 	.print("Task ",Item," ",PQty," is feasible in ",NewMax," steps");	
 	!selected_task(IParts,Item,PQty);
 	!selected_task_assemble(IRoles,Item,PQty);
-	!evaluate_task(Tasks,TLoad,TRoles,TempLoad+(PQty*PVolume),NewMax,Bids);
+//	!evaluate_task(Tasks,TLoad,TRoles,TempLoad+(PQty*PVolume),NewMax,Bids);
+	!evaluate_task([],TLoad,TRoles,TempLoad+(PQty*PVolume),NewMax,Bids); // I just want one task for evaluation, we need to fix coordination at moise
 	.
 +!evaluate_task([item(Item,Qty)|Tasks],TLoad,TRoles,TempLoad,MaxStep,Bids)
 <-
@@ -108,16 +109,16 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 	.	
 +!selected_task([],Compound,Qty).
 +!selected_task([PItem|Parts],Compound,Qty)	
-	: not ::selected_task(PItem,Compound,_) & default::item(PItem,Vol,_,_)
+	: not ::selected_task(PItem,Compound,_,_) & default::item(PItem,Vol,_,_)
 <-
-	+::selected_task(PItem,Compound,Qty);
+	+::selected_task(PItem,Compound,Qty,entire);
 	!selected_task(Parts,Compound,Qty);
 	.
 +!selected_task([PItem|Parts],Compound,Qty)	
-	: ::selected_task(PItem,Compound,OldQty) & default::item(PItem,Vol,_,_)
+	: ::selected_task(PItem,Compound,OldQty,Type) & default::item(PItem,Vol,_,_)
 <-
-	-::selected_task(PItem,Compound,_);
-	+::selected_task(PItem,Compound,Qty+OldQty);
+	-::selected_task(PItem,Compound,_,_);
+	+::selected_task(PItem,Compound,Qty+OldQty,Type);
 	!selected_task(Parts,Compound,Qty);
 	.
 
@@ -126,17 +127,31 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 	: ::selected_bids(Bids) & .sort(Bids,SortedBids) & .reverse(SortedBids,RBids)
 <-
 	.print("Sorted bids ",RBids," to ",DeliveryPoint);
+	
+//	for(::selected_task(TPItem,TCompound,TQty,_)){
+//		.print("selected task ",TPItem," ",TCompound," ",TQty);
+//	}
+	
 	for(.member(bid(Load,Role,Name),RBids)){
 		+::awarded_agent(Name,Role,Load,[],[]);
 	}
 	!award_task(DeliveryPoint,RBids);
 	
+	for(::awarded_agent(Name,Role,Load,Duty,Tasks)){
+		for(.member(assemble(Item,Qty),Duty)){
+			manufactureItem(Item, Qty);
+		}
+		for(.member(retrieve(Storage,Item,Qty),Tasks)){
+//			.print("retrieve ",Storage," ",Item," ",Qty);
+			removeAvailableItem(Storage,Item,Qty,Result);
+		}
+	}		
 	.findall(winner(Name,assembly,Duty,Tasks,TaskId),::awarded_agent(Name,Role,Load,Duty,Tasks) & not (Duty == [] & Tasks == []),Winners);
 		
 	.abolish(::selected_bids(_));
 	.abolish(::awarded_agent(_,_,_,_,_));
 	.abolish(::constraint_role(_,_));
-	.abolish(::selected_task(_,_,_));
+	.abolish(::selected_task(_,_,_,_));
 	.
 	
 assembler(Compound,Qty,Name)
@@ -154,12 +169,22 @@ assembler(Compound,Qty,Name)
 	.
 	
 +!award_task(DeliveryPoint,Bids)
-	: ::selected_task(Item,Compound,Qty)  & assembler(Compound,Qty,Assembler)
+	: ::selected_task(Item,Compound,Qty,_)  & assembler(Compound,Qty,Assembler)
 <-
 //	.print(Assembler," was selected as assembler of ",Compound);
 	!award_assembler(Compound,Qty,Assembler);
 	!award_retrieve(DeliveryPoint,Compound,Assembler,Assembler);
 	!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
+//	while(::selected_task(Item,Compound,Qty) & Qty > 1){
+	while(::selected_task(MItem,Compound,MQty,MType)){
+		Qty1 = MQty div 2;
+		Qty2 = (MQty div 2) + (MQty mod 2);
+//		.print("%%%%%%%%%%%%%%%%%%%%%% Failed allocation of ",MItem," ",Compound," ",MQty," spliting item in ",Qty1," ",Qty2);
+		-::selected_task(MItem,Compound,MQty,MType);
+		+::selected_task(MItem,Compound,Qty1,half_1);
+		+::selected_task(MItem,Compound,Qty2,half_2);
+		!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
+	}	
 	!award_task(DeliveryPoint,Bids);
 	.
 +!award_task(DeliveryPoint,Bids).
@@ -180,12 +205,12 @@ assembler(Compound,Qty,Name)
 	.
 
 +!award_retrieve(DeliveryPoint,Compound,Assembler,Agent)
-	: ::selected_task(Item,Compound,Qty) & ::awarded_agent(Agent,Role,Load,Duty,AssignedTasks) & default::item(Item,Vol,_,_) & (Qty*Vol) <= Load
+	: ::selected_task(Item,Compound,Qty,Type) & ::awarded_agent(Agent,Role,Load,Duty,AssignedTasks) & default::item(Item,Vol,_,_) & (Qty*Vol) <= Load
 <-
-//	.print("awarded ",Agent," to retrieve ",Item," in ",Qty," for ",Compound);
+//	.print("awarded ",Agent," ",AssignedTasks," to retrieve ",Item," in ",Qty," for ",Compound);
 	-::awarded_agent(Agent,_,_,_,_);
 	+::awarded_agent(Agent,Role,Load-(Qty*Vol),Duty,[retrieve(DeliveryPoint,Item,Qty)|AssignedTasks]);
-	-::selected_task(Item,Compound,Qty);
+	-::selected_task(Item,Compound,Qty,Type);
 	!award_assist(Agent,Compound,Assembler);
 	!award_retrieve(DeliveryPoint,Compound,Assembler,Agent);
 	.

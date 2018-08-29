@@ -30,6 +30,10 @@
 	: strategies::winner(Name,Type,Duty,Tasks,TaskId) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop)
 <-
 	!action::goto(Storage);
+	?default::facility(Teste);
+	?default::lat(Lat);
+	?default::lon(Lon);
+	.print("I'm at ",Teste," ",Lat," ",Lon," I should be at ",Storage);
 	!stock::store_all_items(Storage);
 	!go_retrieve(Tasks);
 	!action::goto(Workshop);	
@@ -61,7 +65,8 @@
 <-
 	.print("stop assisting to ",Assembler);
 //	.succeed_goal(assemble::assist_assemble(Assembler));
-    .drop_desire(assemble::assist_assemble(Assembler));
+//    .drop_desire(assemble::assist_assemble(Assembler));
+    !action::forget_old_action(assemble,assist_assemble(Assembler));
     org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
 	.print("stopped ",Assembler);
 	
@@ -101,7 +106,7 @@
 	: default::hasItem(_,_) & strategies::centerStorage(Storage)
 <-
 	.print("I'm going to delivery items");
-	!action::forget_old_action(Id);
+	!action::forget_old_action;
 	!action::goto(Storage);
 	for(default::hasItem(Item,Qty)){
 		!stock::store_manufactored_item(Item,Qty,Storage)
@@ -114,7 +119,7 @@
 	: .my_name(Me) & default::play(Me,CurrentRole,_)
 <-
 	.print("I'm going back to work");
-	!action::forget_old_action(Id);
+	!action::forget_old_action;
 	!strategies::change_role(CurrentRole,gatherer);
 	!strategies::gather;
 	.

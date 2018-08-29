@@ -82,17 +82,10 @@
 
 	!strategies::set_center_storage_workshop;
 
-	if ( MyRole == explorer_drone ) { 
-//		!!explore::go_map_size;
-		!!explore::go_walk;
-  }
+	if ( MyRole == explorer_drone ) { !!explore::go_walk; }
 	
 	if ( MyRole == gatherer ) { !!strategies::gather; }
 	
 	if ( MyRole == builder ) { !!strategies::build; }
     .
-
-
-
-
-	
+    
