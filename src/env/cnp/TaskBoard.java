@@ -72,4 +72,8 @@ public class TaskBoard extends Artifact {
 		this.cnps.remove(artifactName);
 	}
 	
+	@OPERATION void generateTaskId(OpFeedbackParam<String> id){
+		this.taskId++;
+		id.set(String.valueOf(this.taskId));
+	}
 }

@@ -105,6 +105,18 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 +default::job(Id,Storage,Reward,Start,End,Items)
 	: default::step(S) & S >= 11
 <-
+	
+	+action::reasoning_about_belief(Id);
+ 	.print("Received ",Id,", Items ",Items," starting the priced job process.");
+ 	!compound_item_quantity(Items);
+ 	
+	!!accomplished_priced_job(Id,Storage,Items);
+//	-action::reasoning_about_belief(Id);
+	.
++!accomplished_priced_job(Id,Storage,Items)
+//	: not entroo
+<-
+//	+entroo;
 //	?default::joined(vehicleart,IdT);
 //	addAvailableItem(storage0,item5,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
 //	addAvailableItem(storage0,item6,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
@@ -113,18 +125,8 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 //	addAvailableItem(storage0,item9,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
 //	addAvailableItem(storage0,item10,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
 //	addAvailableItem(storage0,item11,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-	+action::reasoning_about_belief(Id);
- 	.print("Received ",Id,", Items ",Items," starting the priced job process.");
- 	!compound_item_quantity(Items);
-	!!accomplished_priced_job(Id,Storage,Items);
-//	-action::reasoning_about_belief(Id);
-	.
-+!accomplished_priced_job(Id,Storage,Items)
-	: not entroo
-<-
-//	+entroo;
 	!estimates::priced_estimate(Id,Items);
-	+entroo;
+//	+entroo;
 	.print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ",Id," is feasible! ");
     !allocate_delivery_tasks(Id,Items,Storage);
     -action::reasoning_about_belief(Id);
@@ -135,24 +137,26 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	-action::reasoning_about_belief(Id);
     .
  
-//+!allocate_delivery_tasks(Id,[],DeliveryPoint)
-//<-
-//	!cnpd::send_awards(Id,DeliveryPoint);
-//	.
-//+!allocate_delivery_tasks(Id,[required(Item,Qtd)|Items],DeliveryPoint)
-//	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer),ListAgents)
-//<-     
-////	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,ListAgents,CNPBoardName);
-//	!cnpd::announce(delivery_task(DeliveryPoint,Item,Qtd),10000,Id,[vehicle1,vehicle3],CNPBoardName);
-//       
-//    !cnpd::evaluate_bids(Id,required(Item,Qtd),CNPBoardName,AwardedBids);
-//       
-//    !cnpd::award_agents(Id,DeliveryPoint,Item,Qtd,AwardedBids);
-//       
-//    !cnpd::enclose(CNPBoardName);
-//
-//    !allocate_delivery_tasks(Id,Items,DeliveryPoint);
-//    .
+
++!allocate_delivery_tasks(JobId,Tasks,DeliveryPoint)
+	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer),ListAgents)
+<-     
+	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),10000,JobId,ListAgents,CNPBoardName);
+     
+    getBidsTask(Bids) [artifact_name(CNPBoardName)];
+	if (.length(Bids) \== 0) {	
+		!cnpd::evaluate_bids(Tasks,Bids);
+       
+    	!cnpd::award_agents(JobId,DeliveryPoint,Winners);
+    	.print("&&& Winners for ",CNPBoardName,": ",Winners);
+	}
+	else {
+		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
+		.fail(noBids);
+	}      
+       
+    !cnpd::enclose(CNPBoardName);
+    .
     
 
 

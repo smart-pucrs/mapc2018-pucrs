@@ -1,122 +1,111 @@
-task_id(0).
+volume_task([],PVol,Volume) :- Volume = PVol.
+volume_task([required(Item,Qty)|Tasks],PVol,Volume+(IVol*Qty))
+:-
+	default::item(Item,IVol,_,_) &		
+	volume_task(Tasks,PVol,Volume)
+	.
+	
+task_can_be_accomplished(TotalVolume,[],TemQtd,MaxStep) :- false.
+task_can_be_accomplished(TotalVolume,[bid(Distance,MaxLoad,Agent)|Bids],TempVol,Distance) 
+:- 
+	TempVol+MaxLoad >= TotalVolume
+	.
+task_can_be_accomplished(TotalVolume,[bid(Distance,MaxLoad,Agent)|Bids],TempVol,MaxStep) 
+:- 
+	task_can_be_accomplished(TotalVolume,Bids,TempVol+MaxLoad,MaxStep) 
+	.
 
 // given a list of bids, it returns all the bids under the maximum specified step 
 bids_by_step([],MaximumStep,Temp,Result) 
 :-
 	.sort(Temp,Result)
 	. 
-bids_by_step([bid(Step,Storage,Agent)|Bids],MaximumStep,Temp,Result)
+bids_by_step([bid(Distance,MaxLoad,Agent)|Bids],MaximumStep,Temp,Result)
 :-
-	Step <= MaximumStep &
-	bids_by_step(Bids,MaximumStep,[bid(Step,Storage,Agent)|Temp],Result)
+	Distance <= MaximumStep &
+	bids_by_step(Bids,MaximumStep,[bid(MaxLoad,Agent)|Temp],Result)
 	.
 bids_by_step(Bids,MaximumStep,Temp,Result) 
 :-
 	.sort(Temp,Result)
 	. 
-	
-// given a list of bids, it indicates if the task can be accomplished
-task_can_be_accomplished(Item,Qtd,[],TemQtd,Temp,Result) :- false.
-task_can_be_accomplished(Item,Qtd,[bid(Step,Storage,Agent)|Bids],TempQtd,Temp,Result)
-:- 
-	default::available_items(Storage,Items)&
-	.member(item(Item,QtdS),Items) &
-//	(TempQtd+QtdS >= Qtd & Result=[storageItem(QtdS,Storage,Agent)|Temp]
-	(QtdS >= Qtd & Result=[storageItem(QtdS,Storage,Agent)|Temp]
-		|
-	 task_can_be_accomplished(Item,Qtd,Bids,TempQtd+QtdS,[storageItem(QtdS,Storage,Agent)|Temp],Result)
-	)
-	.
 
-+!announce(Task,Deadline,JobId,Agents,CNPBoardName)
-	: task_id(TaskId)
++!announce(Tasks,Deadline,JobId,Agents,CNPBoardName)
 <- 
-	-+task_id(TaskId+1);
+	generateTaskId(TaskId);
 	.concat("cnp_delivery_",TaskId,CNPBoardName);
-	.print("Creating task ",CNPBoardName," for task ",Task);
-	makeArtifact(CNPBoardName, "cnp.ContractNet", [Task, Deadline, .length(Agents)]);
-	.send(Agents,tell,delivery::task(Task,CNPBoardName,TaskId));	
+	.print("Creating task ",CNPBoardName," for task ",Tasks);
+	makeArtifact(CNPBoardName, "cnp.ContractNetBoard", [Tasks, Deadline, .length(Agents)]);
+	.send(Agents,tell,delivery::task(Tasks,CNPBoardName,TaskId));	
 	.
 	
-//+!evaluate_bids(JobId,required(Item,Qtd),CNPBoardName,AwardedBids)
-//<-
-//	getBidsTask(Bids) [artifact_name(CNPBoardName)];
-//	if (.length(Bids) \== 0) {		
-//		.print("Bids received ",Bids);
-//		.sort(Bids,SortedBids);
-//		.print("Bids ",SortedBids);
-//		.nth(0,SortedBids,bid(InitialStep,_,_));
-//		?bids_by_step(SortedBids,InitialStep,[],UnderMaximumBids);
-//		.print("minim ",UnderMaximumBids);
-//		?task_can_be_accomplished(Item,Qtd,UnderMaximumBids,0,[],BestBids);
-//		.sort(BestBids,SortedBestBids);
-//		.print("B ",SortedBestBids);
-//		.reverse(SortedBestBids,AwardedBids);
-//		.print("R B ",AwardedBids);
-//	}
-//	else {
-//		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
-//		.fail(noBids);
-//	}	
-//	.
-+!evaluate_bids(JobId,required(Item,Qtd),CNPBoardName,AwardedBids)
-<-
-	getBidsTask(Bids) [artifact_name(CNPBoardName)];
-	if (.length(Bids) \== 0) {		
-		.sort(Bids,SortedBids);
-		.nth(0,SortedBids,bid(InitialStep,_,_));
-		!evaluate_bids(Item,Qtd,SortedBids,InitialStep,AwardedBids);
-	}
-	else {
-		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
-		.fail(noBids);
-	}	
-	.
-+!evaluate_bids(Item,Qtd,SortedBids,InitialStep,AwardedBids)
++!evaluate_bids(Tasks,Bids)
+	: .sort(Bids,SortedBids) &.print("a ",Tasks)& volume_task(Tasks,20,TLoad) &task_can_be_accomplished(TLoad,SortedBids,0,MaxStep) & bids_by_step(SortedBids,MaxStep,[],SelectedBids)
 <-	
-	?bids_by_step(SortedBids,InitialStep,[],UnderMaximumBids);
-	if (task_can_be_accomplished(Item,Qtd,UnderMaximumBids,0,[],BestBids)){
-		.sort(BestBids,SortedBestBids);
-		.reverse(SortedBestBids,AwardedBids);
-	}else{
-//		.print("Task cannot be accomplished, trying again");
-		.difference(SortedBids,UnderMaximumBids,NewList);
-		.nth(0,NewList,bid(Initial,_,_));
-		!evaluate_bids(Item,Qtd,SortedBids,Initial,AwardedBids);
-	}	
-	.
-
-// [delivery(Storage,[item(Item,Qtd)])]
-+!send_awards(JobId,DeliveryPoint)
-	: .findall(Agent,::award(Agent,_,_),LAgents) & .union(LAgents,LAgents,Agents)
-<-
-	for(.member(Ag,Agents)){
-		.findall(delivery(Storage,Items),::award(Ag,Storage,Items),Deliveries);
-		.print("Sending award to ",Ag," of ",Deliveries);
-		.send(Ag,tell,strategies::winner(JobId,Deliveries,DeliveryPoint));
-		.abolish(::award(Ag,_,_));
-	}	
-	.	
-+!award_agents(JobId,DeliveryPoint,Item,Qtd,[storageItem(QtdS,Storage,Agent)|Bids])
-	: QtdS >= Qtd
-<-
-	if (award(Agent,Storage,Items)){
-		-+award(Agent,Storage,[item(Item,Qtd)|Items]);		
-	}else{
-		+award(Agent,Storage,[item(Item,Qtd)]);
-	}	
-	default::removeAvailableItem(Storage,Item,Qtd,Result);
-	!send_awards(JobId,DeliveryPoint);
-	.
-+!award_agents(JobId,DeliveryPoint,Item,Qtd,[storageItem(QtdS,Storage,Agent)|Bids])
-<-
-	if (award(Agent,Storage,Items)){
-		-+award(Agent,Storage,[item(Item,QtdS)|Items]);
-	}else{
-		+award(Agent,Storage,[item(Item,QtdS)]);
+//	.print("Required load ",TLoad,"can be transported in ",MaxStep);
+//	.print("Selected bids for delivery ",SelectedBids);
+	for(.member(required(Item,Qty),Tasks)){
+		+::selected_task(Item,Qty,entire);
 	}
-	!award_agents(JobId,DeliveryPoint,Item,Qtd-QtdS,Bids);
+	+::selected_bids(SelectedBids);
+	.	
++!evaluate_bids(Tasks,Bids)
+<-	
+	.print("Insufficient load to delivery load");
 	.
+	
+	
++!award_agents(TaskId,DeliveryPoint,Winners)
+	: ::selected_bids(Bids) & .sort(Bids,SortedBids) & .reverse(SortedBids,RBids)
+<-
+	.print("Sorted bids ",RBids," to ",DeliveryPoint);
+	
+	for(.member(bid(Load,Name),RBids)){
+		+::awarded_agent(Name,Load,[]);
+	}
+	
+	!award_deliveries(DeliveryPoint,Bids);	
+	while(::selected_task(MItem,MQty,MType)){
+		Qty1 = MQty div 2;
+		Qty2 = (MQty div 2) + (MQty mod 2);
+		.print("%%%%%%%%%%%%%%%%%%%%%% Failed allocation of ",MItem," ",MQty," spliting item in ",Qty1," ",Qty2);
+		-::selected_task(MItem,MQty,MType);
+		+::selected_task(MItem,Qty1,half_1);
+		+::selected_task(MItem,Qty2,half_2);
+		!award_deliveries(DeliveryPoint,Bids);
+	}
+	
+	for(::awarded_agent(Name,_,Tasks) & Tasks \== []){
+		for(.member(delivery(Storage,Item,Qty),Tasks)){
+			removeAvailableItem(Storage,Item,Qty,Result);
+		}
+		.send(Name,tell,default::winner(TaskId,Tasks,DeliveryPoint));
+	}		
+	.findall(winner(Name,Tasks,TaskId),::awarded_agent(Name,Load,Tasks) & Tasks \== [],Winners);
+//	.send(Ag,tell,strategies::winner(JobId,Deliveries,DeliveryPoint));
+		
+	.abolish(::selected_bids(_));
+	.abolish(::awarded_agent(_,_,_));
+	.abolish(::selected_task(_,_,_));
+	.
++!award_agents(TaskId,DeliveryPoint,[]).
+	
++!award_deliveries(DeliveryPoint,[]).
++!award_deliveries(DeliveryPoint,[bid(_,Agent)|Bids])
+<-
+	!award_delivery(DeliveryPoint,Agent);
+	!award_deliveries(DeliveryPoint,Bids);
+	.
++!award_delivery(DeliveryPoint,Agent)
+	: ::selected_task(Item,Qty,Type) & ::awarded_agent(Agent,Load,AssignedTasks) & default::item(Item,Vol,_,_) & (Qty*Vol) <= Load
+<-
+//	.print("awarded ",Agent," ",AssignedTasks," to delivery ",Item," in ",Qty);
+	-::awarded_agent(Agent,_,_);
+	+::awarded_agent(Agent,Load-(Qty*Vol),[delivery(DeliveryPoint,Item,Qty)|AssignedTasks]);
+	-::selected_task(Item,Qty,Type);
+	!award_delivery(DeliveryPoint,Agent);
+	.
++!award_delivery(DeliveryPoint,Agent).
 	
 +!enclose(CNPBoardName)
 <- 		

@@ -1,5 +1,3 @@
-{ include("strategy/beliefs_agents.asl") }
-
 !configure_first_strategies.
 
 +!configure_first_strategies
@@ -120,6 +118,21 @@
    	!prepare_assembly(TaskId,Duty);
 	.
 	
++default::winner(TaskId,Tasks,DeliveryPoint)
+	: default::joined(org,OrgId) & default::play(Me,CurrentRole,_)
+<-
+	.print("*************************************************** I'm winner ",TaskId," ",Tasks," at ",DeliveryPoint);
+	
+	!change_role(CurrentRole,deliveryagent);
+	
+	!action::forget_old_action;
+	.drop_desire(::gather(_));
+ 	
+ 	.print("I was a ",CurrentRole);	
+	
+	!perform_delivery;
+	.	
+	
 // what builders do
 +!build 
 	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
@@ -136,37 +149,18 @@
 	.
 	
 // what delivery agents do 
-+!prepare_to_delivery
-	: .my_name(Me) & default::play(Me,deliveryagent,_) & .desire(::perform_delivery)
-<-
-	.print("I'm already working on a delivery task, I'll do it later");
-	.
-+!prepare_to_delivery
-	: .my_name(Me) & default::play(Me,CurrentRole,_)
-<-
-	!action::forget_old_action;
- 	+action::committedToAction(Id);
- 	
- 	.print("I was a ",CurrentRole);
-	
-	!strategies::change_role(CurrentRole,deliveryagent);
-	!perform_delivery;
-	.
 +!perform_delivery
-	: ::winner(JobId,Deliveries,DeliveryPoint)[source(Initiator)]
+	: default::winner(JobId,Deliveries,DeliveryPoint)[source(Initiator)]
 <-
 	.print("I won the tasks to ",Deliveries," at ",DeliveryPoint);	
+	
 	!delivery::delivery_job(JobId,Deliveries,DeliveryPoint);
 	
 	-::winner(JobId,Deliveries,DeliveryPoint)[source(Initiator)]
 	
-	!perform_delivery;
-	.
-+!perform_delivery
-<-
 	.print("I've finished my deliveries'");
-	!strategies::change_role(deliveryagent,gatherer);
-	!strategies::always_recharge;
+	!change_role(deliveryagent,gatherer);
+	!!strategies::gather;
 	.
 	
 // what gathers do

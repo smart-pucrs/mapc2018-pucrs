@@ -35,39 +35,47 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 	steps_to_storages(Destination,Item,Storages,Temp,Result)
 	.
 	
-+task(delivery_task(StorageD,Item,Qtd),CNPBoard,TaskId)
++task(delivery_task(DeliveryPoint,Tasks),CNPBoard,TaskId)
 <-
-	!create_bid_task(StorageD,Item, Qtd, Bid);
+//	!create_bid_task(StorageD,Item, Qtd, Bid);
+	!create_bid(DeliveryPoint, Bid);
 	.print("My bid for task ",TaskId," is ",Bid);
     manyBids(Bid)[artifact_name(CNPBoard)];
 	ceaseBids[artifact_name(CNPBoard)];
 	.
-+!create_bid_task(StorageD, ItemId, Qty, Bid)
-	: default::load(MyLoad) & predicted_load(PredLoad) & default::maxLoad(LoadCap) & default::item(ItemId,Vol,_,_) & new::storageList(SList)
+//+!create_bid_task(StorageD, ItemId, Qty, Bid)
+//	: default::load(MyLoad) & predicted_load(PredLoad) & default::maxLoad(LoadCap) & default::item(ItemId,Vol,_,_) & new::storageList(SList)
+//<-
+//	.print("CL: ",MyLoad," pred: ",PredLoad);
+//	if (LoadCap - (PredLoad + MyLoad) >= Vol * Qty) {
+//		?steps_to_storages(StorageD,ItemId,SList,[],Bid);
+//	}
+//	else { Bid = []; }
+//	.
++!create_bid(StorageD,Bid)
+	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
 <-
-	.print("CL: ",MyLoad," pred: ",PredLoad);
-	if (LoadCap - (PredLoad + MyLoad) >= Vol * Qty) {
-		?steps_to_storages(StorageD,ItemId,SList,[],Bid);
-	}
-	else { Bid = []; }
+	actions.route(Role,Speed,Storage,RouteStorage);
+	actions.route(Role,Speed,Storage,StorageD,RouteStorage2);
+	Distance = RouteStorage + RouteStorage2;
+	Bid = [bid(Distance,MaxLoad)];
 	.
 
 +!delivery_job(Id,Stocks,StorageDestination)
-	: .sort(Stocks,ItemsToGet)
+	: .sort(Stocks,ItemsToGet) & .member(delivery(Storage,_,_),Stocks)
 <- 
+	.print("Going to retrieve items to delivery at ",Storage);
+	!action::goto(Storage);
 	!has_items(ItemsToGet);
+	.print("Going to delivery items at ",StorageDestination);
 	!action::goto(StorageDestination);
 	!action::deliver_job(Id);
 	.
 
 +!has_items([]).	
-+!has_items([delivery(Storage,Items)|Stoks])
++!has_items([delivery(_,Item,Qty)|Stoks])
 <-
-	!action::goto(Storage);
-	for(.member(item(Item,Qtd),Items)){
-		.print("I am going to get ",Qtd," units of ",Item," at ",Storage);
-		!action::retrieve(Item,Qtd);
-	}
+	!action::retrieve(Item,Qty);
 	!has_items(Stoks);
 	.
 -!has_items(Stoks)[code(.fail(action(Action),result(Result)))]
