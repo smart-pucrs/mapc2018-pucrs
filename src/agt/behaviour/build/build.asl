@@ -1,35 +1,24 @@
 get_suitable_well_type([], wellType(Type,_,_), Massium, SuitableType) :- SuitableType=Type.
-get_suitable_well_type([wellType(Type, Cost, Punctuation)|RemainingList], wellType(TypeTemp, CostTemp, PunctuationTemp), Massium, SuitableType) :-  
-PunctuationTemp>=Punctuation & get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, PunctuationTemp), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, Punctuation)|RemainingList], wellType(TypeTemp, CostTemp, PunctuationTemp), Massium, SuitableType) :-  
-PunctuationTemp<Punctuation & Cost>Massium & get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, PunctuationTemp), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, Punctuation)|RemainingList], wellType(TypeTemp, CostTemp, PunctuationTemp), Massium, SuitableType) :-  
-PunctuationTemp<Punctuation & Cost<=Massium & get_suitable_well_type(RemainingList, wellType(Type, Cost, Punctuation), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, Punctuation)|RemainingList], Massium, SuitableType) :- Cost<=Massium 
-& get_suitable_well_type(RemainingList, wellType(Type, Cost, Punctuation), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, Punctuation)|RemainingList], Massium, SuitableType) :- Cost>Massium 
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) :-  
+CostPerEfficiencyTemp<=CostPerEfficiency & get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType).
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) :-  
+CostPerEfficiencyTemp>CostPerEfficiency & Cost>Massium & get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType).
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) :-  
+CostPerEfficiencyTemp>CostPerEfficiency & Cost<=Massium & get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType).
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) :- Cost<=Massium 
+& get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType).
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) :- Cost>Massium 
 & get_suitable_well_type(RemainingList, Massium, SuitableType).
 get_suitable_well_type(SuitableType) :- default::myRanking(Ranking) & default::massium(Massium) & ::get_suitable_well_type(Ranking, Massium, SuitableType).
 
-calc(Type, Cost, Efficiency, Integrity, Length, Result) :- default::conf_baseEfficiencyMax(BaseEfficiencyMax) & default::conf_baseEfficiencyMin(BaseEfficiencyMin) 
-& default::conf_baseIntegrityMax(BaseIntegrityMax) & default::conf_baseIntegrityMin(BaseIntegrityMin) & default::conf_costFactor(CostFactor) 
-& default::conf_efficiencyIncreaseMax(EfficiencyIncreaseMax) & default::conf_efficiencyIncreaseMin(EfficiencyIncreaseMin)
-& (EMax = (BaseEfficiencyMax + (EfficiencyIncreaseMax * Length)))
-& (EMin = (BaseEfficiencyMin + EfficiencyIncreaseMin))
-& (CMax = ((EMax + math.sqrt(EMax)) * CostFactor))
-& (CMin = ((EMin + math.sqrt(EMin)) * CostFactor))
-& (CN = ((Cost - CMin) / (CMax - CMin)))
-& (ENor = ((Efficiency - EMin) / (EMax - EMin)))
-& (INor = ((Integrity - BaseIntegrityMin) / (BaseIntegrityMax - BaseIntegrityMin)))
-& (Punctuation = ((100 * ENor) - (20 * CN) + (5 * INor)))
-& (Result = wellType(Type, Cost, Punctuation)).
+calc(Type, Cost, Efficiency, Result) :- (CostPerEfficiency = Cost/Efficiency) & (Result = wellType(Type, Cost, CostPerEfficiency)).
 
-ranking([], PartialList, Length, Ranking) :- Ranking=PartialList.
-ranking([wellType(Type, Cost, Efficiency, Integrity)|RemainingList], PartialList, Length, Ranking) :- ::calc(Type, Cost, Efficiency, Integrity, Length, Result)
-& .concat(PartialList, [Result], NewList) & ::ranking(RemainingList, NewList, Length, Ranking).
-ranking(List, Ranking) :- .length(List, Length) & ::ranking(List, [], Length, Ranking).
+ranking([], PartialList, Ranking) :- Ranking=PartialList.
+ranking([wellType(Type, Cost, Efficiency)|RemainingList], PartialList, Ranking) :- ::calc(Type, Cost, Efficiency, Result)
+& .concat(PartialList, [Result], NewList) & ::ranking(RemainingList, NewList, Ranking).
+ranking(List, Ranking) :- ::ranking(List, [], Ranking).
 
-list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency, Integrity), default::wellType(Type, Cost, Efficiency,_, Integrity), List).
+list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency), default::wellType(Type, Cost, Efficiency,_,_), List).
 
 !make_well_types_ranking.
 
