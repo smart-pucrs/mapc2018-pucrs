@@ -70,7 +70,7 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 	Qty = math.min(TempQty,MaxQty)
 	.
 	
-+!evaluate_bids(JobId,assemble(Tasks),Bids)
++!evaluate_bids(JobId,Tasks,Bids)
 	: .sort(Bids,SortedBids) & available_resources(SortedBids,TLoad,TRoles)
 <-	
 	.print("Preparing evaluation ",SortedBids," ",TLoad," ",TRoles);
