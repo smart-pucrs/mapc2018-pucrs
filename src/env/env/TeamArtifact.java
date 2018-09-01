@@ -176,9 +176,6 @@ public class TeamArtifact extends Artifact {
 			updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
 		}
 		
-		logger.info("Add available - "+item+" "+qty);
-//		print_all();
-		
 		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 		this.defineObsProperty("available_items", litStorage, itemsAux);
 	}
@@ -186,7 +183,7 @@ public class TeamArtifact extends Artifact {
 	private void print_all() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Desired Base Item"+"\n");
+		sb.append("\n"+"Desired Base Item"+"\n");
 		this.desiredBase.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
 		sb.append("\n"+"Desired Compound Item"+"\n");
 		this.desiredCompound.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
@@ -197,23 +194,14 @@ public class TeamArtifact extends Artifact {
 		logger.info(sb.toString());
 	}
 	
-	@OPERATION void addManufactoredItem(String storage, String item, int qty){		
-		logger.info("-------");
-		print_all();
-		this.desiredCompound.get(item).removeCurrentQty(qty);
-		
-		addAvailableItem(storage, item, qty);
-		print_all();
-		logger.info("-------");
+	@OPERATION void addManufactoredItem(String storage, String item, int qty){	
+		this.desiredCompound.get(item).removeCurrentQty(qty);		
+//		addAvailableItem(storage, item, qty);
+		updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
 	}
 	@OPERATION void manufactureItem(String item, int qty){
-		logger.info("-------");
-		print_all();
 		this.desiredCompound.get(item).addCurrentQty(qty);
-		
-		logger.info("remove manufacture - "+item+" "+qty);
-		print_all();
-		logger.info("-------");
+		updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
 	}
 	
 //	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
@@ -280,8 +268,6 @@ public class TeamArtifact extends Artifact {
 			this.defineObsProperty("available_items", litStorage, itemsAux);
 		}
 		
-		logger.info("Remove available - "+item+" "+qty);
-		print_all();
 		res.set(result);
 	}
 	

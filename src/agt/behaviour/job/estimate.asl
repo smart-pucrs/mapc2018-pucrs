@@ -47,11 +47,12 @@ evaluate_steps
 +!global_stock
 	: new::storageList(SList)
 <-
-	.print("Building global stock of compound items");
+//	.print("Building global stock of compound items");
 	?get_available_items(SList,[],ItemizedAvailableItems);
 	?sum_up_items(ItemizedAvailableItems,[],AvailableItems);	
 	for(.member(item(Item,Qtd),AvailableItems)){
 		+::partial_stock(Qtd,Item);
+//		.print("Partial stock: ",Item," ",Qtd);
 	} 	
 	.	
 
@@ -83,8 +84,10 @@ calculate_lot(Item,DesiredQty,Lot)
 	: new::storageList(SList) & default::desired_compound(CList) & .sort(CList,SCList)
 <-
 	!global_stock;
+//	.print("Priority Compound: ",SCList);
 	!compound_priority(SCList);
-	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),Items);
+	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),SelectedItems);
+	.reverse(SelectedItems,Items);
 	.abolish(::partial_stock(_,_));
 	.abolish(::must_assemble(_,_));
 	.
