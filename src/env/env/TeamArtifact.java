@@ -176,17 +176,44 @@ public class TeamArtifact extends Artifact {
 			updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
 		}
 		
+		logger.info("Add available - "+item+" "+qty);
+//		print_all();
+		
 		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 		this.defineObsProperty("available_items", litStorage, itemsAux);
 	}
 	
+	private void print_all() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Desired Base Item"+"\n");
+		this.desiredBase.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
+		sb.append("\n"+"Desired Compound Item"+"\n");
+		this.desiredCompound.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
+		
+		sb.append("\n"+"Storage1"+"\n");
+		this.availableItems.get("storage1").forEach(l -> sb.append(l.toString()));
+		
+		logger.info(sb.toString());
+	}
+	
 	@OPERATION void addManufactoredItem(String storage, String item, int qty){		
+		logger.info("-------");
+		print_all();
 		this.desiredCompound.get(item).removeCurrentQty(qty);
 		
 		addAvailableItem(storage, item, qty);
+		print_all();
+		logger.info("-------");
 	}
 	@OPERATION void manufactureItem(String item, int qty){
+		logger.info("-------");
+		print_all();
 		this.desiredCompound.get(item).addCurrentQty(qty);
+		
+		logger.info("remove manufacture - "+item+" "+qty);
+		print_all();
+		logger.info("-------");
 	}
 	
 //	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
@@ -252,6 +279,9 @@ public class TeamArtifact extends Artifact {
 			this.removeObsPropertyByTemplate("available_items", litStorage, null);
 			this.defineObsProperty("available_items", litStorage, itemsAux);
 		}
+		
+		logger.info("Remove available - "+item+" "+qty);
+		print_all();
 		res.set(result);
 	}
 	
