@@ -97,11 +97,11 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 	!award_deliveries(DeliveryPoint,Bids);
 	.
 +!award_delivery(DeliveryPoint,Agent)
-	: ::selected_task(Item,Qty,Type) & ::awarded_agent(Agent,Load,AssignedTasks) & default::item(Item,Vol,_,_) & (Qty*Vol) <= Load
+	: ::selected_task(Item,Qty,Type) & ::awarded_agent(Agent,Load,AssignedTasks) & default::item(Item,Vol,_,_) & (Qty*Vol) <= Load & strategies::centerStorage(Storage) 
 <-
 //	.print("awarded ",Agent," ",AssignedTasks," to delivery ",Item," in ",Qty);
 	-::awarded_agent(Agent,_,_);
-	+::awarded_agent(Agent,Load-(Qty*Vol),[delivery(DeliveryPoint,Item,Qty)|AssignedTasks]);
+	+::awarded_agent(Agent,Load-(Qty*Vol),[delivery(Storage,Item,Qty)|AssignedTasks]);
 	-::selected_task(Item,Qty,Type);
 	!award_delivery(DeliveryPoint,Agent);
 	.

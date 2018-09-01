@@ -66,7 +66,8 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 <- 
 	.print("Going to retrieve items to delivery at ",Storage);
 	!action::goto(Storage);
-	!has_items(ItemsToGet);
+	!stock::store_all_items(Storage);
+	!::has_items(ItemsToGet);
 	.print("Going to delivery items at ",StorageDestination);
 	!action::goto(StorageDestination);
 	!action::deliver_job(Id);
