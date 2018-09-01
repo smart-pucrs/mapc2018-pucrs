@@ -1,3 +1,20 @@
+::current_token(0).
++!commit_action(Action)
+	: .current_intention(intention(IntentionId,_)) & not ::access_token(IntentionId,_) & ::current_token(Token)
+<-
+	.print("It's my first access, receiving a token ",Token," ",Action," ",IntentionId);
+	+::access_token(IntentionId,Token);
+	!commit_action(Action);
+	.
++!commit_action(Action)
+	: .current_intention(intention(IntentionId,_)) & ::access_token(IntentionId,IntentionToken) & ::current_token(Token) & IntentionToken < Token
+<-
+	.print("My access was revogated, my ",IntentionToken," current ",Token,", shutting down!");
+//	-::access_token(IntentionId,_);
+//	.drop_intention(::commit_action(Action));
+//	.drop_intention;
+	.suspend;
+	.
 +!commit_action(Action)
 	: default::actionID(Id) & action::action_sent(Id) & metrics::next_actions(C) & default::step(Step)
 <-
@@ -59,15 +76,61 @@
 	!commit_action(Action);
 	.
 
+//+!update_percepts
+//	: ::action_sent(Id)
+//<-
+////	if(.desire(action::commit_action(Action))){
+////		.print("I feel an action ",Action);
+////	}
+//	
+//	.print("An action has been sent to the Server, I have to wait for the perceptions to be updated");
+//	.wait(default::actionID(Id2) & Id2 \== Id)
+//	. 
+//+!update_percepts.
+//@forgetParticularGoal[atomic]
+//+!forget_old_action(Module,Goal) 
+//	: not ::action_sent(_)
+//<- 
+//	.print("I Have a desire ",Goal,", forgetting it");
+//	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
+//	if(action::action(ActionId,Action)){
+//		.drop_desire(action::wait_request_for_help(ActionId));
+//		-action::action(ActionId,Action);
+//	}
+//	.	
+//+!forget_old_action(Module,Goal) 
+//<-	
+//	!update_percepts;
+//	!forget_old_action(Module,Goal) ;
+//	.
+//@forgetCommitAction[atomic]
+//+!forget_old_action
+//	: not ::action_sent(_)
+//<-
+//	.print("Dropping all intentions that aim to send an action to the Server");
+////	if(.desire(strategies::G) | .desire(explore::G)){
+////		.print("I feel a goal ",G);
+////	}
+//	.drop_future_intention(action::commit_action(_)); // we don't want to follow these plans anymore
+////	if(.desire(strategies::G2)|.desire(explore::G2)){
+////		.print("I feel a goal2 ",G2);
+////	}
+//	if(action::action(ActionId,Action)){
+//		.drop_desire(action::wait_request_for_help(ActionId));
+//		-action::action(ActionId,Action);
+//	}
+//	.
+//+!forget_old_action
+//<-	
+//	!update_percepts;
+//	!forget_old_action;
+//	.
 +!update_percepts
 	: ::action_sent(Id)
 <-
-//	if(.desire(action::commit_action(Action))){
-//		.print("I feel an action ",Action);
-//	}
-	
 	.print("An action has been sent to the Server, I have to wait for the perceptions to be updated");
-	.wait(default::actionID(Id2) & Id2 \== Id)
+//	.wait(default::actionID(Id2) & Id2 \== Id);
+	.wait({-::action_sent(_)});
 	. 
 +!update_percepts.
 @forgetParticularGoal[atomic]
@@ -86,10 +149,17 @@
 	!update_percepts;
 	!forget_old_action(Module,Goal) ;
 	.
+	
++!forget_old_action
+	: ::action_sent(_)
+<-
+	!revogate_tokens;
+	!update_percepts;
+	.
 @forgetCommitAction[atomic]
 +!forget_old_action
-	: not ::action_sent(_)
 <-
+	!revogate_tokens;
 	.print("Dropping all intentions that aim to send an action to the Server");
 //	if(.desire(strategies::G) | .desire(explore::G)){
 //		.print("I feel a goal ",G);
@@ -108,6 +178,14 @@
 	!update_percepts;
 	!forget_old_action;
 	.
+@revogate[atomic]
++!revogate_tokens
+	: ::current_token(Token)
+<-
+	.print("Revogating older tokens...");
+	-+::current_token(Token+1);
+	.
+
 
 +default::chosenActions(ActionId, Agents) // all the agents have chosen their actions
 	: .length(Agents) == 34
