@@ -56,7 +56,8 @@
 	.print("stop assisting to ",Assembler);
 //	.succeed_goal(assemble::assist_assemble(Assembler));
 //    .drop_desire(assemble::assist_assemble(Assembler));
-    !action::forget_old_action(assemble,assist_assemble(Assembler));
+//    !action::forget_old_action(assemble,assist_assemble(Assembler));
+	!action::forget_old_action(_,assist_assemble[scheme(Scheme)]);
     org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
 	.print("stopped ",Assembler);
 	
