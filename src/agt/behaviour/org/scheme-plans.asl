@@ -1,23 +1,13 @@
-+!clean_scheme(Scheme,AOrgId,WOrgId)	
-<-
-//	.abolish(org::focused(_,Scheme,_)); 
-	org::destroyScheme(Scheme)[artifact_id(AOrgId),wid(WOrgId)];
-	.
--!clean_scheme(Scheme,AOrgId,WOrgId).
-
-+!clean_group(GroupName,AOrgId,WOrgId)	
-<-   	
-//	.abolish(org::focused(_,GroupName,_)); // why do I have to use abolish?
-   	org::destroyGroup(GroupName)[artifact_id(AOrgId),wid(WOrgId)];   	
-	.
--!clean_group(GroupName,AOrgId,WOrgId).
-
 +goalState(Scheme,item_manufactured,_,_,satisfied)
-	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(AOrgId)] & default::joined(org,WOrgId)
+	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & default::group(_,_,GroupId)[artifact_id(AOrgId)] & .my_name(Me) & ::play(Me,assembler,GroupName) & default::joined(org,WOrgId)
+<-
+   	.print("*** Compound Item deliveried for ",Scheme,", removing artifacts! ***");  
+   	org::destroyScheme(Scheme)[artifact_id(AOrgId),wid(WOrgId)];
+   	org::destroyGroup(GroupName)[artifact_id(AOrgId),wid(WOrgId)]; 
+   	.
++goalState(Scheme,item_manufactured,_,_,satisfied)
 <-
    	.print("*** Compound Item deliveried for ",Scheme,"! ***");  
-   	!clean_scheme(Scheme,AOrgId,WOrgId); 
-   	!clean_group(GroupName,AOrgId,WOrgId);
    	.
 
 +!retrive_items
