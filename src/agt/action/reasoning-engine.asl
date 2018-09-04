@@ -10,10 +10,8 @@
 	: .current_intention(intention(IntentionId,_)) & ::access_token(IntentionId,IntentionToken) & ::current_token(Token) & IntentionToken < Token
 <-
 	.print("My access was revogated, my ",IntentionToken," current ",Token,", shutting down!");
-//	-::access_token(IntentionId,_);
-//	.drop_intention(::commit_action(Action));
-//	.drop_intention;
-	.suspend;
+	-::access_token(IntentionId,_);
+	.drop_intention;
 	.
 +!commit_action(Action)
 	: default::actionID(Id) & action::action_sent(Id) & metrics::next_actions(C) & default::step(Step)
