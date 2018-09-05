@@ -8,7 +8,7 @@ import jason.JasonException;
 import massim.Server;
 
 
-public class ConnectionTest_MAPC_SmartDell {
+public class TeamA_Server {
 
 	@Before
 	public void setUp() {

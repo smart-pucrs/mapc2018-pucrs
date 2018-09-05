@@ -8,7 +8,7 @@ import jason.JasonException;
 import massim.Server;
 
 
-public class JustJacamo_Local {
+public class TeamB_JustJaCaMo {
 
 	@Before
 	public void setUp() {

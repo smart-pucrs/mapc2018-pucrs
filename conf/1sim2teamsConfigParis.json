@@ -1,7 +1,7 @@
 {
-  "server" : [{
+  "server" : {
   "tournamentMode" : "round-robin",
-  "teamsPerMatch" : 2,
+  "teamsPerMatch" : 1,
   "teamSize" : 34,
   "launch" : "key",
   "port" : 12300,
@@ -12,7 +12,7 @@
   "logPath" : "logs",
   "replayPath" : "replays",
   "maxPacketLength" : 65536
-}],
+},
 
   "manual-mode" : [
     ["A", "B"],
