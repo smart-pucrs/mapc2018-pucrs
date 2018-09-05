@@ -43,6 +43,35 @@
 	!go_retrieve(Tasks);
 	.
 
+//+!assist_assemble[scheme(Scheme)]
+//	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName)
+//<-
+//	.print("doing assisting ",Assembler);
+//	!assemble::assist_assemble(Assembler);
+//	!assist_assemble[scheme(Scheme)];
+//	.
+//+!stop_assist[scheme(Scheme)]
+//	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName) & default::joined(org,OrgId) 
+//<-
+//	.print("stop assisting to ",Assembler);
+////	.succeed_goal(assemble::assist_assemble(Assembler));
+////    .drop_desire(assemble::assist_assemble(Assembler));
+////    !action::forget_old_action(assemble,assist_assemble(Assembler));
+//
+//	!action::forget_old_action(_,assist_assemble[scheme(Scheme),source(self)]);
+//    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
+//	.print("stopped ",Assembler);
+//	
+//	if (not .desire(::assemble) & not .desire(::assist_assemble) ){
+//		!!go_back_to_work;
+//	}
+//	.
++!assist_assemble[scheme(Scheme)]
+	: ::stopAssisting(Scheme)
+<-
+	-::stopAssisting(Scheme);
+	.drop_intention;
+	.
 +!assist_assemble[scheme(Scheme)]
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName)
 <-
@@ -53,18 +82,34 @@
 +!stop_assist[scheme(Scheme)]
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName) & default::joined(org,OrgId) 
 <-
+	+::stopAssisting(Scheme);
 	.print("stop assisting to ",Assembler);
 //	.succeed_goal(assemble::assist_assemble(Assembler));
 //    .drop_desire(assemble::assist_assemble(Assembler));
 //    !action::forget_old_action(assemble,assist_assemble(Assembler));
-	!action::forget_old_action(_,assist_assemble[scheme(Scheme)]);
+
+//	!action::forget_old_action(_,assist_assemble[scheme(Scheme),source(self)]);
     org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
-	.print("stopped ",Assembler);
+	.print("stopped ",Assembler," ",Scheme);
+	
+	!teste1(Scheme);
+	.print("feito ",Scheme);
 	
 	if (not .desire(::assemble) & not .desire(::assist_assemble) ){
 		!!go_back_to_work;
 	}
 	.
++!teste1(Scheme)
+	: not .desire(::assist_assemble[scheme(Scheme)])
+<-
+	!!go_back_to_work;
+	.	
++!teste1(Scheme)
+<-
+	.wait(1000);
+	!teste1(Scheme);
+	.
+	
 	   
 //+!assemble[scheme(Scheme)]
 //	: ::goalArgument(Scheme,_,"Item",SItem) & .term2string(Item,SItem) & ::goalArgument(Scheme,_,"Qty",Qty)
