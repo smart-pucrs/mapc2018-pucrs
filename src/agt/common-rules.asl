@@ -37,13 +37,23 @@ select_resource_node(SelectedResource)
 :-
 	default::desired_base(List) &
 	remove_unknown_bases(List,[],PrunedList) &
-	.sort(PrunedList,SortedList) & 
-	.nth(0,SortedList,item(_,Base,_)) & 
-	.findall(ResourceNode,default::resNode(ResourceNode,Lat,Lon,Base),Resources) & 
+	sum_percentages(PrunedList,Total) & .random(N) &
+	chosen_item(PrunedList, 0, (N * Total), item(_,Name,_)) &
+//	.print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n") &
+//	.print("[ TEST ] Pruned List: ",PrunedList) &
+//	.print("[ TEST ] Sun of Percentages (Total): ",Total,"\n | Random Number [0 to Total]: ",(N*Total),"\n | Chosen Item: ",Name,"\n") &
+	.findall(ResourceNode,default::resNode(ResourceNode,Lat,Lon,Name),Resources) & 
 	closest_facility(Resources,SelectedResource)
 	.
+
+// count(item(Priority,Name,Quantity)|L], Total)
+sum_percentages([],0).
+sum_percentages([item(P,I,Q)|L], Total) :- sum_percentages(L,T) & Total = T + P.
+
+chosen_item([Item|[]],_,_,Item).
+chosen_item([item(P,N,Q)|L], Temp, R, item(P,N,Q)):- (P + Temp) > R.
+chosen_item([item(P,N,Q)|L], Temp, R, Item) :- chosen_item(L, P + Temp, R, Item).
 
 remove_unknown_bases([],AuxList,PrunedList) :- PrunedList = AuxList.	
 remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- default::resNode(_,_,_,Base) & remove_unknown_bases(List,[item(X,Base,Y)|AuxList],PrunedList).
 remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- remove_unknown_bases(List,AuxList,PrunedList).
-

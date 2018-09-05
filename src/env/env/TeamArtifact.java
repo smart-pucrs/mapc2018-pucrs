@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,35 +21,29 @@ import cartago.OpFeedbackParam;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
-import jason.stdlib.list;
 
 
 public class TeamArtifact extends Artifact {
 
 	private static Logger logger = Logger.getLogger(TeamArtifact.class.getName());
 	
-	private final String obspDesiredCompound 	= "desired_compound";
-	private final String obspDesiredBase 		= "desired_base";
+	private final String obspDesiredCompound = "desired_compound";
+	private final String obspDesiredBase 	 = "desired_base";
 	
-	private static Map<String, Integer> shopItemsQty = new HashMap<String, Integer>();
-	private static Map<String, Integer> itemsQty = new HashMap<String, Integer>();
-	private static Map<String, Integer> itemsPrice = new HashMap<String, Integer>();
-	private static Map<String, String> agentNames = new HashMap<String, String>();
-	private static Map<String, String> agentRoles = new HashMap<String, String>();
-	private static Map<String, Integer> loads = new HashMap<String, Integer>();
-	private static Map<String, Integer> duplicateLoads = new HashMap<String, Integer>();
-//	private Map<String, ArrayList<String>> availableItems = new HashMap<String,ArrayList<String>>();
-	private Map<String, ArrayList<Literal>> availableItems = new HashMap<String,ArrayList<Literal>>();
-	private Map<String, ArrayList<String>> buyCoordination = new HashMap<String,ArrayList<String>>();
-	private static Map<Integer, Set<String>> actionsByStep = new HashMap<Integer, Set<String>>();
-//	private Map<String, Literal> desiredBase 		= new HashMap<String, Literal>();
-//	private Map<String, Literal> desiredCompound 	= new HashMap<String, Literal>();
-	private Map<String, DesiredItem> desiredBase 		= new HashMap<String, DesiredItem>();
-	private Map<String, DesiredItem> desiredCompound 	= new HashMap<String, DesiredItem>();
-//	private Map<String, > totalItems 		= new HashMap<String, Integer>();
-	
-	private final String USER_AGENT = "Mozilla/5.0";
-	
+	private static Map<String, Integer> shopItemsQty 	= new HashMap<String, Integer>();
+	private static Map<String, Integer> itemsQty 	 	= new HashMap<String, Integer>();
+	private static Map<String, Integer> itemsPrice 	 	= new HashMap<String, Integer>();
+	private static Map<String, String>  agentNames 	 	= new HashMap<String, String>();
+	private static Map<String, String>  agentRoles 	 	= new HashMap<String, String>();
+	private static Map<String, Integer> loads 			= new HashMap<String, Integer>();
+	private static Map<String, Integer> duplicateLoads 	= new HashMap<String, Integer>();
+
+	private Map<String, ArrayList<Literal>>  availableItems  = new HashMap<String,ArrayList<Literal>>();
+	private Map<String, ArrayList<String>>   buyCoordination = new HashMap<String,ArrayList<String>>();
+	private static Map<Integer, Set<String>> actionsByStep   = new HashMap<Integer, Set<String>>();
+
+	private Map<String, DesiredItem> desiredBase 	 = new HashMap<String, DesiredItem>();
+	private Map<String, DesiredItem> desiredCompound = new HashMap<String, DesiredItem>();
 	
 	void init(){
 		logger.info("Team Artifact has been created!");
@@ -60,16 +52,11 @@ public class TeamArtifact extends Artifact {
 		this.defineObsProperty(this.obspDesiredBase, new Object[0]);
 	}
 	
-	public void readConf(){
-		
+	public void readConf(){		
 		JSONParser parser = new JSONParser();		
-		
-//		String pathProject = "C:\\mapc2018";
 		File currentDir = new File(".");
-		String path = currentDir.getAbsolutePath();
-		
-		try {
-			
+		String path = currentDir.getAbsolutePath();		
+		try {			
 			Object obj = parser.parse(new FileReader(path+"//conf//generate//generate.json"));
 			
 			JSONObject jsonObject 		= (JSONObject) obj;			
@@ -82,23 +69,23 @@ public class TeamArtifact extends Artifact {
 			defineObsProperty("conf_efficiencyIncreaseMax", objWells.get("efficiencyIncreaseMax"));
 			defineObsProperty("conf_baseIntegrityMin", objWells.get("baseIntegrityMin"));
 			defineObsProperty("conf_baseIntegrityMax", objWells.get("baseIntegrityMax"));
-			defineObsProperty("conf_costFactor", objWells.get("costFactor"));
-			
+			defineObsProperty("conf_costFactor", objWells.get("costFactor"));			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+				e.printStackTrace();
 		}
-		
 	}
 	
-	@OPERATION void createAvailableList(String storage){
+	@OPERATION
+	void createAvailableList(String storage){
 		availableItems.put(storage, new ArrayList<Literal>());
 		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
 //		this.defineObsProperty("available_items", storage, itemsAux);
 		this.defineObsProperty("available_items", Literal.parseLiteral(storage), itemsAux);
 	}
 	
-	@OPERATION void createBuyCoordinationList(String shop){
+	@OPERATION
+	void createBuyCoordinationList(String shop){
 		buyCoordination.put(shop, new ArrayList<String>());
 		String[] itemsAux = buyCoordination.get(shop).toArray(new String[buyCoordination.get(shop).size()]);
 		this.defineObsProperty("buy_coordination", shop, itemsAux);
@@ -122,27 +109,73 @@ public class TeamArtifact extends Artifact {
 //		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 //		this.defineObsProperty("available_items", litStorage, itemsAux);
 //	}
-	@OPERATION void setDesiredBase(String item, int qty)  {
-		setDesiredItem(this.desiredBase, this.obspDesiredBase, item, qty);
-	}
-	@OPERATION void setDesiredCompound(String item, int qty)  {
-		setDesiredItem(this.desiredCompound, this.obspDesiredCompound, item, qty);
-	}
-	private void setDesiredItem(Map<String,DesiredItem> desiredItems, String obspName, String item, int qty)  {
-		if (!desiredItems.containsKey(item))
-			desiredItems.put(item, new DesiredItem(item));
+	
+	@OPERATION
+	void setDesiredBase(String item, int qty)  {
+		if (!this.desiredBase.containsKey(item))
+			this.desiredBase.put(item, new DesiredItem(item));
 		
-		DesiredItem desired = desiredItems.get(item);
+		DesiredItem desired = this.desiredBase.get(item);
 		desired.setDesiredQty(qty);
 		
-		updateDesiredItems(desiredItems, obspName);
+		updateDesiredItemsBase(this.desiredBase, this.obspDesiredBase);
 	}
-	private void updateDesiredItems(Map<String,DesiredItem> desiredItems, String obspName) {
+	
+	
+	@OPERATION
+	void setDesiredCompound(String item, int qty)  {
+		if (!this.desiredCompound.containsKey(item))
+			this.desiredCompound.put(item, new DesiredItem(item));
+		
+		DesiredItem desired = this.desiredCompound.get(item);
+		desired.setDesiredQty(qty);
+		
+		updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
+
+	}
+	
+	private void updateDesiredItemsCompound(Map<String,DesiredItem> desiredItems, String obspName) {
+		
+//		System.out.println("\n[  TEST  ] << updateDesiredItemsCompound >>                                                   <<---------------$$ \n");
 		Object[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral()).toArray(Literal[]::new);
 		this.removeObsProperty(obspName);
 		this.defineObsProperty(obspName, new Object[] {itemsAux});
 	}
-	@OPERATION void addAvailableItem(String storage, String item, int qty){
+	
+	private void updateDesiredItemsBase(Map<String,DesiredItem> desiredItems, String obspName) {
+		
+//		System.out.println("\n[  TEST  ] << updateDesiredItemsBase >>                                                   <<---------------$$ \n");
+		int totalDesiredItems = getTotalDesiredItems(desiredItems);
+		Object[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral(totalDesiredItems)).toArray(Literal[]::new);
+		this.removeObsProperty(obspName);
+		this.defineObsProperty(obspName, new Object[] {itemsAux});
+	}
+	
+	private int getTotalDesiredItems(Map<String,DesiredItem> storedItems) {
+		int total = 0;
+		
+//		System.out.println("[  TEST  ] Item | Current Qty | Desired Qty | Percentual % | C_Qty - D_Qty");
+		for (String key : storedItems.keySet()) {			
+            DesiredItem desiredItem = storedItems.get(key);
+            
+//            System.out.println("[  TEST  ] " + key +
+//            		" | " + desiredItem.getCurrentQty() +
+//            		" | " + desiredItem.getDesiredQty() +
+//            		" | " + desiredItem.getPercentage() + 
+//            		" | " + (desiredItem.getCurrentQty() - desiredItem.getDesiredQty()));
+            
+            if(desiredItem.getCurrentQty() < desiredItem.getDesiredQty()) {
+            	total = total + desiredItem.getPercentage();
+            } else {
+            	total = total + 1;
+            }
+		}
+//		System.out.println("[  TEST  ] % Total = "+total);
+		return total;
+	}
+	
+	@OPERATION
+	void addAvailableItem(String storage, String item, int qty){
 		Literal litStorage = Literal.parseLiteral(storage);
 		Literal litItem = Literal.parseLiteral("item");
 		
@@ -169,39 +202,42 @@ public class TeamArtifact extends Artifact {
 		
 		if (this.desiredBase.containsKey(item)) {
 			this.desiredBase.get(item).addCurrentQty(qty);
-			updateDesiredItems(this.desiredBase, this.obspDesiredBase);
+			updateDesiredItemsBase(this.desiredBase, this.obspDesiredBase);
 			signal("baseStored");
 		} else {
 			this.desiredCompound.get(item).addCurrentQty(qty);
-			updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
+			updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
 		}
 		
 		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 		this.defineObsProperty("available_items", litStorage, itemsAux);
 	}
 	
-	private void print_all() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("\n"+"Desired Base Item"+"\n");
-		this.desiredBase.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
-		sb.append("\n"+"Desired Compound Item"+"\n");
-		this.desiredCompound.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
-		
-		sb.append("\n"+"Storage1"+"\n");
-		this.availableItems.get("storage1").forEach(l -> sb.append(l.toString()));
-		
-		logger.info(sb.toString());
-	}
+//	private void print_all() {
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("\n"+"Desired Base Item"+"\n");
+//		this.desiredBase.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
+//		sb.append("\n"+"Desired Compound Item"+"\n");
+//		this.desiredCompound.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
+//		
+//		sb.append("\n"+"Storage1"+"\n");
+//		this.availableItems.get("storage1").forEach(l -> sb.append(l.toString()));
+//		
+//		logger.info(sb.toString());
+//	}
 	
-	@OPERATION void addManufactoredItem(String storage, String item, int qty){	
+	@OPERATION
+	void addManufactoredItem(String storage, String item, int qty){	
 		this.desiredCompound.get(item).removeCurrentQty(qty);		
 //		addAvailableItem(storage, item, qty);
-		updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
+		updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
 	}
-	@OPERATION void manufactureItem(String item, int qty){
+	
+	@OPERATION
+	void manufactureItem(String item, int qty){
 		this.desiredCompound.get(item).addCurrentQty(qty);
-		updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
+		updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
 	}
 	
 //	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
@@ -227,7 +263,9 @@ public class TeamArtifact extends Artifact {
 //		}
 //		res.set(result);
 //	}
-	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
+	
+	@OPERATION
+	void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
 		Literal litStorage = Literal.parseLiteral(storage);
 		int newqty = 0;
 		String result = "false";
@@ -257,10 +295,10 @@ public class TeamArtifact extends Artifact {
 		if (result.equals("true")) {
 			if (this.desiredBase.containsKey(item)) {
 				this.desiredBase.get(item).removeCurrentQty(qty);
-				updateDesiredItems(this.desiredBase, this.obspDesiredBase);
+				updateDesiredItemsBase(this.desiredBase, this.obspDesiredBase);
 			} else {
 				this.desiredCompound.get(item).removeCurrentQty(qty);
-				updateDesiredItems(this.desiredCompound, this.obspDesiredCompound);
+				updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
 			}
 			
 			Literal[] itemsAux = availableItems.get(storage).toArray(new Literal[availableItems.get(storage).size()]);
@@ -271,7 +309,8 @@ public class TeamArtifact extends Artifact {
 		res.set(result);
 	}
 	
-	@OPERATION void addBuyCoordination(String shop, String item, int qty){
+	@OPERATION
+	void addBuyCoordination(String shop, String item, int qty){
 		if (buyCoordination.get(shop).toString().contains(item)) {
 			for (String s: buyCoordination.get(shop)) {
 				if (s.contains(item)) {
@@ -289,7 +328,8 @@ public class TeamArtifact extends Artifact {
 		this.defineObsProperty("buy_coordination", shop, itemsAux);
 	}
 	
-	@OPERATION void removeBuyCoordination(String shop, String item, int qty){
+	@OPERATION
+	void removeBuyCoordination(String shop, String item, int qty){
 		int remove = -1;
 		if (buyCoordination.get(shop) != null && buyCoordination.get(shop).toString().contains(item)) {
 			for (String s: buyCoordination.get(shop)) {
@@ -310,37 +350,45 @@ public class TeamArtifact extends Artifact {
 		}
 	}
 	
-	@OPERATION void addServerName(String agent, String agentServer){
+	@OPERATION
+	void addServerName(String agent, String agentServer){
 		agentNames.put(agent,agentServer);
 	}
 	
-	@OPERATION void getServerName(String agent, OpFeedbackParam<String> agentServer){
+	@OPERATION
+	void getServerName(String agent, OpFeedbackParam<String> agentServer){
 		agentServer.set(agentNames.get(agent));
 	}
 	
-	@OPERATION void addRole(String agent, String role){
+	@OPERATION
+	void addRole(String agent, String role){
 		agentRoles.put(agent,role);
 	}
 	
-	@OPERATION void addLoad(String agent, int load){
+	@OPERATION
+	void addLoad(String agent, int load){
 //		logger.info("Loads before "+loads);
 		loads.put(agent,load);
 //		logger.info("Loads after "+loads);
 	}
 	
-	@OPERATION void getLoad(String agent, OpFeedbackParam<Integer> load){
+	@OPERATION
+	void getLoad(String agent, OpFeedbackParam<Integer> load){
 		load.set(loads.get(agent));
 	}
 	
-	@OPERATION void saveDuplicateLoad(){
+	@OPERATION
+	void saveDuplicateLoad(){
 		duplicateLoads.putAll(loads);
 	}
 	
-	@OPERATION void resetLoads(){
+	@OPERATION
+	void resetLoads(){
 		loads.putAll(duplicateLoads);
 	}
 	
-	@OPERATION void addShopItem(String item, int qty, String itemId, int price){
+	@OPERATION
+	void addShopItem(String item, int qty, String itemId, int price){
 		shopItemsQty.put(item,qty);
 		if (itemsQty.containsKey(itemId)) {
 			if (itemsQty.get(itemId) < qty) {
@@ -360,7 +408,8 @@ public class TeamArtifact extends Artifact {
 		}
 	}
 	
-	@OPERATION void getShopItem(String item, OpFeedbackParam<Integer> qty){
+	@OPERATION
+	void getShopItem(String item, OpFeedbackParam<Integer> qty){
 		qty.set(shopItemsQty.get(item));
 	}
 	
@@ -380,7 +429,8 @@ public class TeamArtifact extends Artifact {
 		return itemsPrice.get(item);
 	}
 		
-	@OPERATION void addResourceNode(String resourceId, double lat, double lon, String resource){
+	@OPERATION
+	void addResourceNode(String resourceId, double lat, double lon, String resource){
 		Literal litResourceId = Literal.parseLiteral(resourceId);
 		Literal litResource = Literal.parseLiteral(resource);
 		
@@ -390,7 +440,8 @@ public class TeamArtifact extends Artifact {
 		}
 	}
 	
-	@OPERATION void clearMaps() {
+	@OPERATION
+	void clearMaps() {
 		shopItemsQty.clear();
 		agentNames.clear();
 		loads.clear();
@@ -399,7 +450,8 @@ public class TeamArtifact extends Artifact {
 		this.init();
 	}
 	
-	@OPERATION void chosenAction(int step) {
+	@OPERATION
+	void chosenAction(int step) {
 		String agent = getCurrentOpAgentId().getAgentName();
 		
 		Set<String> agents = actionsByStep.remove(step);
@@ -420,10 +472,11 @@ public class TeamArtifact extends Artifact {
 	}
 	
 	class DesiredItem{
+		
 		private String name;
 		private int desiredQty;
 		private int currentQty;
-		private int percentual;
+		private int percentage;
 		
 		public DesiredItem(String name) {
 			this.name = name;
@@ -431,18 +484,28 @@ public class TeamArtifact extends Artifact {
 			this.currentQty = 0;
 		}
 		
+		public int getCurrentQty() {
+			return this.currentQty;
+		}
+
+		public int getPercentage() {
+			return 100 - this.percentage;
+		}
+		
+		public int getDesiredQty() {
+			return this.desiredQty;
+		}
+
 		public void setDesiredQty(int desiredQty) {
 			this.desiredQty = desiredQty;
 			updatePercentual();
 		}
-//		public void setCurrentQty(int currentQty) {
-//			this.currentQty = currentQty;
-//			updatePercentual();
-//		}
+		
 		public void addCurrentQty(int qty) {
 			this.currentQty = this.currentQty+qty;
 			updatePercentual();
 		}
+		
 		public void removeCurrentQty(int qty) {
 			this.currentQty = this.currentQty-qty;
 			updatePercentual();
@@ -451,16 +514,29 @@ public class TeamArtifact extends Artifact {
 		private void updatePercentual() {
 			int percent = (this.currentQty*100)/this.desiredQty;
 			if (percent >= 100) 
-				this.percentual = 99;
+				this.percentage = 99;
 			else
-				this.percentual = percent;
+				this.percentage = percent;
 		}
 
 		public Literal getLiteral() {
 			Literal l = null;
 			try {
 				l = ASSyntax.parseLiteral("item");
-				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.percentual)));
+				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.percentage)));
+				l.addTerm(ASSyntax.parseTerm(this.name));
+				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.desiredQty)));				
+			} catch (ParseException e) {
+				logger.info(e.getMessage());
+			}
+			return l;
+		}
+		
+		public Literal getLiteral(int total) {
+			Literal l = null;
+			try {
+				l = ASSyntax.parseLiteral("item"); 
+				l.addTerm(ASSyntax.parseTerm(String.valueOf(1+(this.getPercentage()*100)/total))); // Priority percent %
 				l.addTerm(ASSyntax.parseTerm(this.name));
 				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.desiredQty)));				
 			} catch (ParseException e) {
