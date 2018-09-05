@@ -1,0 +1,13 @@
+{
+  "scenario": "city2018",
+  "host": "smart_dell",
+  "port": 12300,
+  "scheduling": false,
+  "timeout": 40000,
+  "times": false,
+  "notifications": false,
+  "queued": true,
+  "entities": [
+    {"name": "connectionB33", "username": "agentB33", "password": "1", "iilang": false, "xml": false}
+  ]
+}

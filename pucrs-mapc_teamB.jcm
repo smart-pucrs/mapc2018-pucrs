@@ -1,0 +1,256 @@
+mas scenario {
+		
+	agent vehicle1: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle1, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB1")
+    	roles: explorer_drone in g1
+	}
+	agent vehicle2: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle2, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB2")
+		roles: explorer_drone in g1
+	}
+	agent vehicle3: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle3, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB3")
+		roles: explorer_drone in g1
+	}
+	agent vehicle4: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle4, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB4")
+		roles: explorer_drone in g1
+	}
+	agent vehicle5: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle5, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB5")
+		roles: gatherer in g1
+	}
+	agent vehicle6: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle6, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB6")
+		roles: gatherer in g1
+	}
+	agent vehicle7: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle7, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB7")
+		roles: gatherer in g1
+	}
+	agent vehicle8: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle8, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB8")
+		roles: gatherer in g1
+	}
+	agent vehicle9: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle9, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB9")
+		roles: gatherer in g1
+	}
+	agent vehicle10: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle10, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB10")
+		roles: gatherer in g1
+	}
+	agent vehicle11: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle11, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB11")
+		roles: gatherer in g1
+	}
+	agent vehicle12: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle12, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB12")
+		roles: gatherer in g1
+	}
+	agent vehicle13: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle13, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB13")
+		roles: gatherer in g1
+	}
+	agent vehicle14: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle14, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB14")
+		roles: gatherer in g1
+	}
+	agent vehicle15: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle15, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB15")
+		roles: gatherer in g1
+	}
+	agent vehicle16: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle16, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB16")
+		roles: gatherer in g1
+	}
+	agent vehicle17: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle17, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB17")
+		roles: gatherer in g1
+	}
+	agent vehicle18: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle18, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB18")
+		roles: gatherer in g1
+	}
+	agent vehicle19: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle19, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB19")
+		roles: gatherer in g1
+	}
+	agent vehicle20: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle20, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB20")
+		roles: gatherer in g1
+	}
+	agent vehicle21: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle21, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB21")
+		roles: gatherer in g1
+	}
+	agent vehicle22: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle22, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB22")
+		roles: gatherer in g1
+	}
+	agent vehicle23: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle23, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB23")
+		roles: gatherer in g1
+	}
+	agent vehicle24: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle24, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB24")
+		roles: gatherer in g1
+	}
+	agent vehicle25: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle25, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB25")
+		roles: gatherer in g1
+	}
+	agent vehicle26: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle26, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB26")
+		roles: gatherer in g1
+	}
+	agent vehicle27: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle27, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB27")
+		roles: gatherer in g1
+	}
+	agent vehicle28: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle28, vehicleart.team_artifact, vehicleart.task_board
+		goals: register("connectionB28")
+		roles: gatherer in g1
+	}
+	agent vehicle29: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle29, vehicleart.team_artifact
+		goals: register("connectionB29")
+		roles: builder in g1
+	}
+	agent vehicle30: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle30, vehicleart.team_artifact
+		goals: register("connectionB30")
+		roles: builder in g1
+	}
+	agent vehicle31: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle31, vehicleart.team_artifact
+		goals: register("connectionB31")
+		roles: builder in g1
+	}
+	agent vehicle32: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle32, vehicleart.team_artifact
+		goals: register("connectionB32")
+		roles: builder in g1
+	}
+	agent vehicle33: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle33, vehicleart.team_artifact
+		goals: register("connectionB33")
+		roles: builder in g1
+	}
+	agent vehicle34: vehicle.asl {
+		join: vehicleart
+		focus: vehicleart.eis_art_vehicle34, vehicleart.team_artifact
+		goals: register("connectionB34")
+		roles: builder in g1
+	}
+	
+	workspace vehicleart {
+		artifact eis_art_vehicle1: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig1.json")
+		artifact eis_art_vehicle2: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig2.json")
+		artifact eis_art_vehicle3: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig3.json")
+		artifact eis_art_vehicle4: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig4.json")
+		artifact eis_art_vehicle5: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig5.json")
+		artifact eis_art_vehicle6: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig6.json")
+		artifact eis_art_vehicle7: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig7.json")
+		artifact eis_art_vehicle8: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig8.json")
+		artifact eis_art_vehicle9: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig9.json")
+		artifact eis_art_vehicle10: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig10.json")
+		artifact eis_art_vehicle11: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig11.json")
+		artifact eis_art_vehicle12: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig12.json")
+		artifact eis_art_vehicle13: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig13.json")
+		artifact eis_art_vehicle14: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig14.json")
+		artifact eis_art_vehicle15: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig15.json")
+		artifact eis_art_vehicle16: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig16.json")
+		artifact eis_art_vehicle17: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig17.json")
+		artifact eis_art_vehicle18: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig18.json")
+		artifact eis_art_vehicle19: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig19.json")
+		artifact eis_art_vehicle20: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig20.json")
+		artifact eis_art_vehicle21: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig21.json")
+		artifact eis_art_vehicle22: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig22.json")
+		artifact eis_art_vehicle23: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig23.json")
+		artifact eis_art_vehicle24: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig24.json")
+		artifact eis_art_vehicle25: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig25.json")
+		artifact eis_art_vehicle26: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig26.json")
+		artifact eis_art_vehicle27: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig27.json")
+		artifact eis_art_vehicle28: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig28.json")
+		artifact eis_art_vehicle29: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig29.json")
+		artifact eis_art_vehicle30: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig30.json")
+		artifact eis_art_vehicle31: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig31.json")
+		artifact eis_art_vehicle32: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig32.json")
+		artifact eis_art_vehicle33: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig33.json")
+		artifact eis_art_vehicle34: env.EISArtifact("conf/eisconfig/local_server_smartdell/eismassimconfig34.json")
+		artifact team_artifact: env.TeamArtifact()
+		artifact task_board: cnp.TaskBoard()
+	}
+	
+	organisation org : org.xml{
+		group g1 : team		
+	}
+
+    asl-path: src/agt
+              src/agt/inc
+	
+	platform: cartago("infrastructure")
+
+}
