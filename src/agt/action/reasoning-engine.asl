@@ -74,55 +74,6 @@
 	!commit_action(Action);
 	.
 
-//+!update_percepts
-//	: ::action_sent(Id)
-//<-
-////	if(.desire(action::commit_action(Action))){
-////		.print("I feel an action ",Action);
-////	}
-//	
-//	.print("An action has been sent to the Server, I have to wait for the perceptions to be updated");
-//	.wait(default::actionID(Id2) & Id2 \== Id)
-//	. 
-//+!update_percepts.
-//@forgetParticularGoal[atomic]
-//+!forget_old_action(Module,Goal) 
-//	: not ::action_sent(_)
-//<- 
-//	.print("I Have a desire ",Goal,", forgetting it");
-//	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
-//	if(action::action(ActionId,Action)){
-//		.drop_desire(action::wait_request_for_help(ActionId));
-//		-action::action(ActionId,Action);
-//	}
-//	.	
-//+!forget_old_action(Module,Goal) 
-//<-	
-//	!update_percepts;
-//	!forget_old_action(Module,Goal) ;
-//	.
-//@forgetCommitAction[atomic]
-//+!forget_old_action
-//	: not ::action_sent(_)
-//<-
-//	.print("Dropping all intentions that aim to send an action to the Server");
-////	if(.desire(strategies::G) | .desire(explore::G)){
-////		.print("I feel a goal ",G);
-////	}
-//	.drop_future_intention(action::commit_action(_)); // we don't want to follow these plans anymore
-////	if(.desire(strategies::G2)|.desire(explore::G2)){
-////		.print("I feel a goal2 ",G2);
-////	}
-//	if(action::action(ActionId,Action)){
-//		.drop_desire(action::wait_request_for_help(ActionId));
-//		-action::action(ActionId,Action);
-//	}
-//	.
-//+!forget_old_action
-//<-	
-//	!update_percepts;
-//	!forget_old_action;
-//	.
 +!update_percepts
 	: ::action_sent(Id)
 <-
@@ -131,32 +82,16 @@
 	.wait({-::action_sent(_)});
 	. 
 +!update_percepts.
-@forgetParticularGoal[atomic]
+//@forgetParticularGoal[atomic]
 +!forget_old_action(Module,Goal) 
 	: not ::action_sent(_)
 <- 
-
 	.print("I Have a desire ",Module,"::",Goal,", forgetting it");
-//	if (.desire(Module::Goal)){
-	if (.desire(Module::Goal)){
-		.print("Yes I do ",Module," ",Goal);
-	} else{
-		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		.wait(5000);		
-	}
-//	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
-	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
 	
-	if (.desire(Module::Goal)){
-//	if (.desire(Module::Goal)){	
-		.print("FODEOOO");
-	}
-//	.wait(5000);
+	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
+	.wait(200);
+	.drop_desire(Module::Goal);
+	
 	if(action::action(ActionId,Action)){
 		.drop_desire(action::wait_request_for_help(ActionId));
 		-action::action(ActionId,Action);
@@ -179,13 +114,7 @@
 <-
 	!revogate_tokens;
 	.print("Dropping all intentions that aim to send an action to the Server");
-//	if(.desire(strategies::G) | .desire(explore::G)){
-//		.print("I feel a goal ",G);
-//	}
 	.drop_future_intention(action::commit_action(_)); // we don't want to follow these plans anymore
-//	if(.desire(strategies::G2)|.desire(explore::G2)){
-//		.print("I feel a goal2 ",G2);
-//	}
 	if(action::action(ActionId,Action)){
 		.drop_desire(action::wait_request_for_help(ActionId));
 		-action::action(ActionId,Action);
