@@ -6,7 +6,7 @@
   "timeout": 40000,
   "times": false,
   "notifications": false,
-  "queued": false,
+  "queued": true,
   "entities": [
     {"name": "connectionA21", "username": "SMART_JaCaMo21", "password": "n8d4Rs", "iilang": false, "xml": false}
   ]

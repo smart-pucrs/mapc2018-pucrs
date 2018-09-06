@@ -6,7 +6,7 @@
   "timeout": 40000,
   "times": false,
   "notifications": false,
-  "queued": false,
+  "queued": true,
   "entities": [
     {"name": "connectionA21", "username": "agentA21", "password": "1", "iilang": false, "xml": false}
   ]
