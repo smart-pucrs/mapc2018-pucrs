@@ -46,9 +46,13 @@
 +!assist_assemble[scheme(Scheme)]
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName)
 <-
+	!do_assist(Scheme,Assembler);
+	.
++!do_assist(Scheme,Assembler)
+<-
 	.print("doing assisting ",Assembler);
 	!assemble::assist_assemble(Assembler);
-	!assist_assemble[scheme(Scheme)];
+	!do_assist(Scheme,Assembler);
 	.
 +!stop_assist[scheme(Scheme)]
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName) & default::joined(org,OrgId) 
@@ -57,7 +61,8 @@
 //	.succeed_goal(assemble::assist_assemble(Assembler));
 //    .drop_desire(assemble::assist_assemble(Assembler));
 //    !action::forget_old_action(assemble,assist_assemble(Assembler));
-	!action::forget_old_action(_,assist_assemble[scheme(Scheme)]);
+
+	!action::forget_old_action(org,assist_assemble[scheme(Scheme)]);
     org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
 	.print("stopped ",Assembler);
 	
