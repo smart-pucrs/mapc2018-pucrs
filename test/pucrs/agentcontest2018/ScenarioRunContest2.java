@@ -8,13 +8,13 @@ import jason.JasonException;
 import massim.Server;
 
 
-public class ConnectionTest_MAPC_Server2 {
+public class ScenarioRunContest2 {
 
 	@Before
 	public void setUp() {
 
 		try {			
-			JaCaMoLauncher.main(new String[] {"pucrs-mapc_server2_2018.jcm"});
+			JaCaMoLauncher.main(new String[] {"pucrs-mapc2018-contest2.jcm"});
 		} catch (JasonException e) {
 			System.out.println("Exception: "+e.getMessage());
 			e.printStackTrace();
