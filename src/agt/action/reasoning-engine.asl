@@ -137,6 +137,7 @@
 <- 
 
 	.print("I Have a desire ",Module,"::",Goal,", forgetting it");
+//	if (.desire(Module::Goal)){
 	if (.desire(Module::Goal)){
 		.print("Yes I do ",Module," ",Goal);
 	} else{
@@ -148,10 +149,11 @@
 		.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		.wait(5000);		
 	}
-	.drop_desire(Module::Goal);
+//	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
 	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
 	
 	if (.desire(Module::Goal)){
+//	if (.desire(Module::Goal)){	
 		.print("FODEOOO");
 	}
 //	.wait(5000);
