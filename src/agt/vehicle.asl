@@ -1,6 +1,6 @@
-{ include("$jacamoJar/templates/common-cartago.asl") }
-{ include("$jacamoJar/templates/common-moise.asl") }
-{ include("$jacamoJar/templates/org-obedient.asl", org) }
+{ include("common-cartago.asl") }
+{ include("common-moise.asl") }
+{ include("org-obedient.asl", org) }
 { include("action/actions.asl",action) }
 { include("behaviour/build/build.asl",build) }
 //{ include("behaviour/dismantle/dismantle.asl",dismantle) }
