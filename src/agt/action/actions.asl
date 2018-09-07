@@ -439,7 +439,7 @@
 		if (Result == "false") {
 			+impossible;
 			.print("@@@@ Impossible route, going to try anyway.");
-			+going(Flat,Flon);
+			+::going(Flat,Flon);
 			!action::commit_action(goto(Flat,Flon));
 			!goto(Flat,Flon);
 		}
@@ -457,7 +457,7 @@
 			if (Result2 == "false") {
 				+impossible;
 				.print("@@@@ Impossible route, going to try anyway and hopefully call service breakdown.");
-				+going(Flat,Flon);
+				+::going(Flat,Flon);
 				!action::commit_action(goto(Flat,Flon));
 				!goto(Flat,Flon);
 			}
@@ -484,6 +484,7 @@
 	-onMyWay(Aux2List);
 	if (not action::impossible) {
 		.print("**** Going to charge my battery at ", FacilityAux2);
+		+::going(FacilityAux2);
 		!action::commit_action(goto(FacilityAux2));
 		!goto(FacilityAux2);
 		!charge;		
@@ -533,6 +534,7 @@
 		if (Result == "false") {
 			+impossible;
 			.print("@@@@ Impossible route, going to try anyway.");
+			+::going(FacilityId);
 			!action::commit_action(goto(FacilityId));
 			!goto(FacilityId);
 		}
@@ -550,6 +552,7 @@
 			if (Result2 == "false") {
 				+impossible;
 				.print("@@@@ Impossible route, going to try anyway and hopefully call service breakdown.");
+				+::going(FacilityId);
 				!action::commit_action(goto(FacilityId));
 				!goto(FacilityId);
 			}
@@ -576,6 +579,7 @@
 	-onMyWay(Aux2List);
 	if (not action::impossible) {
 		.print("**** Going to charge my battery at ", FacilityAux2);
+		+::going(FacilityAux2)
 		!action::commit_action(goto(FacilityAux2));
 		!goto(FacilityAux2);
 		!charge;		
