@@ -18,27 +18,42 @@
 	!action::commit_action(dismantle);
 	.
 
-
-
 // Goto (option 1)
 // FacilityId must be a string
-+!goto(FacilityId) : default::facility(FacilityId).
++!goto(FacilityId) 
+	: default::facility(FacilityId)
+<-
+	-::going(FacilityId);
+	.
 +!goto(FacilityId)
 	: default::charge(0)
 <-
 	!recharge;
 	!goto(FacilityId);
 	.
-//+!goto(FacilityId)
-//	: default::routeLength(R) & R \== 0
-//<-	
-//	!continue;
-//	!goto(FacilityId);
-//	.
++!goto(FacilityId) 
+	: ::going(_,_) 
+<-
+	-::going(_,_);
+	!goto(FacilityId);
+	.
++!goto(FacilityId) 
+	: ::going(FacilityGoing) & FacilityId \== FacilityGoing
+<-
+	-::going(FacilityGoing);
+	!goto(FacilityId);
+	.
++!goto(FacilityId)
+	: ::going(FacilityId) & default::routeLength(R) & R \== 0
+<-	
+	!continue;
+	!goto(FacilityId);
+	.
 // We should not test battery if we are already going to a charging station	
 +!goto(FacilityId)
 : not .desire(action::go_charge(_)) & new::chargingList(List) & .member(FacilityId,List)
 <-	
+	+::going(FacilityId);
     !action::commit_action(goto(FacilityId));
 	!goto(FacilityId);
 	.
@@ -46,74 +61,60 @@
 +!goto(FacilityId)
 : not .desire(action::go_charge(_)) & new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
 <-	
-    if (Result == "false") { !go_charge(FacilityId); }
-    else { !action::commit_action(goto(FacilityId)); }
+    if (Result == "false") { 
+    	!go_charge(FacilityId);
+    }
+    else { 
+    	+::going(FacilityId);
+    	!action::commit_action(goto(FacilityId));
+    }
 	!goto(FacilityId);
 	.
-+!goto(FacilityId)
-<-	
-	!::commit_action(goto(FacilityId));
-	!::goto(FacilityId);
-	.
-//+!goto(FacilityId)
-//	: true
-//<-	
-//	!action::commit_action(goto(FacilityId));
-//	!goto(FacilityId);
-//	.
-
 
 // Goto (option 2)
 // Lat and Lon must be floats
-+!goto(Lat, Lon) : default::lat(Lat) & default::lon(Lon).
++!goto(Lat, Lon) 
+	: ::going(Lat,Lon) & default::routeLength(R) & R == 0 
+<- 
+	-::going(Lat,Lon)
+	.
 +!goto(Lat, Lon)
 	: default::charge(0)
 <-
 	!recharge;
 	!goto(Lat, Lon);
 	.
-//+!goto(Lat, Lon)
-//	: default::routeLength(R) & R \== 0
-//<-	
-//	!continue;
-//	!goto(Lat, Lon);
-//	.
-// Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
-+!goto(Lat, Lon)
-: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
++!goto(Lat,Lon) 
+	: ::going(_) 
+<-
+	-::going(_);
+	!goto(Lat,Lon);
+	.
++!goto(Lat,Lon) 
+	: ::going(LatGoing,LonGoing) & (Lat \== LatGoing | Lon \== LonGoing)
+<-
+	-::going(LatGoing,LonGoing);
+	!goto(Lat,Lon);
+	.
++!goto(Lat,Lon)
+	: ::going(Lat,Lon) & default::routeLength(R) & R \== 0
 <-	
-    if (Result == "false") { !go_charge(Lat, Lon); }
-    else { !action::commit_action(goto(Lat,Lon)); }
+	!continue;
 	!goto(Lat, Lon);
 	.
-+!goto(Lat, Lon)
+// Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
++!goto(Lat,Lon)
+: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
 <-	
-	!::commit_action(goto(Lat,Lon));
-	!::goto(Lat,Lon);
+    if (Result == "false") { 
+    	!go_charge(Lat,Lon);
+    }
+    else { 
+    	+::going(Lat,Lon); 
+    	!action::commit_action(goto(Lat,Lon));
+    }
+	!goto(Lat,Lon);
 	.
-//// Goto (option 2)
-//// Lat and Lon must be floats
-//+!goto(Lat, Lon) : going(Lat,Lon) & default::routeLength(R) & R == 0 <- -going(Lat,Lon).
-//+!goto(Lat, Lon)
-//	: default::charge(0)
-//<-
-//	!recharge;
-//	!goto(Lat, Lon);
-//	.
-//+!goto(Lat, Lon)
-//	: going(Lat,Lon) & default::routeLength(R) & R \== 0
-//<-	
-//	!continue;
-//	!goto(Lat, Lon);
-//	.
-//// Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
-//+!goto(Lat, Lon)
-//: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
-//<-	
-//    if (Result == "false") { !go_charge(Lat, Lon); }
-//    else { +going(Lat,Lon); !action::commit_action(goto(Lat,Lon)); }
-//	!goto(Lat, Lon);
-//	.
 
 // Charge
 // No parameters
