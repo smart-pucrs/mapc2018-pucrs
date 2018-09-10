@@ -124,6 +124,7 @@
 		-::action(ActionId,Action);
 	}
 	+::committedToAction(ActionId);
+	.print("Finished dropping all intentions");
 	.
 +!forget_old_action
 <-	
