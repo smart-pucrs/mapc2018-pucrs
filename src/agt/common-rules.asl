@@ -57,3 +57,9 @@ chosen_item([item(P,N,Q)|L], Temp, R, Item) :- chosen_item(L, P + Temp, R, Item)
 remove_unknown_bases([],AuxList,PrunedList) :- PrunedList = AuxList.	
 remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- default::resNode(_,_,_,Base) & remove_unknown_bases(List,[item(X,Base,Y)|AuxList],PrunedList).
 remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- remove_unknown_bases(List,AuxList,PrunedList).
+
+am_I_a_winner 
+:-
+	default::winner(_,_,_,_,_) | // assembly winner
+	default::winner(_,_,_) // delivery winner
+	.

@@ -37,28 +37,22 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 	
 +task(delivery_task(DeliveryPoint,Tasks),CNPBoard,TaskId)
 <-
-//	!create_bid_task(StorageD,Item, Qtd, Bid);
 	!create_bid(DeliveryPoint, Bid);
 	.print("My bid for task ",TaskId," is ",Bid);
     manyBids(Bid)[artifact_name(CNPBoard)];
 	ceaseBids[artifact_name(CNPBoard)];
 	.
-//+!create_bid_task(StorageD, ItemId, Qty, Bid)
-//	: default::load(MyLoad) & predicted_load(PredLoad) & default::maxLoad(LoadCap) & default::item(ItemId,Vol,_,_) & new::storageList(SList)
-//<-
-//	.print("CL: ",MyLoad," pred: ",PredLoad);
-//	if (LoadCap - (PredLoad + MyLoad) >= Vol * Qty) {
-//		?steps_to_storages(StorageD,ItemId,SList,[],Bid);
-//	}
-//	else { Bid = []; }
-//	.
 +!create_bid(StorageD,Bid)
-	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
+	: not rules::am_I_a_winner & default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
 <-
 	actions.route(Role,Speed,Storage,RouteStorage);
 	actions.route(Role,Speed,Storage,StorageD,RouteStorage2);
 	Distance = RouteStorage + RouteStorage2;
 	Bid = [bid(Distance,MaxLoad)];
+	.
++!create_bid(StorageD,Bid)
+<-
+	Bid = [];
 	.
 
 +!delivery_job(Id,Stocks,StorageDestination)

@@ -10,13 +10,17 @@
 	.
 	
 +!create_bid(Bid)
-	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
+	: not rules::am_I_a_winner & default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
 <-
 	actions.route(Role,Speed,Storage,RouteStorage);
 	actions.route(Role,Speed,Storage,Workshop,RouteWorkshop);
 	actions.route(Role,Speed,Workshop,Storage,RouteStorage2);
 	Distance = RouteStorage + RouteWorkshop + RouteStorage2;
 	Bid = [bid(Distance,MaxLoad,Role)];
+	.
++!create_bid(Bid)
+<-
+	Bid = [];
 	.
 
 // ### ASSEMBLE ###
