@@ -33,6 +33,11 @@
 <-
 	!recover_from_failure(Action,Result);
 	.
+-!retrieve_items(Type,Item,Qtd,OldQtd)
+<-
+	.print("HOUSTON WE HAVE A BUG!");
+	!retrieve_items(Type,Item,Qtd,OldQtd);
+	.
 
 // ### STORE ###
 +!store_items(Storage,Item,Qtd)
