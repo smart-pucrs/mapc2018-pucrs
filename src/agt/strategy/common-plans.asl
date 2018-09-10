@@ -76,7 +76,7 @@
 	
 // ### AWARD ###
 +default::winner(Me,assembly,Duty,Tasks,TaskId)
-	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,_)
+	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,g1)
 <-
 //	+action::reasoning_about_belief(TaskId);
 	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
@@ -119,7 +119,7 @@
 	.
 	
 +default::winner(TaskId,Tasks,DeliveryPoint)
-	: default::joined(org,OrgId) & default::play(Me,CurrentRole,_)
+	: default::joined(org,OrgId) & default::play(Me,CurrentRole,g1)
 <-
 	.print("*************************************************** I'm winner ",TaskId," ",Tasks," at ",DeliveryPoint);
 	
