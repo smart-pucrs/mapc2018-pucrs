@@ -105,10 +105,6 @@ public class ContractNetBoard extends Artifact {
 	}
 	
 	private boolean allAgentsMadeTheirBid(int agents){
-		 return bids.size() == agents;
-	}
-	
-	private boolean allAgentsMadeTheirMultipleBid(int agents){
 		 return bidders.size() == agents;
 	}
 }
