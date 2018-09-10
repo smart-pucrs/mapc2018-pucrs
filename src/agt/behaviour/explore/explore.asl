@@ -1,6 +1,18 @@
 n_steps(0).
 n_walks(0).
 
+// Plan to calculate how much the quadrant should be traversed
++!size_map 
+	: 	default::minLat(MinLat) & default::minLon(MinLon) & 
+		default::maxLat(MaxLat) & default::maxLon(MaxLon) & 
+		CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & 
+		new::chargingList(List) & rules::closest_facility(List, CLat, MinLon + 0.001, Facility)
+<- 
+	VHipo = ((((CLat - MinLat)/2) * ((CLat - MinLat)/2)) + (((CLon - MinLon)/2) * ((CLon - MinLon)/2)));
+	HalfH = VHipo / 2;
+	+s_total(math.floor((math.sqrt(HalfH)/0.0060))-2);
+	.
+
 +!explore
 <-
 	!go_explore_charging;
@@ -15,12 +27,11 @@ n_walks(0).
 	!action::charge;
 	.
 
-
 +!go_walk
-	: n_steps(3) & n_walks(W)
+	: n_steps(S) & n_walks(W) & s_total(T) & S == T
 <- 
 	.print("Explorer completed, exploring again.");
-	-n_steps(3);
+	-n_steps(S);
 	+n_steps(0);
 	-n_walks(W);
 	+n_walks(0);
