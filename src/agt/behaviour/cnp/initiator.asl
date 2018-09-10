@@ -62,8 +62,8 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 <-
 	+::must_check_compound;
 	.print("Chamou o Based Stored");
-	+action::reasoning_about_belief(Storage);
 	.wait({+default::actionID(_)});
+	+action::reasoning_about_belief(Storage);
 	
 	!estimates::compound_estimate(Items);
 	if (Items \== []) { 

@@ -110,28 +110,26 @@ public class TeamArtifact extends Artifact {
 //		this.defineObsProperty("available_items", litStorage, itemsAux);
 //	}
 	
+	private int timesQtyCompundItem = 3;
 	@OPERATION
 	void setDesiredBase(String item, int qty)  {
 		if (!this.desiredBase.containsKey(item))
 			this.desiredBase.put(item, new DesiredItem(item));
 		
 		DesiredItem desired = this.desiredBase.get(item);
-		desired.setDesiredQty(qty);
+		desired.setDesiredQty(qty*timesQtyCompundItem);
 		
 		updateDesiredItemsBase(this.desiredBase, this.obspDesiredBase);
-	}
-	
-	
+	}	
 	@OPERATION
 	void setDesiredCompound(String item, int qty)  {
 		if (!this.desiredCompound.containsKey(item))
 			this.desiredCompound.put(item, new DesiredItem(item));
 		
 		DesiredItem desired = this.desiredCompound.get(item);
-		desired.setDesiredQty(qty);
+		desired.setDesiredQty(qty*timesQtyCompundItem);
 		
 		updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
-
 	}
 	
 	private void updateDesiredItemsCompound(Map<String,DesiredItem> desiredItems, String obspName) {

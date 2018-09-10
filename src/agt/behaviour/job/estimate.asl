@@ -73,11 +73,32 @@ evaluate_steps
 //:-
 //	Lot = math.ceil(DesiredQty*0.5)
 //	.
+max_capacity([],Temp,Capacity)
+:-
+	Capacity = Temp
+	.
+max_capacity([Role|Roles],Temp,Capacity)
+:-
+	Role == car &
+	Temp <= 50 & 
+	NewTemp = 50 &
+	max_capacity(Roles,NewTemp,Capacity)
+	.
+max_capacity([Role|Roles],Temp,Capacity)
+:-
+	Role == truck &
+	Capacity = 100
+	.
+max_capacity([Role|Roles],Temp,Capacity)
+:-
+	max_capacity(Roles,Temp,Capacity)
+	.
 calculate_lot(Item,DesiredQty,Lot)
 :-
-	default::item(Item,Vol,_,_) &
-	MaxQty = math.ceil(100/Vol) & // truck load
-	HalfQty = math.ceil(DesiredQty*0.5) &
+	default::item(Item,Vol,roles(Roles),_) &
+	max_capacity(Roles,30,Capacity) &
+	MaxQty = math.floor(Capacity/Vol) & // truck load
+	HalfQty = math.floor(DesiredQty*0.5) &
 	Lot = math.min(HalfQty,MaxQty)	
 	.
 +!compound_estimate(Items)
