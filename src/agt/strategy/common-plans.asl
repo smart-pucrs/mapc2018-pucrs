@@ -119,7 +119,7 @@
 	.
 	
 +default::winner(TaskId,Tasks,DeliveryPoint)
-	: default::joined(org,OrgId) & default::play(Me,CurrentRole,g1)
+	: .my_name(Me) & default::joined(org,OrgId) & default::play(Me,CurrentRole,g1)
 <-
 	.print("*************************************************** I'm winner ",TaskId," ",Tasks," at ",DeliveryPoint);
 	
