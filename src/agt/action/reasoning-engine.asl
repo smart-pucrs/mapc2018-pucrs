@@ -22,26 +22,27 @@
 	!commit_action(Action);
 	.
 +!commit_action(Action)
-	: default::actionID(Id) & not action::action(Id,_) 
+	: default::actionID(Id) & not action::action(Id,_) & .current_intention(intention(IntentionId,_))
 <-
 	.abolish(action::action(_,_)); // removes all the possible last actions
 	+action::action(Id,Action);
-	chosenAction(Id);
-	.print("Doing action ",Action, " at step ",Id," . Waiting for step ",Id+1);
+	.print("Doing action ",Action, " for ",IntentionId," at step ",Id," . Waiting for step ",Id+1);
 //	if ( Action \== recharge & Action \== continue) {
 //		.print("Doing action ",Action, " at step ",S," . Waiting for step ",S+1);
 //	}
 	
-	!!wait_request_for_help(Id)
+	!!wait_request_for_help(Id);
+	chosenAction(Id);
 //	.wait( default::actionID(Id2) & Id2 \== Id & not action::reasoning_about_belief(_)); 
 	.wait({+default::actionID(_)}); 
 	.wait(not action::reasoning_about_belief(_)); 
 	
-	-action::action(Id,Action);
-	-action::action_sent(Id);
+	-::action(Id,Action);
+	-::action_sent(Id);
+	-::committedToAction(Id);
 	
 	?default::lastActionResult(Result);
-	.print("Last action result was: ",Result);
+	.print("Last action result ",IntentionId," was: ",Result);
 		
 	if (Result \== successful & Result \== successful_partial){
 		if (Action \== recharge & Action \== continue & not .substring("assist_assemble",Action) & Result == failed){
@@ -82,20 +83,21 @@
 	.wait({-::action_sent(_)});
 	. 
 +!update_percepts.
-//@forgetParticularGoal[atomic]
+@forgetParticularGoal[atomic]
 +!forget_old_action(Module,Goal) 
-	: not ::action_sent(_)
+	: not ::action_sent(_) & default::actionID(ActionId)
 <- 
 	.print("I Have a desire ",Module,"::",Goal,", forgetting it");
 	
 	.drop_desire(Module::Goal); // we don't want to follow these plans anymore
-	.wait(200);
-	.drop_desire(Module::Goal);
+	.drop_intention(Module::Goal);
 	
-	if(action::action(ActionId,Action)){
-		.drop_desire(action::wait_request_for_help(ActionId));
-		-action::action(ActionId,Action);
+	if(::action(ActionId,Action)){
+		.drop_desire(::wait_request_for_help(ActionId));
+		-::action(ActionId,Action);
 	}
+	
+	+::committedToAction(ActionId);
 	.	
 +!forget_old_action(Module,Goal) 
 <-	
@@ -111,14 +113,17 @@
 	.
 @forgetCommitAction[atomic]
 +!forget_old_action
+	: default::actionID(ActionId)
 <-
 	!revogate_tokens;
 	.print("Dropping all intentions that aim to send an action to the Server");
-	.drop_future_intention(action::commit_action(_)); // we don't want to follow these plans anymore
-	if(action::action(ActionId,Action)){
-		.drop_desire(action::wait_request_for_help(ActionId));
-		-action::action(ActionId,Action);
+	.drop_desire(::commit_action(_));
+	.drop_future_intention(::commit_action(_)); // we don't want to follow these plans anymore
+	if(::action(ActionId,Action)){
+		.drop_desire(::wait_request_for_help(ActionId));
+		-::action(ActionId,Action);
 	}
+	+::committedToAction(ActionId);
 	.
 +!forget_old_action
 <-	
@@ -133,22 +138,27 @@
 	-+::current_token(Token+1);
 	.
 
-
+@helprequest[atomic]
 +default::chosenActions(ActionId, Agents) // all the agents have chosen their actions
-	: .length(Agents) == 34
+	: .length(Agents) == 34 & not ::committedToAction(ActionId) & not ::action_sent(ActionId)
 <-
-	.drop_desire(action::wait_request_for_help(ActionId));
+	.print("All agents have chosen their action on ",ActionId,", dropping wait_request_for_help");
+	.drop_desire(::wait_request_for_help(ActionId));
+	.drop_intention(::wait_request_for_help(ActionId));
 	!send_action_to_server(ActionId);
 	.
 +!wait_request_for_help(ActionId)
-	: action::committedToAction(ActionId)
+	: ::committedToAction(ActionId)
 <-
+	.print("I'm strong commited to help someone else on ",ActionId);
 	!send_action_to_server(ActionId);
-	.abolish(action::committedToAction(_));
+	.abolish(::committedToAction(_));
 	.	
 +!wait_request_for_help(ActionId)
 <-
+	.print("Waiting for help request on ",ActionId);
 	.wait(1000);
+	.print("Time has gone on ",ActionId);
 	!send_action_to_server(ActionId);
 	.	
 	
@@ -160,5 +170,8 @@
 	action(Action);
 	+action::action_sent(ActionId);
 	.
-+!send_action_to_server(ActionId). // action already sent to the server
++!send_action_to_server(ActionId)
+<-
+	.print("SHOULDN'T PASS HERE ON ",ActionId);
+	. // action already sent to the server
 

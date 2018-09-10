@@ -457,18 +457,21 @@ public class TeamArtifact extends Artifact {
 		Set<String> agents = actionsByStep.remove(step);
 		if (agents == null)
 			agents = new HashSet<String>();
-		agents.add(agent);
-		actionsByStep.put(step, agents);
 		
-		if (this.getObsPropertyByTemplate("chosenActions", step,null) != null)
-			this.removeObsPropertyByTemplate("chosenActions", step, null);
-		this.defineObsProperty("chosenActions", step, agents.toArray());
-		
-//		clean belief
-		if (actionsByStep.containsKey(step-1)) {
-			actionsByStep.remove(step-1);
-			this.removeObsPropertyByTemplate("chosenActions", step-1, null);
-		}
+		if (!agents.contains(agent)) {
+			agents.add(agent);
+			actionsByStep.put(step, agents);
+			
+			if (this.getObsPropertyByTemplate("chosenActions", step,null) != null)
+				this.removeObsPropertyByTemplate("chosenActions", step, null);
+			this.defineObsProperty("chosenActions", step, agents.toArray());
+			
+//			clean belief
+			if (actionsByStep.containsKey(step-1)) {
+				actionsByStep.remove(step-1);
+				this.removeObsPropertyByTemplate("chosenActions", step-1, null);
+			}
+		}	
 	}
 	
 	class DesiredItem{
