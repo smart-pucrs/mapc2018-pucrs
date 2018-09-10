@@ -95,7 +95,7 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	}
 	else {
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
-		.fail(noBids);
+//		.fail(noBids);
 	} 
 	clear(CNPBoardName);  
     .
