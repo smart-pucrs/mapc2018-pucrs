@@ -112,7 +112,7 @@
 	.
 	
 +!go_back_to_work
-	: .my_name(Me) & default::play(Me,CurrentRole,_)
+	: .my_name(Me) & default::play(Me,CurrentRole,g1)
 <-
 	.print("I'm going back to work");
 	!action::forget_old_action;

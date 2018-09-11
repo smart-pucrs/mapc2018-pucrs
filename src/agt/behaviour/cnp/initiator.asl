@@ -70,7 +70,8 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 
 		.term2string(Items,ItemsS);
 		
-		!allocate_tasks(none,Items,Storage);		
+//		!allocate_tasks(none,Items,Storage);
+		!pick_task(allocate_tasks(none,Items,Storage))[priority(4)];		
 	}
 	else { 
 		.print("££££££££££ Can't assemble anything yet."); 
@@ -81,7 +82,7 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
  	.
  	
  +!allocate_tasks(Id,Task,DeliveryPoint)
-	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer_drone),ListAgents)
+	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer_drone),ListAgents)
 <-     .print(ListAgents,Task);
 	announce(assemble(Task),10000,ListAgents,CNPBoardName);
        
@@ -128,7 +129,8 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	!estimates::priced_estimate(Id,Items);
 //	+entroo;
 	.print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ",Id," is feasible! ");
-    !allocate_delivery_tasks(Id,Items,Storage);
+//    !allocate_delivery_tasks(Id,Items,Storage);
+	!pick_task(allocate_delivery_tasks(Id,Items,Storage))[priority(3)];
     -action::reasoning_about_belief(Id);
     .
 -!accomplished_priced_job(Id,Storage,Items)[error_msg(Message)]
@@ -139,7 +141,7 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
  
 
 +!allocate_delivery_tasks(JobId,Tasks,DeliveryPoint)
-	: .findall(Agent,default::play(Agent,Role,_) & (Role==gatherer|Role==explorer),ListAgents)
+	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer),ListAgents)
 <-     
 	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),10000,JobId,ListAgents,CNPBoardName);
      
@@ -157,6 +159,31 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
        
     !cnpd::enclose(CNPBoardName);
     .
+    
+// ### DECIDE WHAT TASK ALLOCATE ###
+// Priority 1 - Missions
+// Priority 2 - Auctions
+// Priority 3 - Priced
+// Priority 4 - Compound Items
+^!pick_task(G)[priority(MyP),state(started)]
+	: not ::task_priority(_) | (::task_priority(P) & MyP < P)
+<-
+	-+::task_priority(MyP);
+	.
++!pick_task(G)[priority(MyP)]
+	: not ::requesting_help & (not ::task_priority(_) | (::task_priority(P) & MyP <= P))  
+<-
+	+::requesting_help;
+	!G;
+	-::task_priority(_);
+	-::requesting_help;
+	.
++!pick_task(G)[priority(P)]
+<-
+	.wait({-::requesting_help});
+	!pick_task(G)[priority(P)];
+	.
+ 	
     
 
 

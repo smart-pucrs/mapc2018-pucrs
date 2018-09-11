@@ -1,6 +1,6 @@
 compareStrings(Str1,Str2) :- .term2string(Str1,T1) & .term2string(Str2,T2) & (T1==T2).
 
-my_role(Role,CurrentRole):- .my_name(Me) & default::play(Me,CurrentRole,_) & CurrentRole == Role.
+my_role(Role,CurrentRole):- .my_name(Me) & default::play(Me,CurrentRole,g1) & CurrentRole == Role.
 
 am_I_at_right_position(Lat,Lon) :- default::lat(CurrentLat) & (Lat == CurrentLat) & default::lon(CurrentLon) & (Lon == CurrentLon).
 
@@ -58,8 +58,12 @@ remove_unknown_bases([],AuxList,PrunedList) :- PrunedList = AuxList.
 remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- default::resNode(_,_,_,Base) & remove_unknown_bases(List,[item(X,Base,Y)|AuxList],PrunedList).
 remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- remove_unknown_bases(List,AuxList,PrunedList).
 
-am_I_a_winner 
+can_I_bid
 :-
-	default::winner(_,_,_,_,_) | // assembly winner
-	default::winner(_,_,_) // delivery winner
+	not default::biding(_) &
+	(
+		not default::winner(_,_,_,_,_) // assembly winner
+		| 
+		not default::winner(_,_,_) // delivery winner
+	) 
 	.

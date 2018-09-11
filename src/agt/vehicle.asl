@@ -60,7 +60,7 @@
 	.
 
 +default::role(Role, BaseSpeed, MaxSpeed, BaseLoad, MaxLoad, BaseSkill, MaxSkill, BaseVision, MaxVision, BaseBattery, MaxBattery)
-	: .my_name(Me) & play(Me,MyRole,_)
+	: .my_name(Me) & play(Me,MyRole,g1)
 <- 
 	.wait( default::actionID(S) );
 	.wait(500);

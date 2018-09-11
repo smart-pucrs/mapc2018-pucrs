@@ -37,13 +37,17 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 	
 +task(delivery_task(DeliveryPoint,Tasks),CNPBoard,TaskId)
 <-
-	!create_bid(DeliveryPoint, Bid);
-	.print("My bid for task ",TaskId," is ",Bid);
-    manyBids(Bid)[artifact_name(CNPBoard)];
+	.print("Received a bid request for ",TaskId);
+	if (rules::can_I_bid){
+//		+default::biding(TaskId);
+		!create_bid(DeliveryPoint, Bid);
+		.print("My bid for task delivery ",TaskId," is ",Bid);
+    	manyBids(Bid)[artifact_name(CNPBoard)];	
+    }
 	ceaseBids[artifact_name(CNPBoard)];
 	.
 +!create_bid(StorageD,Bid)
-	: not rules::am_I_a_winner & default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
+	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
 <-
 	actions.route(Role,Speed,Storage,RouteStorage);
 	actions.route(Role,Speed,Storage,StorageD,RouteStorage2);

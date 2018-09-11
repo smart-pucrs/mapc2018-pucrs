@@ -2,15 +2,19 @@
 +default::task(Agents,assemble(_),ContractNetName,TaskId)
 	: .my_name(Me) & .member(Me,Agents)
 <-
-	!create_bid(Bid);
-	.print("My bid for taskss ",TaskId," is ",Bid);
-    manyBids(Bid)[artifact_name(ContractNetName)];
+	.print("Received a bid request for ",TaskId);
+	if (rules::can_I_bid){
+//		+default::biding(TaskId);
+		!create_bid(Bid);
+		.print("My bid for task assemble ",TaskId," is ",Bid);
+	    manyBids(Bid)[artifact_name(ContractNetName)];
+	}	
 	ceaseBids[artifact_name(ContractNetName)];
 	.print(ContractNetName);
 	.
-	
+
 +!create_bid(Bid)
-	: not rules::am_I_a_winner & default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
+	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
 <-
 	actions.route(Role,Speed,Storage,RouteStorage);
 	actions.route(Role,Speed,Storage,Workshop,RouteWorkshop);
