@@ -55,7 +55,22 @@
 <-
 	!recover_from_failure(Action,Result);
 	.
-	
+
++!recover_from_failure(Action, failed_capacity)
+<-	
+	.print("HOUSTON WE HAVE A BUG! ",Action," failed_capacity");
+	.wait(para);
+	.	
++!recover_from_failure(Action, failed_location)
+<-	
+	.print("HOUSTON WE HAVE A BUG! ",Action," failed_location");
+	.wait(para);
+	.	
++!recover_from_failure(Action, failed_item_amount)
+<-	
+	.print("HOUSTON WE HAVE A BUG! ",Action," failed_item_amount");
+	.wait(para);
+	.
 +!recover_from_failure(Action, Result)
 <-	
 	.print("Action ",Action," failed because of ",Result);
