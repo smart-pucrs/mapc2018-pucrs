@@ -230,6 +230,7 @@ public class TeamArtifact extends Artifact {
 		this.desiredCompound.get(item).removeCurrentQty(qty);		
 //		addAvailableItem(storage, item, qty);
 		updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
+		signal("compound_stored");
 	}
 	
 	@OPERATION

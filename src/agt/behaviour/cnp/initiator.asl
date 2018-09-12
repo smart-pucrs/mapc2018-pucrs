@@ -102,43 +102,55 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
     .
 
 // ### PRICED JOBS ###
+//job(id, storage, reward, start, end, [required(name1, qty1), ...])
 @priced_job[atomic]
 +default::job(Id,Storage,Reward,Start,End,Items)
 	: default::step(S) & S >= 11
-<-
-	
+<-	
 	+action::reasoning_about_belief(Id);
  	.print("Received ",Id,", Items ",Items," starting the priced job process.");
  	!compound_item_quantity(Items);
  	
-	!!accomplished_priced_job(Id,Storage,Items);
+//	!!accomplished_job(Id,Storage,Items);
+	!!pick_task(accomplished_job(Id,Storage,Items))[priority(3)];
 //	-action::reasoning_about_belief(Id);
 	.
-+!accomplished_priced_job(Id,Storage,Items)
-//	: not entroo
+	
+// ### MISSION ###
+// mission(id, storage, reward, start, end, fine, bid, time, [required(name1, qty1), ...])
+@mission[atomic]
++default::mission(MissionId,Storage,Reward,_,End,Fine,_,_,Items)
 <-
-//	+entroo;
-//	?default::joined(vehicleart,IdT);
-//	addAvailableItem(storage0,item5,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item6,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item7,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item8,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item9,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item10,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
-//	addAvailableItem(storage0,item11,10)[wid(IdT)]; // pode ser util para fazer os testes da aloção do assemble
+	+::mission(MissionId,Storage,Reward,End,Fine,Items);
+	.print("Receveid a new Mission ",MissionId," to be delivered at ",Storage," R: ",Reward," F: ",Fine," Items: ",Items);
+	!mission_done;
+	.
+@compound_stored[atomic]
++default::compound_stored
+<-
+	!mission_done;
+	.
++!mission_done
+<-
+	for(::mission(MissionId,Storage,Reward,End,Fine,Items) & not action::reasoning_about_belief(MissionId)){
+		+action::reasoning_about_belief(MissionId);
+		.print("Thinking about mission ",MissionId);
+		!!pick_task(accomplished_job(MissionId,Storage,Items))[priority(1)];
+	}	
+	.
+	
++!accomplished_job(Id,Storage,Items)
+<-
 	!estimates::priced_estimate(Id,Items);
-//	+entroo;
 	.print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ",Id," is feasible! ");
-//    !allocate_delivery_tasks(Id,Items,Storage);
-	!pick_task(allocate_delivery_tasks(Id,Items,Storage))[priority(3)];
+    !allocate_delivery_tasks(Id,Items,Storage);
     -action::reasoning_about_belief(Id);
     .
--!accomplished_priced_job(Id,Storage,Items)[error_msg(Message)]
+-!accomplished_job(Id,Storage,Items)[error_msg(Message)]
 <-
 	.print(Id," cannot be accomplished! Reasons: ",Message);
 	-action::reasoning_about_belief(Id);
     .
- 
 
 +!allocate_delivery_tasks(JobId,Tasks,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer),ListAgents)
@@ -151,6 +163,9 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
        
     	!cnpd::award_agents(JobId,DeliveryPoint,Winners);
     	.print("&&& Winners for ",CNPBoardName,": ",Winners);
+    	
+    	-::mission(JobId,_,_,_,_,_);
+//    	-::priced(JobId,_,_,_,_,_);
 	}
 	else {
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
@@ -160,7 +175,7 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
     !cnpd::enclose(CNPBoardName);
     .
     
-// ### DECIDE WHAT TASK ALLOCATE ###
+// ### DECIDE WHAT TASK TO ALLOCATE ###
 // Priority 1 - Missions
 // Priority 2 - Auctions
 // Priority 3 - Priced
