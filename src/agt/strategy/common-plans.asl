@@ -196,13 +196,13 @@
 	
 // what delivery agents do 
 +!perform_delivery
-	: default::winner(JobId,Deliveries,DeliveryPoint)[source(Initiator)]
+	: ::winner(JobId,Deliveries,DeliveryPoint)
 <-
 	.print("I won the tasks to ",Deliveries," at ",DeliveryPoint);	
 	
 	!delivery::delivery_job(JobId,Deliveries,DeliveryPoint);
 	
-	-::winner(JobId,Deliveries,DeliveryPoint)[source(Initiator)]
+	-::winner(JobId,Deliveries,DeliveryPoint);
 	
 	.print("I've finished my deliveries'");
 	!change_role(deliveryagent,gatherer);
