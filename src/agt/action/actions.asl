@@ -18,6 +18,13 @@
 	!action::commit_action(dismantle);
 	.
 
+// Goto (option 0)
+// walk only one step	
++!goto_one_step(FacilityId) 
+<-
+	!action::commit_action(goto(FacilityId));
+	.
+
 // Goto (option 1)
 // FacilityId must be a string
 +!goto(FacilityId) 

@@ -62,7 +62,7 @@ list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency), default::wellT
 +!build_well(Type) 
 	: default::well(Id,Lat,Lon,Type,Team,Integrity) & default::wellType(Type,_,_,_,TotalIntegrity) & (Integrity < TotalIntegrity)
 <- 
-	.print("Building well ",Id);
+	.print("Building well ",Id," ",Integrity," ",TotalIntegrity);
 	!action::buildExistingOne; 
 	!build_well(Type);
 	.
@@ -76,11 +76,17 @@ list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency), default::wellT
 <-	
 	.print("Some agent bought the well before me");
 	.
+//+!recover_from_failure(Action, failed_location)
+//	: default::lat(Lat) & default::lon(Lon) 
+//<-	
+//	.print("There is another well/facility here, moving on");
+//	!action::goto(Lat + 0.001,Lon + 0.001);
+//	.
 +!recover_from_failure(Action, failed_location)
-	: default::lat(Lat) & default::lon(Lon)
+	: new::chargingList(List) & rules::farthest_facility(List, Facility)
 <-	
 	.print("There is another well/facility here, moving on");
-	!action::goto(Lat + 0.001,Lon + 0.001);
+	!action::goto_one_step(Facility);
 	.
 +!recover_from_failure(Action, Result)
 <-	

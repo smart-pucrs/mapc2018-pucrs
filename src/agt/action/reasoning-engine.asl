@@ -44,8 +44,9 @@
 	?default::lastActionResult(Result);
 	.print("Last action result ",IntentionId," was: ",Result);
 	
-	if (default::lastAction(noAction)){
-		.print("I've missed the time to send my action and receveid a noaction, send it again");
+	?default::lastAction(LastAction);
+	if (LastAction == noAction | LastAction == randomFail){
+		.print("My action was replaced by ",LastAction,", sending true action again");
 		!commit_action(Action); // repeat the previous action
 	}else{
 		if (Result \== successful & Result \== successful_partial){
