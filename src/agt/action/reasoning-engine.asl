@@ -43,16 +43,22 @@
 	
 	?default::lastActionResult(Result);
 	.print("Last action result ",IntentionId," was: ",Result);
-		
-	if (Result \== successful & Result \== successful_partial){
-		if (Action \== recharge & Action \== continue & not .substring("assist_assemble",Action) & Result == failed){
-			//		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
-			!commit_action(Action);
-		} else{
-			.print("Failing action ",Action," because ",Result);
-			.fail(action(Action),result(Result));
+	
+	if (default::lastAction(noAction)){
+		.print("I've missed the time to send my action and receveid a noaction, send it again");
+		!commit_action(Action); // repeat the previous action
+	}else{
+		if (Result \== successful & Result \== successful_partial){
+			if (Action \== recharge & Action \== continue & not .substring("assist_assemble",Action) & Result == failed){
+				//		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
+				!commit_action(Action);
+			} else{
+				.print("Failing action ",Action," because ",Result);
+				.fail(action(Action),result(Result));
+			}
 		}
 	}
+	
 //	if (Action \== recharge & Action \== continue & not .substring("deliver",Action) & not .substring("assist_assemble",Action) & not .substring("buy",Action) & not .substring("bid_for_job",Action) & Result \== successful) {
 //		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
 ////		!commit_action(Action);
