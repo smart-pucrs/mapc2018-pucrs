@@ -49,6 +49,19 @@
 	.print("--- Available at ",Storage,": ",Msg);
 	-::message_available(_);
 	.
+@printstorage[atomic]
++default::storage(Storage,_,_,_,_,A)
+<-
+	+::message_storage("");
+	for(.member(item(Item,CurrentQty,Delivered),A)){
+		?::message_storage(Msg);
+		.concat(Msg,Item,"_",CurrentQty," ",String);
+		-+::message_storage(String);
+	}
+	?::message_storage(Msg);
+	.print("--- MAPC at ",Storage,": ",Msg);
+	-::message_storage(_);
+	.
 	
 +!set_center_storage_workshop
 	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility_truck(SList, CLat, CLon, Storage) & rules::closest_facility_truck(WList, Storage, Workshop)
