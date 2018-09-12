@@ -122,8 +122,9 @@
 	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,g1)
 <-
 //	+action::reasoning_about_belief(TaskId);
-	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
 	+::winner(Me,assembly,Duty,Tasks,TaskId);
+	-default::winner(Me,assembly,Duty,Tasks,TaskId);
+	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
 
 	!action::forget_old_action;
 	.drop_desire(::gather(_));
@@ -164,6 +165,8 @@
 +default::winner(TaskId,Tasks,DeliveryPoint)
 	: .my_name(Me) & default::joined(org,OrgId) & default::play(Me,CurrentRole,g1)
 <-
+	+::winner(TaskId,Tasks,DeliveryPoint);
+	-default::winner(TaskId,Tasks,DeliveryPoint);
 	.print("*************************************************** I'm winner ",TaskId," ",Tasks," at ",DeliveryPoint);
 	
 	!change_role(CurrentRole,deliveryagent);

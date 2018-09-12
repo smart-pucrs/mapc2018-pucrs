@@ -61,9 +61,6 @@ remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- remove_unknown
 can_I_bid
 :-
 	not default::biding(_) &
-	(
-		not default::winner(_,_,_,_,_) // assembly winner
-		| 
-		not default::winner(_,_,_) // delivery winner
-	) 
+	not strategies::winner(_,_,_,_,_) & // assembly winner
+	not strategies::winner(_,_,_) // delivery winner
 	.
