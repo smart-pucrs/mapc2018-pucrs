@@ -133,9 +133,14 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 +!mission_done
 <-
 	for(::mission(MissionId,Storage,Reward,End,Fine,Items) & not action::reasoning_about_belief(MissionId)){
-		+action::reasoning_about_belief(MissionId);
-		.print("Thinking about mission ",MissionId);
-		!!pick_task(accomplished_job(MissionId,Storage,Items))[priority(1)];
+		if (default::step(S) & S+30 <= End){
+			+action::reasoning_about_belief(MissionId);
+			.print("Thinking about mission ",MissionId);
+			!!pick_task(accomplished_job(MissionId,Storage,Items))[priority(1)];
+		} else{
+			.print("Mission ",MissionId," cannot be accomplished anymore, step ",S," end ",End,", we'll pay the fine ",Fine);
+			-::mission(MissionId,_,_,_,_,_);
+		}		
 	}	
 	.
 	
