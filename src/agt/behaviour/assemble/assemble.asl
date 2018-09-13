@@ -13,13 +13,30 @@
 	.print(ContractNetName);
 	.
 
+//+!create_bid(Bid)
+//	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
+//<-
+//	actions.route(Role,Speed,Storage,RouteStorage);
+//	actions.route(Role,Speed,Storage,Workshop,RouteWorkshop);
+//	actions.route(Role,Speed,Workshop,Storage,RouteStorage2);
+//	Distance = RouteStorage + RouteWorkshop + RouteStorage2;
+//	Bid = [bid(Distance,MaxLoad,Role)];
+//	.
+//+!create_bid(Bid)
+//<-
+//	Bid = [];
+//	.
 +!create_bid(Bid)
-	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
+	: 	default::role(Role,_,_,_,_,_,_,_,_,_,_) & 
+		default::maxLoad(MaxLoad) & 
+		strategies::centerStorage(Storage) & 
+		strategies::centerWorkshop(Workshop) & 
+		default::speed(Speed) & 
+		default::lat(Lat) &
+		default::lon(Lon) &
+		default::charge(Battery)
 <-
-	actions.route(Role,Speed,Storage,RouteStorage);
-	actions.route(Role,Speed,Storage,Workshop,RouteWorkshop);
-	actions.route(Role,Speed,Workshop,Storage,RouteStorage2);
-	Distance = RouteStorage + RouteWorkshop + RouteStorage2;
+	?rules::estimate_route(Role,Speed,Battery,location(Lat,Lon),[location(Storage),location(Workshop),location(Storage)],0,Distance);
 	Bid = [bid(Distance,MaxLoad,Role)];
 	.
 +!create_bid(Bid)

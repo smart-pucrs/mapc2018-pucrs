@@ -64,3 +64,40 @@ can_I_bid
 	not strategies::winner(_,_,_,_,_) & // assembly winner
 	not strategies::winner(_,_,_) // delivery winner
 	.
+	
+estimate_route(Role,Speed,Battery,_,[],TemQty,QtySteps)
+:-
+	QtySteps = TemQty
+	.
+estimate_route(Role,Speed,Battery,location(Lat,Lon),[location(Facility)|Locations],TemQty,QtySteps)
+:-
+	actions.route(Role,Speed,Lat,Lon,Facility,_,RouteFacility) & 
+	Battery > RouteFacility & 
+	estimate_route(Role,Speed,Battery-RouteFacility,location(Facility),Locations,TemQty+RouteFacility,QtySteps)
+	.
+estimate_route(Role,Speed,Battery,location(Lat,Lon),Locations,TemQty,QtySteps)
+:-
+	new::chargingList(CList) & 
+	rules::closest_facility(CList,Lat,Lon,ChargingStation) & 
+	actions.route(Role,Speed,Lat,Lon,ChargingStation,_,RouteFacility) & 
+	default::maxBattery(MaxBattery) &
+	default::chargingStation(ChargingStation,_,_,Rate) &
+	StepsToRecharge = math.ceil(MaxBattery / Rate) &
+	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),Locations,TemQty+StepsToRecharge+RouteFacility,QtySteps)
+	.
+estimate_route(Role,Speed,Battery,location(Facility),[location(Destination)|Locations],TemQty,QtySteps)
+:-
+	actions.route(Role,Speed,Facility,Destination,Route) & 
+	Battery > Route & 
+	estimate_route(Role,Speed,Battery-Route,location(Destination),Locations,TemQty+Route,QtySteps)
+	.
+estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
+:-
+	new::chargingList(CList) & 
+	rules::closest_facility(CList,Facility,ChargingStation) & 
+	actions.route(Role,Speed,Facility,ChargingStation,Route) & 
+	default::maxBattery(MaxBattery) &
+	default::chargingStation(ChargingStation,_,_,Rate) &
+	StepsToRecharge = math.ceil(MaxBattery / Rate) &
+	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),Locations,TemQty+StepsToRecharge+Route,QtySteps)
+	.

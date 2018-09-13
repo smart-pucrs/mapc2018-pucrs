@@ -46,12 +46,28 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
     }
 	ceaseBids[artifact_name(CNPBoard)];
 	.
+//+!create_bid(StorageD,Bid)
+//	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
+//<-
+//	actions.route(Role,Speed,Storage,RouteStorage);
+//	actions.route(Role,Speed,Storage,StorageD,RouteStorage2);
+//	Distance = RouteStorage + RouteStorage2;
+//	Bid = [bid(Distance,MaxLoad)];
+//	.
+//+!create_bid(StorageD,Bid)
+//<-
+//	Bid = [];
+//	.
 +!create_bid(StorageD,Bid)
-	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & default::speed(Speed)
+	: 	default::role(Role,_,_,_,_,_,_,_,_,_,_) & 
+		default::maxLoad(MaxLoad) & 
+		strategies::centerStorage(Storage) & 
+		default::speed(Speed) &
+		default::lat(Lat) &
+		default::lon(Lon) &
+		default::charge(Battery)
 <-
-	actions.route(Role,Speed,Storage,RouteStorage);
-	actions.route(Role,Speed,Storage,StorageD,RouteStorage2);
-	Distance = RouteStorage + RouteStorage2;
+	?rules::estimate_route(Role,Speed,Battery,location(Lat,Lon),[location(Storage),location(StorageD)],0,Distance);
 	Bid = [bid(Distance,MaxLoad)];
 	.
 +!create_bid(StorageD,Bid)
