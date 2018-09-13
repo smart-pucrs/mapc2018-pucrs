@@ -73,16 +73,14 @@
 	.
 
 +default::well(Well, Lat, Lon, Type, Team, Integrity)
-//	: not ataque & .print("aqui") & default::team(MyTeam) & MyTeam == Team & my_role(builder) & default::actionID(Id) 
-: default::team(MyTeam) & not .substring(MyTeam, Team) & rules::my_role(builder,CurrentRole) & default::actionID(Id)
+	: default::team(MyTeam) & not .substring(MyTeam, Team) & .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
 <-
+	!change_role(builder,attacker);
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Id);
-	!action::forget_old_action;
- 	+action::committedToAction(Id);
 	
-	!change_role(CurrentRole,attacker);
-	!attack::dismantle_well(Well);
-	!change_role(attacker,CurrentRole);
+	!action::forget_old_action;	
+	
+	!::attack;	
 	.
 
 +default::lastAction(Action)
@@ -116,6 +114,7 @@
 +!not_free <- -free.
 //+!not_free <- .print("free removed");-free.
 
+@change_role(atomic)
 +!change_role(OldRole, NewRole)
 	: default::group(_,team,GroupId)
 <-
@@ -205,6 +204,20 @@
 <-
 	!build::buy_well; 	
 	!build;
+	.
+
+// what attackers do 
++!attack
+	: default::well(Well,_,_,_,Team,_) & default::team(MyTeam) & not .substring(MyTeam, Team)
+<-
+	!attack::dismantle_well(Well);
+	-default::well(Well,_,_,_,Team,_)[source(_)];
+	!attack;
+	.
++!attack
+<-
+	!change_role(attacker,builder);
+	!!build;
 	.
 	
 // what delivery agents do 

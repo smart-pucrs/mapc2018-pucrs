@@ -14,7 +14,7 @@ public class TeamB_JustJaCaMo {
 	public void setUp() {
 
 		try {			
-			JaCaMoLauncher.main(new String[] {"pucrs-mapc_teamB.jcm"});
+			JaCaMoLauncher.main(new String[] {"pucrs-mapc-teamB.jcm"});
 		} catch (JasonException e) {
 			System.out.println("Exception: "+e.getMessage());
 			e.printStackTrace();
