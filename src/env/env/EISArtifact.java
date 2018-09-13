@@ -5,6 +5,8 @@ import jason.NoValueException;
 import jason.asSyntax.*;
 import jason.asSyntax.parser.ParseException;
 
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,16 +107,20 @@ public class EISArtifact extends Artifact implements AgentListener {
 	
 	@OPERATION
 	void action(String action) throws NoValueException {
-		Literal literal = Literal.parseLiteral(action);
 		try {
+		Literal literal = Literal.parseLiteral(action);
+		
 			String agent = getCurrentOpAgentId().getAgentName();
 			Action a = Translator.literalToAction(literal);
 			ei.performAction(agent, a);
 //			long endTime = System.nanoTime();
 //			long duration = (endTime - startTime) / 1000000;
 //			logger.info("Executed action "+a+" step "+lastStep+". Time from percept: "+duration);
-		} catch (ActException e) {
+		} catch (Exception e) {
+//			e.printStackTrace();
+			logger.info("DEU PAU BUG 47: "+e.getMessage());
 			e.printStackTrace();
+			fail("preciso parar");
 		}
 	}
 	

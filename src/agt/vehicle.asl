@@ -69,6 +69,15 @@
 		?default::cellSize(CellSize);
 		?default::proximity(Proximity);
 		initMap(Map,CellSize,Proximity);
+		
+		for(default::item(Item,_,_,parts([]))){
+			.print("base: ",Item);
+			setDesiredBase(Item,1);
+		}
+		for(default::item(Item,_,_,parts(P)) & P \== []){
+			.print("compound: ",Item);
+			setDesiredCompound(Item,1);
+		}
 	}
 	!action::recharge_is_new_skip;
 	?default::joined(org,OrgId);
