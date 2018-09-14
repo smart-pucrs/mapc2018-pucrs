@@ -72,8 +72,8 @@ estimate_route(Role,Speed,Battery,_,[],TemQty,QtySteps)
 estimate_route(Role,Speed,Battery,location(Lat,Lon),[location(Facility)|Locations],TemQty,QtySteps)
 :-
 	new::chargingList(CList) & 
-	rules::closest_facility(CList,Lat,Lon,SafeHaven) &
 	actions.route(Role,Speed,Lat,Lon,Facility,_,RouteFacility) & 
+	rules::closest_facility(CList,Facility,SafeHaven) &
 	actions.route(Role,Speed,Facility,SafeHaven,RouteSafeHaven) & 
 	Battery > (RouteFacility+RouteSafeHaven) & 
 //	.print("tenho bateria my position ate ",Facility," bateria: ",Battery," rota: ",RouteFacility," safe haven: ",RouteSafeHaven)&
@@ -93,11 +93,11 @@ estimate_route(Role,Speed,Battery,location(Lat,Lon),Locations,TemQty,QtySteps)
 	.
 estimate_route(Role,Speed,Battery,location(Facility),[location(Destination)|Locations],TemQty,QtySteps)
 :-
-	new::chargingList(CList) & 
-	rules::closest_facility(CList,Facility,SafeHaven) &
+	new::chargingList(CList) & 	
 	actions.route(Role,Speed,Facility,Destination,Route) & 
+	rules::closest_facility(CList,Destination,SafeHaven) &
 	actions.route(Role,Speed,Destination,SafeHaven,RouteSafeHaven) & 
-	Battery > (Route+RouteSafeHaven) & 
+	Battery > (Route+RouteSafeHaven) &
 //	.print("tenho bateria ",Facility," ate ",Destination," bateria: ",Battery," rota: ",Route," safe haven: ",RouteSafeHaven)&
 	estimate_route(Role,Speed,Battery-Route,location(Destination),Locations,TemQty+Route,QtySteps)
 	.
@@ -105,7 +105,8 @@ estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
 :-
 //	.print("não tenho bateria ",Facility)&
 	new::chargingList(CList) & 
-	rules::closest_facility(CList,Facility,ChargingStation) & 
+	.difference(CList,[Facility],List) &
+	rules::closest_facility(List,Facility,ChargingStation) & 
 	actions.route(Role,Speed,Facility,ChargingStation,Route) & 
 	default::maxBattery(MaxBattery) &
 	default::chargingStation(ChargingStation,_,_,Rate) &
