@@ -112,10 +112,10 @@
 	.
 	
 +!go_back_to_work
-	: .my_name(Me) & default::play(Me,CurrentRole,g1)
+	: .my_name(Me) & default::play(Me,CurrentRole,g1) & strategies::should_become(PreviousRole)
 <-
 	.print("I'm going back to work");
 	!action::forget_old_action;
-	!strategies::change_role(CurrentRole,gatherer);
-	!strategies::gather;
+	!strategies::change_role(CurrentRole,PreviousRole);
+	!strategies::go_back_to_work;
 	.

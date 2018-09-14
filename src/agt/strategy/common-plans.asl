@@ -132,6 +132,7 @@
 +!change_role(OldRole, NewRole)
 	: default::group(_,team,GroupId)
 <-
+	.print("I was a ",OldRole," becoming ",NewRole);
 	leaveRole(OldRole)[artifact_id(GroupId)];
 	adoptRole(NewRole)[artifact_id(GroupId)];
 	.
@@ -205,6 +206,23 @@
 	!perform_delivery;
 	.	
 	
++!go_back_to_work
+	: .my_name(Me) & default::play(Me,gatherer,g1)
+<-
+	!!gather;
+	.
++!go_back_to_work
+	: .my_name(Me) & default::play(Me,explorer_drone,g1)
+<-
+	!!explore::size_map; 
+	!!explore::go_walk;
+	.
++!go_back_to_work
+	: .my_name(Me) & default::play(Me,builder,g1)
+<-
+	!!strategies::build;
+	.
+	
 // what builders do
 +!build 
 	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
@@ -229,9 +247,10 @@
 	!attack;
 	.
 +!attack
+	: ::should_become(Role)
 <-
-	!change_role(attacker,builder);
-	!!build;
+	!change_role(attacker,Role);
+	!go_back_to_work;
 	.
 	
 // what delivery agents do 
@@ -245,8 +264,9 @@
 	-::winner(JobId,Deliveries,DeliveryPoint);
 	
 	.print("I've finished my deliveries'");
-	!change_role(deliveryagent,gatherer);
-	!!strategies::gather;
+	?::should_become(Role);
+	!change_role(deliveryagent,Role);
+	!go_back_to_work;
 	.
 	
 // what gathers do
