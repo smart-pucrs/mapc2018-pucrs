@@ -105,12 +105,12 @@
 	addResourceNode(NodeId,Lat,Lon,Item);
 	.
 	
-@resourceList[atomic]
-+default::resNode(NodeId,Lat,Lon,Item)
-	: resourceList(List) & not .member(NodeId,List)
-<- 
-	.print("New resource node: ",NodeId," for item: ",Item);
-	-+resourceList([NodeId|List]);
-	.
+//@resourceList[atomic]
+//+default::resNode(NodeId,Lat,Lon,Item)
+//	: resourceList(List) & not .member(NodeId,List)
+//<- 
+//	.print("New resource node: ",NodeId," for item: ",Item);
+//	-+resourceList([NodeId|List]);
+//	.
 	
 {end}

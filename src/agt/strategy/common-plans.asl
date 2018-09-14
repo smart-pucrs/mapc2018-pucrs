@@ -83,6 +83,20 @@
 	!::attack;	
 	.
 
++default::resNode(NodeId,Lat,Lon,Item)
+	: not ::analysing_resource & .findall(Item,default::resNode(_,_,_,Item),List) & .length(List)==1 & .my_name(Me) & default::play(Me,gatherer,g1)
+<- 
+	+::analysing_resource;
+	.print("Found resource node: ",NodeId," for item: ",Item,", I can go there");
+	.wait({+default::actionID(_)});
+	!!reconsider_gather;
+	-::analysing_resource;
+	.
++default::resNode(NodeId,Lat,Lon,Item)
+<- 
+	.print("Found resource node: ",NodeId," for item: ",Item);
+	.
+
 +default::lastAction(Action)
 	: default::step(S) & S \== 0 & Action == noAction & new::noActionCount(Count)
 <-
@@ -236,6 +250,14 @@
 	.
 	
 // what gathers do
++!reconsider_gather
+	: .desire(action::goto(_,_)) 
+<-
+	.print("Reconsidering gather");
+	!action::forget_old_action;
+	!gather;
+	.
++!reconsider_gather.
 +!gather
 	: rules::select_resource_node(SelectedResource) & .literal(SelectedResource)
 <-
