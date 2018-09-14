@@ -84,7 +84,7 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
  	
  +!allocate_tasks(Id,Task,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer_drone),ListAgents)
-<-     .print(ListAgents,Task);
+<-    
 	announce(assemble(Task),10000,ListAgents,CNPBoardName);
        
     getBidsTask(Bids) [artifact_name(CNPBoardName)];
@@ -132,9 +132,10 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	!mission_done;
 	.
 +!mission_done
+	: default::step(S)
 <-
 	for(::mission(MissionId,Storage,Reward,End,Fine,Items) & not action::reasoning_about_belief(MissionId)){
-		if (default::step(S) & S+30 <= End){
+		if (S+30 <= End){
 			+action::reasoning_about_belief(MissionId);
 			.print("Thinking about mission ",MissionId);
 			!!pick_task(accomplished_job(MissionId,Storage,Items))[priority(1)];

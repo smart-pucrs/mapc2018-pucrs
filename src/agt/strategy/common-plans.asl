@@ -8,60 +8,60 @@
 	.
 	
 // ### PRINTS ###	
-@printdesirebase[atomic]
-+default::desired_base(DB)
-//	: not ::message_base(_)
-<-
-	+::message_base("--- Desired Base: ");
-	for(.member(item(Percent,Item,DesiredQty),DB)){
-		?::message_base(Msg);
-		.concat(Msg,Item,"_",Percent,"%_",DesiredQty," ",String);
-		-+::message_base(String);
-	}
-	?::message_base(Msg);
-	.print(Msg);
-	-::message_base(_);
-	.
-@printdesirecompound[atomic]
-+default::desired_compound(DC)
-//	: not ::message_compound(_)
-<-
-	+::message_compound("--- Desired Compound: ");
-	for(.member(item(Percent,Item,DesiredQty),DC)){
-		?::message_compound(Msg);
-		.concat(Msg,Item,"_",Percent,"%_",DesiredQty," ",String);
-		-+::message_compound(String);
-	}
-	?::message_compound(Msg);
-	.print(Msg);
-	-::message_compound(_);
-	.
-@printavailable[atomic]
-+default::available_items(Storage,A)
-<-
-	+::message_available("");
-	for(.member(item(Item,CurrentQty),A)){
-		?::message_available(Msg);
-		.concat(Msg,Item,"_",CurrentQty," ",String);
-		-+::message_available(String);
-	}
-	?::message_available(Msg);
-	.print("--- Available at ",Storage,": ",Msg);
-	-::message_available(_);
-	.
-@printstorage[atomic]
-+default::storage(Storage,_,_,_,_,A)
-<-
-	+::message_storage("");
-	for(.member(item(Item,CurrentQty,Delivered),A)){
-		?::message_storage(Msg);
-		.concat(Msg,Item,"_",CurrentQty," ",String);
-		-+::message_storage(String);
-	}
-	?::message_storage(Msg);
-	.print("--- MAPC at ",Storage,": ",Msg);
-	-::message_storage(_);
-	.
+//@printdesirebase[atomic]
+//+default::desired_base(DB)
+////	: not ::message_base(_)
+//<-
+//	+::message_base("--- Desired Base: ");
+//	for(.member(item(Percent,Item,DesiredQty),DB)){
+//		?::message_base(Msg);
+//		.concat(Msg,Item,"_",Percent,"%_",DesiredQty," ",String);
+//		-+::message_base(String);
+//	}
+//	?::message_base(Msg);
+//	.print(Msg);
+//	-::message_base(_);
+//	.
+//@printdesirecompound[atomic]
+//+default::desired_compound(DC)
+////	: not ::message_compound(_)
+//<-
+//	+::message_compound("--- Desired Compound: ");
+//	for(.member(item(Percent,Item,DesiredQty),DC)){
+//		?::message_compound(Msg);
+//		.concat(Msg,Item,"_",Percent,"%_",DesiredQty," ",String);
+//		-+::message_compound(String);
+//	}
+//	?::message_compound(Msg);
+//	.print(Msg);
+//	-::message_compound(_);
+//	.
+//@printavailable[atomic]
+//+default::available_items(Storage,A)
+//<-
+//	+::message_available("");
+//	for(.member(item(Item,CurrentQty),A)){
+//		?::message_available(Msg);
+//		.concat(Msg,Item,"_",CurrentQty," ",String);
+//		-+::message_available(String);
+//	}
+//	?::message_available(Msg);
+//	.print("--- Available at ",Storage,": ",Msg);
+//	-::message_available(_);
+//	.
+//@printstorage[atomic]
+//+default::storage(Storage,_,_,_,_,A)
+//<-
+//	+::message_storage("");
+//	for(.member(item(Item,CurrentQty,Delivered),A)){
+//		?::message_storage(Msg);
+//		.concat(Msg,Item,"_",CurrentQty," ",String);
+//		-+::message_storage(String);
+//	}
+//	?::message_storage(Msg);
+//	.print("--- MAPC at ",Storage,": ",Msg);
+//	-::message_storage(_);
+//	.
 	
 +!set_center_storage_workshop
 	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility_truck(SList, CLat, CLon, Storage) & rules::closest_facility_truck(WList, Storage, Workshop)
