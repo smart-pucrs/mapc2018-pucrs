@@ -65,21 +65,22 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 	.wait({+default::actionID(_)});
 	+action::reasoning_about_belief(Storage);
 	
-	!estimates::compound_estimate(Items);
-	if (Items \== []) { 
-		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 
-		.term2string(Items,ItemsS);
-		
-//		!allocate_tasks(none,Items,Storage);
-		!pick_task(allocate_tasks(none,Items,Storage))[priority(4)];		
-	}
-	else { 
-		.print("££££££££££ Can't assemble anything yet."); 
-//		-::must_check_compound;
-	}
+	!pick_task(evaluate_compound_item(Storage))[priority(4)];
+	
 	-action::reasoning_about_belief(Storage);
 	-::must_check_compound;
  	.
++!evaluate_compound_item(Storage)
+<-
+	!estimates::compound_estimate(Items);
+	if (Items \== []) { 
+		.print("@@@@@@@@@@@@@@@@@@@@@ We have items to assemble ",Items); 		
+		!allocate_tasks(none,Items,Storage);		
+	}
+	else { 
+		.print("££££££££££ Can't assemble anything yet."); 
+	}
+	.
  	
  +!allocate_tasks(Id,Task,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer_drone),ListAgents)

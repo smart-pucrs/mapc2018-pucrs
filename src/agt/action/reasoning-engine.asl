@@ -75,6 +75,13 @@
 +!commit_action(Action) : Action == recharge <- .suspend;.
 //+!commit_action(Action) : .print(">>>>>>>>>>>>>>>>>>> Plano nao encontrado ",Action) & False.
 +!commit_action(Action)
+	: default::actionID(Id) & action::action(Id,ChosenAction) & ChosenAction \== recharge
+<-
+	.print("I've already picked an action ",ChosenAction," for ",Id," trying ",Action," next");
+	.drop_all_intentions;
+	.print("WE HAVE A BUG");
+	.
++!commit_action(Action)
 	: default::actionID(Id) & action::action(Id,ChosenAction) 
 <-
 	.print("I've already picked an action ",ChosenAction," for ",Id," trying ",Action," next");
