@@ -1,7 +1,9 @@
 package pucrs.agentcontest2018;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,52 +17,37 @@ import massim.Server;
 
 public class ScenarioRun1simParis {
 	
-	public static void main(String[] args) {
+
+	@Before
+	public void cleanUpFolders() throws IOException {
+
+		File currentDir = new File("");
+		String path = currentDir.getAbsolutePath();	
 				
 		ScenarioRun1simParis deletefiles = new ScenarioRun1simParis();
-		deletefiles.delete(5,".log");
+		deletefiles.delete(5, path + "\\logs");
+		deletefiles.delete(5, path + "\\log");
+		deletefiles.delete(5, path + "\\replays");	
 		
 	}
 	
-	public void delete(long days, String fileExtension) {
+	public void delete(long nFiles, String directoryFolder) throws IOException {
 		
 		File currentDir = new File("");
 		String path = currentDir.getAbsolutePath();	
 		
-		String dir1 = path+"\\logs";
-		
-		File folder = new File(dir1);
+		File folder = new File(directoryFolder);
 		
 		if(folder.exists()) {
 			File[] listFiles = folder.listFiles();
-			long eligible = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000);
-			for (File listFile: listFiles) {
-				if(listFile.getName().endsWith(fileExtension) &&
-						listFile.lastModified() < eligible) {
-					if(!listFile.delete()) {
-						System.out.println("Failed");
-					}
-				}
-			}
+			String[] filesInDir = folder.list();			
+			for ( int i=0; i < listFiles.length - nFiles ; i++ ){
+				listFiles[i].delete();
+				FileUtils.deleteDirectory(listFiles[i]);				
+			}		
 		}
 		
-	}
-
-	String caminho = "\\logs\\MASSim-log-2018-09-03-13-44-28.log";
-	
-	@Before
-	public void cleanUpFolders() {
-		File currentDir 	= new File("");
-		String path 		= currentDir.getAbsolutePath();			
-		List arrayFolders 	= new ArrayList();		
-		
-		File file = new File("C:\\Competition\\mapc2018-pucrs\\logs\\MASSim-log-2018-09-03-13-53-18.log");
-		if(file.delete()) {
-			System.out.println("File deleted");
-		} else {
-			System.out.println("Failed");
-		}
-	}
+	}		
 	
 	@Before
 	public void setUp() {
