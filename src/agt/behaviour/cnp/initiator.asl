@@ -7,7 +7,7 @@ verify_bases([Item|Parts],NodesList,Result) :- .member(node(_,_,_,Item),NodesLis
 verify_bases([Item|Parts],NodesList,Result) :- not .member(node(_,_,_,Item),NodesList) & Result = "false".
 
 // ### LIST PRIORITY ###
-get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
+get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 +!compound_item_quantity([])
 	: must_update
 <-
@@ -46,12 +46,13 @@ get_final_qty_item(Item,Qty) :- final_qty_item(Item,Qty) | Qty=0.
 <-
 	!update_item_quantity(List);
 	
+	?::get_final_qty_item(Item,OldQty);
 	-::final_qty_item(Item,_);
-	+::final_qty_item(Item,CurrentQty+Qty);
+	+::final_qty_item(Item,OldQty+CurrentQty+Qty);
 	for(.member(PartItem,Parts)){
-		?::get_final_qty_item(PartItem,OldQty);
+		?::get_final_qty_item(PartItem,PartOldQty);
 		-::final_qty_item(PartItem,_);
-		+::final_qty_item(PartItem,(OldQty+CurrentQty+Qty));
+		+::final_qty_item(PartItem,(PartOldQty+CurrentQty+Qty));
 	}
 	.
 	
