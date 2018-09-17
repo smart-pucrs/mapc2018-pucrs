@@ -92,6 +92,9 @@
 	!strategies::set_center_storage_workshop;
 	
 	+strategies::should_become(MyRole);
+	if(MyRole == explorer_drone){
+		!explore::size_map; 
+	}	
 	!strategies::go_back_to_work;
     .
     
