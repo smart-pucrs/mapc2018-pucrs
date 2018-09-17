@@ -4,10 +4,16 @@
    	.print("*** Compound Item deliveried for ",Scheme,", removing artifacts! ***");  
    	org::destroyScheme(Scheme)[artifact_id(AOrgId),wid(WOrgId)];
    	org::destroyGroup(GroupName)[artifact_id(AOrgId),wid(WOrgId)]; 
+	for(org::focused(_,SchemeName,_) & .substring(Scheme,SchemeName)){
+		.abolish(org::focused(_,SchemeName,_));
+	}
    	.
 +goalState(Scheme,item_manufactured,_,_,satisfied)
 <-
    	.print("*** Compound Item deliveried for ",Scheme,"! ***");  
+   	for(org::focused(_,SchemeName,_) & .substring(Scheme,SchemeName)){
+		.abolish(org::focused(_,SchemeName,_));
+	}
    	.
 
 +!retrive_items

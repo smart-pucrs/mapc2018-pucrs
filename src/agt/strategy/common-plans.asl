@@ -164,7 +164,8 @@
 	.
 +!prepare_assembly(TaskId,[]).
 +!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
-	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
+//	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
+	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,"_group",GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
 <-
 	org::createGroup(GroupName, manufactory, GroupId)[artifact_id(OrgId)];
 	org::focus(GroupId)[wid(OrgId)];
@@ -179,7 +180,8 @@
    	!prepare_assembly(TaskId,Duty);
 	.
 +!prepare_assembly(TaskId,[assist(Assembler,Item)|Duty])
-	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName)
+//	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName)
+	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,"_group",GroupName) & .concat(TaskId,"_",Item,SchemeName)
 <-	
 	org::focusWhenAvailable(GroupName)[wid(OrgId)];
 	org::adoptRole(assistant)[artifact_name(GroupName),wid(OrgId)];
