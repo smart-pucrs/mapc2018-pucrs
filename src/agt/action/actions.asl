@@ -518,7 +518,7 @@
 <-
 	+onMyWay([]);
 	?default::facility(Fac);
-	if (.member(Fac,List)) {
+	if (.member(Fac,List) & default::charge(CCharge) & default::maxBattery(MCharge) & CCharge>=MCharge) {
 		.delete(Fac,List,List2);
 	}
 	else {
