@@ -110,7 +110,7 @@ public class TeamArtifact extends Artifact {
 //		this.defineObsProperty("available_items", litStorage, itemsAux);
 //	}
 	
-	private int timesQtyCompundItem = 3;
+	private int timesQtyCompundItem = 1;
 	@OPERATION
 	void setDesiredBase(String item, int qty)  {
 		if (!this.desiredBase.containsKey(item))
@@ -178,10 +178,10 @@ public class TeamArtifact extends Artifact {
 		Literal litItem = Literal.parseLiteral("item");
 		
 		int finalQtd = 0;
-		if (availableItems.get(storage).toString().contains(item)) {
+		if (availableItems.get(storage).toString().contains(item+',')) { // we need to differentiate item1 from item11
 			for (Iterator<Literal> iter = availableItems.get(storage).iterator(); iter.hasNext();) {
 				Literal l = iter.next();
-				if (l.toString().contains(item)) {
+				if (l.toString().contains(item+',')) {
 					iter.remove();
 					finalQtd 	= qty +Integer.parseInt(l.getTerm(1).toString());
 				}
@@ -268,10 +268,10 @@ public class TeamArtifact extends Artifact {
 		Literal litStorage = Literal.parseLiteral(storage);
 		int newqty = 0;
 		String result = "false";
-		if (availableItems.get(storage) != null && availableItems.get(storage).toString().contains(item)) {
+		if (availableItems.get(storage) != null && availableItems.get(storage).toString().contains(item+',')) {
 			for (ListIterator<Literal> iter = availableItems.get(storage).listIterator(); iter.hasNext();) {
 				Literal l = iter.next();
-				if (l.toString().contains(item)) {
+				if (l.toString().contains(item+',')) {
 					result = "true"; 
 					newqty = Integer.parseInt(l.getTerm(1).toString()) - qty;					
 					if (newqty > 0) {
@@ -306,47 +306,6 @@ public class TeamArtifact extends Artifact {
 		}
 		
 		res.set(result);
-	}
-	
-	@OPERATION
-	void addBuyCoordination(String shop, String item, int qty){
-		if (buyCoordination.get(shop).toString().contains(item)) {
-			for (String s: buyCoordination.get(shop)) {
-				if (s.contains(item)) {
-					int ind = buyCoordination.get(shop).indexOf(s);
-					int newqty = qty + Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1));
-					buyCoordination.get(shop).set(ind,"item("+item+","+newqty+")");
-//					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
-				}
-			}
-		}
-		else { buyCoordination.get(shop).add("item("+item+","+qty+")"); }
-		String[] itemsAux = buyCoordination.get(shop).toArray(new String[buyCoordination.get(shop).size()]);
-//		logger.info("@@@@@@@@@ Adding available item "+item+" to storage "+storage+". Result = "+Arrays.toString(itemsAux)+". Size = "+availableItems.get(storage).size());
-		this.removeObsPropertyByTemplate("buy_coordination", shop, null);
-		this.defineObsProperty("buy_coordination", shop, itemsAux);
-	}
-	
-	@OPERATION
-	void removeBuyCoordination(String shop, String item, int qty){
-		int remove = -1;
-		if (buyCoordination.get(shop) != null && buyCoordination.get(shop).toString().contains(item)) {
-			for (String s: buyCoordination.get(shop)) {
-				if (s.contains(item)) {
-					int ind = buyCoordination.get(shop).indexOf(s);
-					int newqty = Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1)) - qty;
-					if (newqty != 0) { buyCoordination.get(shop).set(ind,"item("+item+","+newqty+")"); }
-					else { remove = ind; }
-//					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
-				}
-			}
-			if (remove != -1) { 
-				buyCoordination.get(shop).remove(remove);
-				String[] itemsAux = buyCoordination.get(shop).toArray(new String[buyCoordination.get(shop).size()]);
-				this.removeObsPropertyByTemplate("buy_coordination", shop, null);
-				this.defineObsProperty("buy_coordination", shop, itemsAux);
-			}
-		}
 	}
 	
 	@OPERATION
