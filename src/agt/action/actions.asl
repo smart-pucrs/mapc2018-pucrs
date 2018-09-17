@@ -31,6 +31,7 @@
 	: default::facility(FacilityId)
 <-
 	-::going(FacilityId);
+	-::going(_,_);
 	.
 +!goto(FacilityId)
 	: default::charge(0)
@@ -83,7 +84,8 @@
 +!goto(Lat, Lon) 
 	: ::going(Lat,Lon) & default::routeLength(R) & R == 0 
 <- 
-	-::going(Lat,Lon)
+	-::going(Lat,Lon);
+	-::going(_);
 	.
 +!goto(Lat, Lon)
 	: default::charge(0)
