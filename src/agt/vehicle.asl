@@ -72,11 +72,11 @@
 		
 		for(default::item(Item,_,_,parts([]))){
 			.print("base: ",Item);
-			setDesiredBase(Item,2);
+			setDesiredBase(Item,1);
 		}
 		for(default::item(Item,_,_,parts(P)) & P \== []){
 			.print("compound: ",Item);
-			setDesiredCompound(Item,2);
+			setDesiredCompound(Item,1);
 		}
 	}
 	!action::recharge_is_new_skip;
