@@ -52,6 +52,7 @@
 +!assist_assemble[scheme(Scheme)]
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName)
 <-
+	!action::forget_old_action(strategies,always_recharge);
 	!do_assist(Scheme,Assembler);
 	.
 +!do_assist(Scheme,Assembler)
@@ -85,6 +86,7 @@
 +!assemble[scheme(Scheme)]
 	: ::goalArgument(Scheme,_,"Item",Item) & ::goalArgument(Scheme,_,"Qty",Qty)
 <-
+	!action::forget_old_action(strategies,always_recharge);
 	!do_assemble(Scheme,Item,Qty);
 	. 
 +!do_assemble(Scheme,Item,Qty)
