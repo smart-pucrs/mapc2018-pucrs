@@ -214,7 +214,7 @@
 +!go_back_to_work
 	: .my_name(Me) & default::play(Me,explorer_drone,g1)
 <-
-	!!explore::size_map; 
+//	!!explore::size_map; 
 	!!explore::go_walk;
 	.
 +!go_back_to_work
