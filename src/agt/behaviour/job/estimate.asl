@@ -52,7 +52,7 @@ evaluate_steps
 	?sum_up_items(ItemizedAvailableItems,[],AvailableItems);	
 	for(.member(item(Item,Qtd),AvailableItems)){
 		+::partial_stock(Qtd,Item);
-//		.print("Partial stock: ",Item," ",Qtd);
+		.print("Partial stock: ",Item," ",Qtd);
 	} 	
 	.	
 
@@ -98,26 +98,46 @@ calculate_lot(Item,DesiredQty,Lot)
 	default::item(Item,Vol,roles(Roles),_) &
 	max_capacity(Roles,30,Capacity) &
 	MaxQty = math.floor(Capacity/Vol) & // truck load
-	HalfQty = math.floor(DesiredQty*0.5) &
+	Temp = math.floor(DesiredQty*0.5) &
+	HalfQty = math.max(Temp,1) &
 	Lot = math.min(HalfQty,MaxQty)	
 	.
+get_real_desired([],Temp,RealDesired)
+:-
+	RealDesired = Temp
+	.	
+get_real_desired([item(Percentual,Item,Qty)|Desired],Temp,RealDesired)
+:-
+	Percentual < 99 &
+	get_real_desired(Desired,[item(Percentual,Item,Qty)|Temp],RealDesired)
+	.
+get_real_desired([item(Percentual,Item,Qty)|Desired],Temp,RealDesired)
+:-
+	get_real_desired(Desired,Temp,RealDesired)
+	.
+
 +!compound_estimate(Items)
-	: new::storageList(SList) & default::desired_compound(CList) & .sort(CList,SCList)
+	: new::storageList(SList) & default::desired_compound(CList) & ::get_real_desired(CList,[],RCList) & .print("real desired compound items ",RCList) & not .empty(RCList) & .sort(RCList,SCList)
 <-
 	!global_stock;
-//	.print("Priority Compound: ",SCList);
+	.print("Priority Compound: ",SCList);
 	!compound_priority(SCList);
 	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),SelectedItems);
 	.reverse(SelectedItems,Items);
 	.abolish(::partial_stock(_,_));
 	.abolish(::must_assemble(_,_));
 	.
++!compound_estimate(Items)
+<-
+	.print("There is no compound item to assemble");
+	Items = [];
+	.
 +!compound_priority([]).
 +!compound_priority([item(_,Item,DesiredQty)|List])
 	: default::item(Item,_,_,parts(Parts)) & ::calculate_lot(Item,DesiredQty,Lot)
 <-		
 	.findall(item(TQtd,TItem),::partial_stock(TQtd,TItem),TItems);
-//	.print("Our production lot for ",Item," is ",Lot);
+	.print("Our production lot for ",Item," is ",Lot);
 	!compound_tracking(Parts,Lot,MinimumQty);
 	+::must_assemble(MinimumQty,Item);
 	!compound_priority(List);
