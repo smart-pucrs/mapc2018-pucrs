@@ -114,19 +114,7 @@
 	!build;
 	.
 
-
 +!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
-
-@free[atomic]
-//+!free : not free <- +free; !!action::recharge_is_new_skip; .
-+!free : not free <- +free; !!always_recharge; .
-//+!free : not free <- .print("free added");+free; !!action::recharge_is_new_skip;.
-//+!free : free <- !!action::recharge_is_new_skip.
-+!free : free & not .desire(_::always_recharge) <- !!always_recharge.
-+!free : free.
-@notFree[atomic]
-+!not_free <- -free.
-//+!not_free <- .print("free removed");-free.
 
 @change_role(atomic)
 +!change_role(OldRole, NewRole)
@@ -207,6 +195,32 @@
 	
 	!perform_delivery;
 	.	
+-default::job(JobId,_,Reward,Start,End,Items)
+	: ::winner(JobId,_,_) & default::step(Step) & Step > End
+<-
+	
+	.print("### Priced Job ",JobId," has FAILED");
+	!recover_delivery(JobId);
+	.
+-default::job(JobId,Storage,Reward,Start,End,Items)
+	: ::winner(JobId,_,_)
+<-
+	.print("### Priced Job ",JobId," Done, ",Reward,"$ in cash ###");
+//	-::winner(JobId,_,_);
+	.
+-default::mission(MissionId,_,_,_,End,Fine,_,_,_)
+	: default::step(Step) & Step > End // the mission could be deliveried at the final step, then this context is wrong
+<-
+	.print("### Mission ",MissionId," has FAILED, ",Fine,"$ we have to pay ### ",Items);
+	if (::winner(MissionId,_,_)){
+		!recover_delivery(MissionId);
+	}
+	.
+-default::mission(MissionId,_,Reward,_,_,_,_,_,_)
+<-
+	.print("### Mission ",MissionId," Done, ",Reward,"$ in cash ###");
+//	-::winner(JobId,_,_);
+	.
 	
 +!go_back_to_work
 	: .my_name(Me) & default::play(Me,gatherer,g1)
@@ -269,6 +283,28 @@
 	?::should_become(Role);
 	!change_role(deliveryagent,Role);
 	!go_back_to_work;
+	.
++!recover_delivery(JobId)
+<-
+	!action::forget_old_action;
+	
+	!give_back_delivery;
+	
+	-::winner(JobId,_,_);
+	
+	?::should_become(Role);
+	!change_role(deliveryagent,Role);
+	!go_back_to_work;
+	.
++!give_back_delivery
+	: default::hasItem(_,_) & strategies::centerStorage(Storage) 
+<-
+	.print("I'm carrying some items, going to store ");
+	!stock::store_all_items(Storage);
+	.
++!give_back_delivery
+<-
+	.print("I have to do nothing");
 	.
 	
 // what gathers do
