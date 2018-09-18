@@ -50,6 +50,12 @@
 	.
 
 +!assist_assemble[scheme(Scheme)]
+	: ::goalState(Scheme,assemble,ListAssembler,_,_) & .nth(0,ListAssembler,Assembler)
+<-
+	!action::forget_old_action(strategies,always_recharge);
+	!do_assist(Scheme,Assembler);
+	.
++!assist_assemble[scheme(Scheme)]
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName)
 <-
 	!action::forget_old_action(strategies,always_recharge);
