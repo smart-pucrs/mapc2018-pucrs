@@ -226,6 +226,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 		Literal step 				= null;
 //		Literal auction 			= null;
 		List<Literal> auction 		= new ArrayList<Literal>();
+		Literal lastAction			= null;
 		Literal lastActionResult 	= null;
 		Literal actionID 			= null;
 		for (Percept percept: percepts) {
@@ -246,6 +247,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 						if (percept.getName().equals("lastActionResult")) {
 							lastActionResult = literal;
 						} 
+						else if (percept.getName().equals("lastAction")) { lastAction = literal; }
 //						else if (agent.equals("vehicle1") && (percept.getName().equals("job") || percept.getName().equals("mission"))) { signalList.add(literal); }
 						else if (percept.getName().equals("actionID")) { actionID = literal; }
 						else if (percept.getName().equals("shop") || percept.getName().equals("workshop") || percept.getName().equals("routeLength") || percept.getName().equals("facility")) { percs.add(0,literal); }
@@ -278,6 +280,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 				defineObsProperty(a.getFunctor(), (Object[]) a.getTermsArray());
 			}
 			defineObsProperty(step.getFunctor(), (Object[]) step.getTermsArray());
+			defineObsProperty(lastAction.getFunctor(), (Object[]) lastAction.getTermsArray());
 			defineObsProperty(lastActionResult.getFunctor(), (Object[]) lastActionResult.getTermsArray());
 			
 			for (Literal lit: percs) {

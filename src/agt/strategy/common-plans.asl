@@ -211,19 +211,24 @@
 	
 	!perform_delivery;
 	.	
--default::job(JobId,_,Reward,Start,End,Items)
-	: ::winner(JobId,_,_) & default::step(Step) & Step > End
+-default::job(JobId,Storage,Reward,Start,End,Items)
+	: ::winner(JobId,_,_) & default::lastAction(LastAction) & .substring("deliver_job",LastAction) & default::lastActionResult(successful_partial)
 <-
-	
-	.print("### Priced Job ",JobId," has FAILED");
-	!recover_delivery(JobId);
+	.print("### I've delivered my part of Priced Job ",JobId," ###");
 	.
 -default::job(JobId,Storage,Reward,Start,End,Items)
-	: ::winner(JobId,_,_)
+	: ::winner(JobId,_,_) & default::lastAction(LastAction) & .substring("deliver_job",LastAction) & default::lastActionResult(successful)
 <-
 	.print("### Priced Job ",JobId," Done, ",Reward,"$ in cash ###");
 //	-::winner(JobId,_,_);
 	.
+-default::job(JobId,_,Reward,Start,End,Items)
+	: ::winner(JobId,_,_)
+<-
+	.print("### Priced Job ",JobId," has FAILED");
+	!recover_delivery(JobId);
+	.
+
 -default::mission(MissionId,_,_,_,End,Fine,_,_,Items)
 	: default::step(Step) & Step > End // the mission could be deliveried at the final step, then this context is wrong
 <-
