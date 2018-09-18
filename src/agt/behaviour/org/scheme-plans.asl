@@ -83,6 +83,19 @@
 		!!go_back_to_work;
 	}
 	.
++!stop_assist[scheme(Scheme)]
+	: ::goalState(Scheme,assemble,ListAssembler,_,_) & .nth(0,ListAssembler,Assembler)
+<-
+	.print("stop assisting to without assembler belief ",Assembler);
+
+	!action::forget_old_action(org,assist_assemble[scheme(Scheme)]);
+    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
+	.print("stopped ",Assembler);
+	
+	if (not .desire(::assemble) & not .desire(::assist_assemble) ){
+		!!go_back_to_work;
+	}
+	.
 	   
 //+!assemble[scheme(Scheme)]
 //	: ::goalArgument(Scheme,_,"Item",SItem) & .term2string(Item,SItem) & ::goalArgument(Scheme,_,"Qty",Qty)
