@@ -338,10 +338,11 @@ select_random_facility(Facility)
 	
 // what gathers do
 +!reconsider_gather
-	: .desire(action::goto(_,_)) 
+	: .desire(action::goto(_,_))
 <-
 	.print("Reconsidering gather");
 	!action::forget_old_action;
+	!action::clean_route;
 	!gather;
 	.
 +!reconsider_gather.

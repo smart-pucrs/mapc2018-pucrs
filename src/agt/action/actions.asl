@@ -24,7 +24,11 @@
 <-
 	!action::commit_action(goto(FacilityId));
 	.
-
++!clean_route
+<-
+	-::going(_);
+	-::going(_,_);
+	.
 // Goto (option 1)
 // FacilityId must be a string
 +!goto(FacilityId) 
