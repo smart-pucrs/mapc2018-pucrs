@@ -176,7 +176,7 @@ assembler(Compound,Qty,Name)
 	!award_retrieve(DeliveryPoint,Compound,Assembler,Assembler);
 	!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
 //	while(::selected_task(Item,Compound,Qty) & Qty > 1){
-	while(::selected_task(MItem,Compound,MQty,MType)){
+	while(::selected_task(MItem,Compound,MQty,MType) & MQty > 1){
 		Qty1 = MQty div 2;
 		Qty2 = (MQty div 2) + (MQty mod 2);
 		.print("%%%%%%%%%%%%%%%%%%%%%% Failed allocation of ",MItem," ",Compound," ",MQty," spliting item in ",Qty1," ",Qty2);
@@ -185,6 +185,11 @@ assembler(Compound,Qty,Name)
 		+::selected_task(MItem,Compound,Qty2,half_2);
 		!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
 	}	
+	if (::selected_task(IfItem,Compound,IfQty,_)){
+		.print(IfItem," ",IfQty," of ",Compound," was not allocated, revogating this allocation process");
+		.abolish(::selected_task(_,_,_,_));
+		.abolish(::awarded_agent(_,_,_,_,_));
+	}
 	!award_task(DeliveryPoint,Bids);
 	.
 +!award_task(DeliveryPoint,Bids).

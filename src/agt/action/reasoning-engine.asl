@@ -51,7 +51,7 @@
 	}else{
 		if (Result \== successful & Result \== successful_partial){
 			if (Action \== recharge & Action \== continue & not .substring("assist_assemble",Action) & Result == failed){
-				//		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
+				.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
 				!commit_action(Action);
 			} else{
 				.print("Failing action ",Action," because ",Result);

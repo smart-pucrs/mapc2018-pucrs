@@ -113,11 +113,11 @@
 	} else{
 		-+::noActionCount(0);
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
-		.my_name(Me);
-		?::should_become(Role);
-		?default::play(Me,CurrentRole,g1);
-		!change_role(CurrentRole,Role);
-		!go_back_to_work;
+//		.my_name(Me);
+//		?::should_become(Role);
+//		?default::play(Me,CurrentRole,g1);
+//		!change_role(CurrentRole,Role);
+//		!go_back_to_work;
 	}
 	.
 	
