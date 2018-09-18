@@ -63,7 +63,8 @@
 	.
 // We should not test battery if we are already going to a charging station	
 +!goto(FacilityId)
-: not .desire(action::go_charge(_)) & new::chargingList(List) & .member(FacilityId,List)
+//: not .desire(action::go_charge(_)) & new::chargingList(List) & .member(FacilityId,List)
+	: new::chargingList(List) & .member(FacilityId,List)
 <-	
 	+::going(FacilityId);
     !action::commit_action(goto(FacilityId));
@@ -71,7 +72,8 @@
 	.
 // Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
 +!goto(FacilityId)
-: not .desire(action::go_charge(_)) & new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
+//: not .desire(action::go_charge(_)) & new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
+	: new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
 <-	
     if (Result == "false") { 
     	!go_charge(FacilityId);
@@ -117,7 +119,8 @@
 	.
 // Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
 +!goto(Lat,Lon)
-: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
+//: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
+	: new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
 <-	
     if (Result == "false") { 
     	!go_charge(Lat,Lon);
