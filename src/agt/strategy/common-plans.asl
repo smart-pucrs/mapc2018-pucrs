@@ -256,10 +256,23 @@
 	.
 	
 // what builders do
+select_random_facility(Facility)
+:-
+	new::chargingList(CList) &
+	new::dumpList(DList) &
+	new::storageList(StList) &
+	new::shopList(ShList) & 
+	new::workshopList(WList) &
+	.concat(CList,DList,StList,ShList,WList,AllList) &
+	.shuffle(AllList,List) &
+	.nth(0,List,Facility)
+	.
 +!build 
-	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
+//	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
+	: not rules::enough_money & select_random_facility(Facility)
 <-
-	.print("Going to my farthest charging station",Facility," to explore");
+//	.print("Going to my farthest charging station",Facility," to explore");
+	.print("Going to ",Facility," to explore");
 	!action::goto(Facility);
 	!action::charge;
 	!build;
