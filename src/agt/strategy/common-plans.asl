@@ -98,11 +98,27 @@
 	.
 
 +default::lastAction(Action)
+	: Action \== noAction
+<-
+	-+::noActionCount(0);
+	.
++default::lastAction(Action)
 	: default::step(S) & S \== 0 & Action == noAction & new::noActionCount(Count)
 <-
 	-+new::noActionCount(Count+1);
 	.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Step ",S-1," I have done ",Count+1," noActions.");
 	-+metrics::noAction(Count+1);
+	if (::noActionCount(C) & C+1 < 3){
+		-+::noActionCount(C+1);
+	} else{
+		-+::noActionCount(0);
+		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
+		.my_name(Me);
+		?::should_become(Role);
+		?default::play(Me,CurrentRole,g1);
+		!change_role(CurrentRole,Role);
+		!go_back_to_work;
+	}
 	.
 	
 +default::massim(Money)
