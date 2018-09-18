@@ -80,7 +80,7 @@
 	
 	!action::forget_old_action;	
 	
-	!::attack;	
+	!!::attack;	
 	.
 
 +default::resNode(NodeId,Lat,Lon,Item)
