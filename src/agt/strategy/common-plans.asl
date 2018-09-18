@@ -224,7 +224,7 @@
 	.print("### Priced Job ",JobId," Done, ",Reward,"$ in cash ###");
 //	-::winner(JobId,_,_);
 	.
--default::mission(MissionId,_,_,_,End,Fine,_,_,_)
+-default::mission(MissionId,_,_,_,End,Fine,_,_,Items)
 	: default::step(Step) & Step > End // the mission could be deliveried at the final step, then this context is wrong
 <-
 	.print("### Mission ",MissionId," has FAILED, ",Fine,"$ we have to pay ### ",Items);
