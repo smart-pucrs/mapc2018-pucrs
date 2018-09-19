@@ -125,6 +125,7 @@
 <-
 	!revogate_tokens;
 	!update_percepts;
+	!forget_old_action; // trying to get the error (it's dangerous)
 	.
 @forgetCommitAction[atomic]
 +!forget_old_action

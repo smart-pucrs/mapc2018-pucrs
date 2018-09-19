@@ -291,29 +291,37 @@ select_random_facility(Facility)
 	!build;
 	.
 +!build 
-//	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
-	: not rules::enough_money & select_random_facility(Facility)
+	: rules::enough_money
 <-
+	!build::buy_well; 	
+	!build;
+	.
++!build
+	: select_random_facility(Facility)
+<-	
 //	.print("Going to my farthest charging station",Facility," to explore");
 	.print("Going to ",Facility," to explore");
 	!action::goto(Facility);
 //	!action::charge;
 	!build;
 	.
-+!build
-<-
-	!build::buy_well; 	
-	!build;
-	.
+//+!build 
+////	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
+//	: not rules::enough_money & select_random_facility(Facility)
+//<-
+////	.print("Going to my farthest charging station",Facility," to explore");
+//	.print("Going to ",Facility," to explore");
+//	!action::goto(Facility);
+////	!action::charge;
+//	!build;
+//	.
+//+!build
+//<-
+//	!build::buy_well; 	
+//	!build;
+//	.
 
 // ### WHAT ATTACKERS DO ###
-//+!attack
-//	: default::well(Well,_,_,_,Team,_) & default::team(MyTeam) & not .substring(MyTeam, Team)
-//<-
-//	!attack::dismantle_well(Well);
-//	-default::well(Well,_,_,_,Team,_)[source(_)];
-//	!attack;
-//	.
 +default::enemyWell(Well,Lat,Lon)
 	:  not ::becoming_atacker & ::team_ready & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
 <-	
