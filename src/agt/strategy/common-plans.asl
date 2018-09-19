@@ -275,8 +275,7 @@ select_random_facility(Facility)
 	: default::enemyWell(Well,_,_)
 <-
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
-	!change_role(builder,attacker);	
-	!!::attack;
+	!!become_attacker;
 	.
 +!build 
 	: 	new::chargingList(CList) & 
@@ -323,11 +322,12 @@ select_random_facility(Facility)
 
 // ### WHAT ATTACKERS DO ###
 +default::enemyWell(Well,Lat,Lon)
-	:  not ::becoming_atacker & ::team_ready & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
+	:  not ::becoming_atacker & ::team_ready
 <-	
 	+::becoming_atacker;
 	.print("Some teammate has discovered a well ",Well," at ",Lat," ",Lon,", becoming attacker");	
-	!become_attacker(Role);
+	.wait({+default::actionID(_)});
+	!!become_attacker;
 	-::becoming_atacker;
 	.
 -default::enemyWell(Well,_,_)
@@ -337,12 +337,14 @@ select_random_facility(Facility)
 	.wait({+default::actionID(_)});
 	!!reconsider_attack(Well);
 	.
-+!become_attacker(Role)
++!become_attacker
+	: .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
 <-
 	!change_role(Role,attacker);	
 	!action::forget_old_action;	
-	!!::attack;	
+	!::attack;	
 	.
++!become_attacker.
 +!reconsider_attack(Well)
 	: .my_name(Me) & default::play(Me,attacker,g1) & .desire(attack::dismantle_well(Well)) & .desire(action::goto(_,_))
 <-
