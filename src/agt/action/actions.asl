@@ -131,6 +131,13 @@
     }
 	!goto(Lat,Lon);
 	.
+-!goto(Lat,Lon)
+<-
+	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
+	+::going(Lat,Lon); 
+    !action::commit_action(goto(Lat,Lon));
+    !goto(Lat,Lon);
+	.
 
 // Charge
 // No parameters
