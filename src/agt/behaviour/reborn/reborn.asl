@@ -35,4 +35,7 @@
 //	estimate
 	.abolish(_::partial_stock(_,_));
 	.abolish(_::must_assemble(_,_));
+	
+//	reasoning
+	.abolish(action::reasoning_about_belief(_));
 	.

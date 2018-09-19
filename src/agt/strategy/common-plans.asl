@@ -109,7 +109,7 @@
 	} else{
 		-+::noActionCount(0);
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
-		!reborn::revive;
+//		!reborn::revive;
 	}
 	.
 	
@@ -314,22 +314,35 @@ select_random_facility(Facility)
 //	!attack;
 //	.
 +default::enemyWell(Well,Lat,Lon)
-	:  not ::becoming_atacker & ::team_ready & .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
+	:  not ::becoming_atacker & ::team_ready & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
 <-	
 	+::becoming_atacker;
-	!change_role(builder,attacker);
-	.print("Some teammate has discovered a well ",Well," at ",Lat," ",Lon);	
-	!action::forget_old_action;	
-	!!::attack;	
+	.print("Some teammate has discovered a well ",Well," at ",Lat," ",Lon,", becoming attacker");	
+	!become_attacker(Role);
 	-::becoming_atacker;
 	.
--default::enemyWell(Well,Lat,Lon)
-	: .desire(attack::dismantle_well(Well)) & not default::lat(Lat) & not default::lon(Lon)
+-default::enemyWell(Well,_,_)
+	: .desire(attack::dismantle_well(Well))
 <-
 	.print("I was going to dismantle ",Well,", but it's not necessary anymore");
-	!action::forget_old_action;	
-	!!::attack;
+	.wait({+default::actionID(_)});
+	!!reconsider_attack(Well);
 	.
++!become_attacker(Role)
+<-
+	!change_role(Role,attacker);	
+	!action::forget_old_action;	
+	!!::attack;	
+	.
++!reconsider_attack(Well)
+	: .desire(attack::dismantle_well(Well)) & .desire(action::goto(_,_))
+<-
+	.print("Reconsidering attack");
+	!action::forget_old_action;	
+	!action::clean_route;
+	!::attack;
+	.
++!reconsider_attack(Well).
 +!attack
 	: default::enemyWell(Well,_,_)
 <-
@@ -345,7 +358,7 @@ select_random_facility(Facility)
 	!go_back_to_work;
 	.
 	
-// what delivery agents do 
+// ### WHAT DELIVERY AGENTS DO ###
 +!perform_delivery
 	: ::winner(JobId,Deliveries,DeliveryPoint)
 <-
