@@ -124,14 +124,14 @@
 
 +!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
 
-+!change_role(OldRole,NewRole)
-	: OldRole == NewRole
++!change_role(OldRole2,NewRole)
+	: .my_name(Me) & default::play(Me,OldRole,g1) & OldRole==NewRole
 <-
 	.print("I'm already ",NewRole);
 	.
-//@change_role(atomic)
-+!change_role(OldRole, NewRole)
-	: .my_name(Me) & default::group(_,team,GroupId)
+@change_role(atomic)
++!change_role(OldRole2, NewRole)
+	: .my_name(Me) & default::play(Me,OldRole,g1) & default::group(_,team,GroupId)
 <-
 	.print("I was ",OldRole," becoming ",NewRole);
 	leaveRole(OldRole)[artifact_id(GroupId)];
