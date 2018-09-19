@@ -95,6 +95,8 @@
 	if(MyRole == explorer_drone){
 		!explore::size_map; 
 	}	
+	+strategies::team_ready;
 	!strategies::go_back_to_work;
+	.print("Everything Set Up!");
     .
     

@@ -1,5 +1,6 @@
 +!dismantle_well(Id)
-	: default::well(Id,Lat,Lon,_,_,_)
+//	: default::well(Id,Lat,Lon,_,_,_)
+	: default::enemyWell(Id,Lat,Lon)
 <-  
 	if (not rules::am_I_at_right_position(Lat,Lon)){
 		.print("I'm not at the desired position, going to Lat(",Lat,") Lon(",Lon,")");
@@ -7,6 +8,10 @@
 	}
 	!attack(Id);
 //	!strategies::free; // remove this once the rest of this behaviour is implemented
+	.
++!dismantle_well(Id)
+<-
+	.print(Id," has been destroyed");
 	.
 	
 +!attack(Id)

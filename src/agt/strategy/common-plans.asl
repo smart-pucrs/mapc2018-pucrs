@@ -72,15 +72,11 @@
 	.print("Closest workshop from the storage above is ",Workshop);
 	.
 
-+default::well(Well, Lat, Lon, Type, Team, Integrity)
-	: default::team(MyTeam) & not .substring(MyTeam, Team) & .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
++default::well(Well,Lat,Lon,Type,Team,Integrity)
+	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_)
 <-
-	!change_role(builder,attacker);
-	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Id);
-	
-	!action::forget_old_action;	
-	
-	!!::attack;	
+	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Well);	
+	addEnemyWell(Well,Lat,Lon);
 	.
 
 +default::resNode(NodeId,Lat,Lon,Item)
@@ -274,6 +270,25 @@ select_random_facility(Facility)
 	.nth(0,List,Facility)
 	.
 +!build 
+	: default::enemyWell(Well,_,_)
+<-
+	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
+	!change_role(builder,attacker);	
+	!!::attack;
+	.
++!build 
+	: 	new::chargingList(CList) & 
+		rules::closest_facility(CList,Facility) & 
+		default::charge(Charge) & 
+		rules::my_route_closest_facility(CList,Facility,Route) &
+		Route >= Charge+2
+<-
+	.print(Route," steps to the closest charging station ",Facility," but my charge is ",Charge,", going to recharge");
+	!action::goto(Facility);
+	!action::charge;
+	!build;
+	.
++!build 
 //	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
 	: not rules::enough_money & select_random_facility(Facility)
 <-
@@ -290,11 +305,36 @@ select_random_facility(Facility)
 	.
 
 // what attackers do 
-+!attack
-	: default::well(Well,_,_,_,Team,_) & default::team(MyTeam) & not .substring(MyTeam, Team)
+//+!attack
+//	: default::well(Well,_,_,_,Team,_) & default::team(MyTeam) & not .substring(MyTeam, Team)
+//<-
+//	!attack::dismantle_well(Well);
+//	-default::well(Well,_,_,_,Team,_)[source(_)];
+//	!attack;
+//	.
++default::enemyWell(Well,Lat,Lon)
+	:  not ::becoming_atacker & ::team_ready & .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
+<-	
+	+::becoming_atacker;
+	!change_role(builder,attacker);
+	.print("Some teammate has discovered a well ",Well," at ",Lat," ",Lon);	
+	!action::forget_old_action;	
+	!!::attack;	
+	-::becoming_atacker;
+	.
+-default::enemyWell(Well,Lat,Lon)
+	: .desire(attack::dismantle_well(Well)) & not default::lat(Lat) & not default::lon(Lon)
 <-
+	.print("I was going to dismantle ",Well,", but it's not necessary anymore");
+	!action::forget_old_action;	
+	!!::attack;
+	.
++!attack
+	: default::enemyWell(Well,_,_)
+<-
+	.print("I'm going to attack ",Well);
 	!attack::dismantle_well(Well);
-	-default::well(Well,_,_,_,Team,_)[source(_)];
+	removeEnemyWell(Well);
 	!attack;
 	.
 +!attack
