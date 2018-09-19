@@ -73,6 +73,11 @@ can_I_bid
 	not strategies::winner(_,_,_,_,_) & // assembly winner
 	not strategies::winner(_,_,_) // delivery winner
 	.
+am_I_winner
+:-
+	strategies::winner(_,_,_,_,_) | // assembly winner
+	strategies::winner(_,_,_)
+	.
 	
 estimate_route(Role,Speed,Battery,_,[],TemQty,QtySteps)
 :-

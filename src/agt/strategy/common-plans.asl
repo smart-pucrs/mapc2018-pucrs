@@ -337,22 +337,29 @@ select_random_facility(Facility)
 	.wait({+default::actionID(_)});
 	!!reconsider_attack(Well);
 	.
+//+!become_attacker
+//	: .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
+//<-
+//	!change_role(builder,attacker);	
+//	!action::forget_old_action;	
+//	.drop_desire(::build);
+//	!::attack;	
+//	.
+//+!become_attacker
+//	: .my_name(Me) & default::play(Me,gatherer,g1)
+//<-
+//	!change_role(gatherer,attacker);	
+//	!action::forget_old_action;	
+//	.drop_desire(::reconsider_gather);
+//	.drop_desire(::gather(_));
+//	.drop_desire(::gather);
+//	!::attack;	
+//	.
 +!become_attacker
-	: .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
 <-
-	!change_role(builder,attacker);	
+	!change_role(Role,attacker);	
 	!action::forget_old_action;	
-	.drop_desire(::build);
-	!::attack;	
-	.
-+!become_attacker
-	: .my_name(Me) & default::play(Me,gatherer,g1)
-<-
-	!change_role(gatherer,attacker);	
-	!action::forget_old_action;	
-	.drop_desire(::reconsider_gather);
-	.drop_desire(::gather(_));
-	.drop_desire(::gather);
 	!::attack;	
 	.
 +!become_attacker.
