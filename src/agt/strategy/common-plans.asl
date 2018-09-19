@@ -129,13 +129,14 @@
 <-
 	.print("I'm already ",NewRole);
 	.
-@change_role(atomic)
+//@change_role(atomic)
 +!change_role(OldRole, NewRole)
-	: default::group(_,team,GroupId)
+	: .my_name(Me) & default::group(_,team,GroupId)
 <-
 	.print("I was ",OldRole," becoming ",NewRole);
 	leaveRole(OldRole)[artifact_id(GroupId)];
 	adoptRole(NewRole)[artifact_id(GroupId)];
+	.wait(default::play(Me,NewRole,g1));
 	.
 	
 // how do we pick a minimum money to start building wells
@@ -257,7 +258,7 @@
 	!!strategies::build;
 	.
 	
-// what builders do
+// ### WHAT BUILDERS DO ###
 select_random_facility(Facility)
 :-
 //	new::chargingList(CList) &
@@ -305,7 +306,7 @@ select_random_facility(Facility)
 	!build;
 	.
 
-// what attackers do 
+// ### WHAT ATTACKERS DO ###
 //+!attack
 //	: default::well(Well,_,_,_,Team,_) & default::team(MyTeam) & not .substring(MyTeam, Team)
 //<-
@@ -335,7 +336,7 @@ select_random_facility(Facility)
 	!!::attack;	
 	.
 +!reconsider_attack(Well)
-	: .desire(attack::dismantle_well(Well)) & .desire(action::goto(_,_))
+	: .my_name(Me) & default::play(Me,attacker,g1) & .desire(attack::dismantle_well(Well)) & .desire(action::goto(_,_))
 <-
 	.print("Reconsidering attack");
 	!action::forget_old_action;	
@@ -396,9 +397,9 @@ select_random_facility(Facility)
 	.print("I have to do nothing");
 	.
 	
-// what gathers do
+// ### WHAT GATHERS DO ###
 +!reconsider_gather
-	: .desire(action::goto(_,_))
+	: .my_name(Me) & default::play(Me,gatherer,g1) & .desire(action::goto(_,_))
 <-
 	.print("Reconsidering gather");
 	!action::forget_old_action;
