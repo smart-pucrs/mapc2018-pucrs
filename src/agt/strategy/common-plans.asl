@@ -346,7 +346,7 @@ select_random_facility(Facility)
 	!::attack;	
 	.
 +!become_attacker
-	: .my_name(Me) & default::play(Me,gatherer,g1) & Role==builder & not .desire(build::_)
+	: .my_name(Me) & default::play(Me,gatherer,g1)
 <-
 	!change_role(Role,attacker);	
 	!action::forget_old_action;	
