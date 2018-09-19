@@ -244,18 +244,21 @@
 +!go_back_to_work
 	: .my_name(Me) & default::play(Me,gatherer,g1)
 <-
-	!!gather;
+	!action::forget_old_action;
+	!gather;
 	.
 +!go_back_to_work
 	: .my_name(Me) & default::play(Me,explorer_drone,g1)
 <-
 //	!!explore::size_map; 
-	!!explore::go_walk;
+	!action::forget_old_action;
+	!explore::go_walk;
 	.
 +!go_back_to_work
 	: .my_name(Me) & default::play(Me,builder,g1)
 <-
-	!!strategies::build;
+	!action::forget_old_action;
+	!strategies::build;
 	.
 	
 // ### WHAT BUILDERS DO ###
@@ -384,7 +387,7 @@ select_random_facility(Facility)
 	: ::should_become(Role)
 <-
 	!change_role(attacker,Role);
-	!go_back_to_work;
+	!!go_back_to_work;
 	.
 	
 // ### WHAT DELIVERY AGENTS DO ###
@@ -400,7 +403,7 @@ select_random_facility(Facility)
 	.print("I've finished my deliveries'");
 	?::should_become(Role);
 	!change_role(deliveryagent,Role);
-	!go_back_to_work;
+	!!go_back_to_work;
 	.
 +!recover_delivery(JobId)
 <-
@@ -412,7 +415,7 @@ select_random_facility(Facility)
 	
 	?::should_become(Role);
 	!change_role(deliveryagent,Role);
-	!go_back_to_work;
+	!!go_back_to_work;
 	.
 +!give_back_delivery
 	: default::hasItem(_,_) & strategies::centerStorage(Storage) 
