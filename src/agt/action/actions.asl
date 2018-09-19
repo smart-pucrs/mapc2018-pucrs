@@ -132,10 +132,11 @@
 	!goto(Lat,Lon);
 	.
 -!goto(Lat,Lon)
+	: default::lat(LatA) & default::lon(LonA)
 <-
 	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
-	+::going(Lat,Lon); 
-    !action::commit_action(goto(Lat,Lon));
+	+::going(LatA,LonA); 
+    !action::commit_action(goto(LatA,LonA));
     !goto(Lat,Lon);
 	.
 
