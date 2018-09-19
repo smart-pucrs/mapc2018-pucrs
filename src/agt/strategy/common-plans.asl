@@ -129,7 +129,7 @@
 <-
 	.print("I'm already ",NewRole);
 	.
-@change_role(atomic)
+@change_role[atomic]
 +!change_role(OldRole2, NewRole)
 	: .my_name(Me) & default::play(Me,OldRole,g1) & default::group(_,team,GroupId)
 <-
