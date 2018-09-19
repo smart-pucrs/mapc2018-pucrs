@@ -16,6 +16,7 @@
 //{ include("strategies/round/end-round.asl") }
 { include("behaviour/delivery/delivery.asl", delivery) }
 { include("behaviour/trade/trade.asl", trade) }
+{ include("behaviour/reborn/reborn.asl", reborn) }
 	
 +!add_initiator
 <- 

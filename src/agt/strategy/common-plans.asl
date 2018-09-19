@@ -109,11 +109,7 @@
 	} else{
 		-+::noActionCount(0);
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
-//		.my_name(Me);
-//		?::should_become(Role);
-//		?default::play(Me,CurrentRole,g1);
-//		!change_role(CurrentRole,Role);
-//		!go_back_to_work;
+		!reborn::revive;
 	}
 	.
 	
@@ -128,11 +124,16 @@
 
 +!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
 
++!change_role(OldRole,NewRole)
+	: OldRole == NewRole
+<-
+	.print("I'm already ",NewRole);
+	.
 @change_role(atomic)
 +!change_role(OldRole, NewRole)
 	: default::group(_,team,GroupId)
 <-
-	.print("I was a ",OldRole," becoming ",NewRole);
+	.print("I was ",OldRole," becoming ",NewRole);
 	leaveRole(OldRole)[artifact_id(GroupId)];
 	adoptRole(NewRole)[artifact_id(GroupId)];
 	.
