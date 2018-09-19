@@ -116,6 +116,7 @@
 +default::massim(Money)
 	: rules::my_role(builder,CurrentRole) & not .desire(build::_) & rules::enough_money
 <-
+	.print("We have enough money calling build");
 	!action::forget_old_action;
  	+action::committedToAction(Id);
 	
@@ -361,6 +362,8 @@ select_random_facility(Facility)
 +!become_attacker
 	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
 <-
+	.current_intention(intention(IntentionId,_));
+	.print("Becoming attacker ",IntentionId);
 	!change_role(Role,attacker);	
 	!action::forget_old_action;	
 	!::attack;	
