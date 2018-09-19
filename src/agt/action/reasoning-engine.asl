@@ -125,7 +125,7 @@
 <-
 	!revogate_tokens;
 	!update_percepts;
-	!forget_old_action; // trying to get the error (it's dangerous)
+//	!forget_old_action; // trying to get the error (it's dangerous)
 	.
 @forgetCommitAction[atomic]
 +!forget_old_action
@@ -149,10 +149,12 @@
 	.
 @revogate[atomic]
 +!revogate_tokens
-	: ::current_token(Token)
+	: ::current_token(Token) & .current_intention(intention(IntentionId,_)) 
 <-
-	.print("Revogating older tokens...");
+	.print("Revogating older tokens...I'm ",IntentionId);
 	-+::current_token(Token+1);
+	-::access_token(IntentionId,_);
+	+::access_token(IntentionId,Token+1);
 	.
 
 @helprequest[atomic]
