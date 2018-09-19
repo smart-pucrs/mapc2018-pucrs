@@ -36,6 +36,9 @@
 	.abolish(_::partial_stock(_,_));
 	.abolish(_::must_assemble(_,_));
 	
+	.abolish(action::_);
+	+action::current_token(0);
+	
 //	reasoning
 	.abolish(action::reasoning_about_belief(_));
 	.

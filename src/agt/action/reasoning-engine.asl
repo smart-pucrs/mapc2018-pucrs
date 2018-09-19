@@ -151,7 +151,8 @@
 +!revogate_tokens
 	: ::current_token(Token) & .current_intention(intention(IntentionId,_)) 
 <-
-	.print("Revogating older tokens...I'm ",IntentionId);
+	.current_intention(intention(IntentionId2,_));
+	.print("Revogating older tokens...I'm ",IntentionId," ",IntentionId2);
 	-+::current_token(Token+1);
 	-::access_token(IntentionId,_);
 	+::access_token(IntentionId,Token+1);
