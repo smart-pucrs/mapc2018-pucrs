@@ -136,8 +136,8 @@
 <-
 	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
 	+::going(LatA,LonA); 
-    !action::commit_action(goto(LatA,LonA));
-    !goto(Lat,Lon);
+    //!action::commit_action(goto(LatA,LonA));
+    !goto(LatA,LonA);
 	.
 
 // Charge
