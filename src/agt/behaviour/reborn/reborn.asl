@@ -1,7 +1,8 @@
 +!kill_yourself
 <-
 	.print("The devil has come into my mind");
-	!action::forget_old_action;
+	.drop_all_intentions;
+//	!action::forget_old_action;
 	!revive;
 	.
 	
@@ -10,35 +11,56 @@
 <-
 	.print("Coming back to life");
 	!forget_the_past;
+	.wait(teste);
 	!strategies::change_role(PastRole,NewRole);
+	.wait({+default::actionID(_)}); // wait for beliefs synchronisation
 	!strategies::go_back_to_work;
 	.	
 
 +!forget_the_past
 <-
-	-strategies::winner(_,_,_,_,_);
-	-strategies::winner(_,_,_);
-	
-	!action::clean_route;
-	
-//	initiator
-	.abolish(_::final_qty_item(_,_));
-//	cnp_assemble
-	.abolish(_::selected_bids(_));
-	.abolish(_::awarded_agent(_,_,_,_,_));
-	.abolish(_::constraint_role(_,_));
-	.abolish(_::selected_task(_,_,_,_));
-//	cnp_delivery
-	.abolish(_::selected_bids(_));
-	.abolish(_::awarded_agent(_,_,_));
-	.abolish(_::selected_task(_,_,_));
-//	estimate
-	.abolish(_::partial_stock(_,_));
-	.abolish(_::must_assemble(_,_));
-	
+	?action::current_token(Token);
 	.abolish(action::_);
-	+action::current_token(0);
+	+action::current_token(Token);
+
+	.abolish(attack::_);
 	
-//	reasoning
-	.abolish(action::reasoning_about_belief(_));
+	.abolish(build::_);	
+	
+	.abolish(cnpa::_);
+	
+	.abolish(cnpd::_);
+	
+	.abolish(delivery::_);
+	
+	.abolish(estimate::_);	
+	
+	?explore::n_steps(NS);
+	?explore::n_walks(NW);
+	.abolish(explore::_);
+	+explore::n_steps(NS);
+	+explore::n_walks(NW);
+	
+	.findall(mission(MissionId,Storage,Reward,End,Fine,Items),initiator::mission(MissionId,Storage,Reward,End,Fine,Items),MissionList);
+	.findall(compound_item_quantity(Item,Qty),initiator::compound_item_quantity(Item,Qty),ItemList);
+	.abolish(initiator::_);
+	for(.member(compound_item_quantity(Item,Qty),ItemList)){
+	   +initiator::compound_item_quantity(Item,Qty);
+	}
+	for(.member(mission(MissionId,Storage,Reward,End,Fine,Items),MissionList)){
+	   +initiator::mission(MissionId,Storage,Reward,End,Fine,Items);
+	}
+	
+	.abolish(gather::_);
+	
+	?strategies::centerStorage(Storage);
+	?strategies::centerWorkshop(Workshop);
+	?strategies::should_become(Role);
+	.abolish(strategies::_);
+	+strategies::should_become(Role);
+	+strategies::centerWorkshop(Workshop);
+	+strategies::centerStorage(Storage);
+	+strategies::team_ready;
+	
+	.abolish(org::_);
 	.

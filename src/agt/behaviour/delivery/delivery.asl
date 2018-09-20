@@ -35,8 +35,9 @@ steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 	steps_to_storages(Destination,Item,Storages,Temp,Result)
 	.
 	
-+task(delivery_task(DeliveryPoint,Tasks),CNPBoard,TaskId)
++task(delivery_task(DeliveryPoint,Tasks),CNPBoard,TaskId)[source(A)]
 <-
+	-task(_,_,TaskId)[source(A)];
 	.print("Received a bid request for ",TaskId);
 	if (rules::can_I_bid){
 //		+default::biding(TaskId);
