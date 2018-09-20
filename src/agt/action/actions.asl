@@ -100,6 +100,13 @@
     !action::commit_action(goto(FacilityId));
 	!goto(FacilityId);
 	.
+-!goto(FacilityId)[error(no_applicable)]
+<-
+	.print("The goto context has failed, our internal action in the context has failed, sending action anyway");
+	+::going(FacilityId); 
+    !action::commit_action(goto(FacilityId));
+	!goto(FacilityId);
+	.
 
 // Goto (option 2)
 // Lat and Lon must be floats
@@ -157,6 +164,13 @@
 -!goto(Lat,Lon)[error(unknown),code(IA)]
 <-
 	.print("Our internal action ",IA," has failed, sending action anyway");
+	+::going(Lat,Lon); 
+    !action::commit_action(goto(Lat,Lon));
+	!goto(Lat,Lon);
+	.
+-!goto(Lat,Lon)[error(no_applicable)]
+<-
+	.print("The goto context has failed, our internal action in the context has failed, sending action anyway");
 	+::going(Lat,Lon); 
     !action::commit_action(goto(Lat,Lon));
 	!goto(Lat,Lon);
