@@ -32,6 +32,15 @@
 // Goto (option 1)
 // FacilityId must be a string
 +!goto(FacilityId) 
+	: ::send_anyway(FacilityId)
+<- 
+	-::send_anyway(FacilityId);
+	!clean_route;
+	+::going(FacilityId); 
+    !action::commit_action(goto(FacilityId));
+    !goto(FacilityId);
+	.
++!goto(FacilityId) 
 	: default::facility(FacilityId)
 <-
 	-::going(FacilityId);
@@ -89,27 +98,32 @@
 <-
 	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
 	.print(Result," failure, we don't know what to do, keep going. My battery is ",C);	
-	+::going(FacilityId);
-    !action::commit_action(goto(FacilityId));
 	!goto(FacilityId);
 	.
 -!goto(FacilityId)[error(unknown),code(IA)]
 <-
 	.print("Our internal action ",IA," has failed, sending action anyway");
-	+::going(FacilityId);
-    !action::commit_action(goto(FacilityId));
+	+::send_anyway(FacilityId);
 	!goto(FacilityId);
 	.
 -!goto(FacilityId)[error(no_applicable)]
 <-
 	.print("The goto context has failed, our internal action in the context has failed, sending action anyway");
-	+::going(FacilityId); 
-    !action::commit_action(goto(FacilityId));
+	+::send_anyway(FacilityId);
 	!goto(FacilityId);
 	.
 
 // Goto (option 2)
 // Lat and Lon must be floats
++!goto(Lat, Lon) 
+	: ::send_anyway(Lat,Lon)
+<- 
+	-::send_anyway(Lat,Lon);
+	!clean_route;
+	+::going(Lat,Lon); 
+    !action::commit_action(goto(Lat,Lon));
+    !goto(Lat, Lon);
+	.
 +!goto(Lat, Lon) 
 	: ::going(Lat,Lon) & default::routeLength(R) & R == 0 
 <- 
@@ -164,15 +178,13 @@
 -!goto(Lat,Lon)[error(unknown),code(IA)]
 <-
 	.print("Our internal action ",IA," has failed, sending action anyway");
-	+::going(Lat,Lon); 
-    !action::commit_action(goto(Lat,Lon));
+	+::send_anyway(Lat,Lon);
 	!goto(Lat,Lon);
 	.
 -!goto(Lat,Lon)[error(no_applicable)]
 <-
 	.print("The goto context has failed, our internal action in the context has failed, sending action anyway");
-	+::going(Lat,Lon); 
-    !action::commit_action(goto(Lat,Lon));
+	+::send_anyway(Lat,Lon);
 	!goto(Lat,Lon);
 	.
 
