@@ -149,13 +149,13 @@
 	.
 @revogate[atomic]
 +!revogate_tokens
-	: ::current_token(Token) & .current_intention(intention(IntentionId,_)) 
+	: ::current_token(Token) & .current_intention(intention(ContextId,_)) 
 <-
-	.current_intention(intention(IntentionId2,_));
-	.print("Revogating older tokens...I'm ",IntentionId," ",IntentionId2);
+	.current_intention(intention(BodyId,_));
+	.print("Revogating older tokens...I'm context ",ContextId," body ",BodyId);
 	-+::current_token(Token+1);
-	-::access_token(IntentionId,_);
-	+::access_token(IntentionId,Token+1);
+	-::access_token(BodyId,_);
+	+::access_token(BodyId,Token+1);
 	.
 
 @helprequest[atomic]
