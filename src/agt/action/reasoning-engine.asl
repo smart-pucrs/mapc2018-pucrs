@@ -2,14 +2,14 @@
 +!commit_action(Action)
 	: .current_intention(intention(IntentionId,_)) & not ::access_token(IntentionId,_) & ::current_token(Token)
 <-
-	.print("It's my first access, receiving a token ",Token," ",Action," ",IntentionId);
+	.print("It's my first access ",IntentionId,", receiving a token ",Token," ",Action," ",IntentionId);
 	+::access_token(IntentionId,Token);
 	!commit_action(Action);
 	.
 +!commit_action(Action)
 	: .current_intention(intention(IntentionId,_)) & ::access_token(IntentionId,IntentionToken) & ::current_token(Token) & IntentionToken < Token
 <-
-	.print("My access was revogated, my ",IntentionToken," current ",Token,", shutting down!");
+	.print("My access was revogated ",IntentionId,", my ",IntentionToken," current ",Token,", shutting down!");
 	-::access_token(IntentionId,_);
 	.drop_intention;
 	.
