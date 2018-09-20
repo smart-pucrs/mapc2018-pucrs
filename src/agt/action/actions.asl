@@ -480,8 +480,9 @@
 
 //  for verifying battery and going to charging stations
 +!go_charge(Flat,Flon)
-	: not .intend(::go_charge(_,_)) & not .intend(::go_charge(_)) & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
+	: not ::analysing_go_charge & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
 <-
+	+::analysing_go_charge;
 	+onMyWay([]);
 	for(.member(ChargingId,List)){
 		?default::chargingStation(ChargingId,Clat,Clon,_);
@@ -542,6 +543,7 @@
 		}
 	}
 	-onMyWay(Aux2List);
+	-::analysing_go_charge;
 	if (not action::impossible) {
 		.print("**** Going to charge my battery at ", FacilityAux2);
 		+::going(FacilityAux2);
@@ -555,7 +557,7 @@
 	.
 +!go_charge(Flat,Flon)
 	<-
-	.wait(50);
+	.wait({-::analysing_go_charge});
 	!go_charge(Flat,Flon);
 	.
 +!check_list_charging(List,Lat,Lon)
@@ -572,8 +574,9 @@
 	.
 
 +!go_charge(FacilityId)
-	:  not .intend(::go_charge(_,_)) & not .intend(::go_charge(_)) & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
+	:  not ::analysing_go_charge & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
 <-
+	+::analysing_go_charge;
 	+onMyWay([]);
 	?default::facility(Fac);
 	if (.member(Fac,List) & default::charge(CCharge) & default::maxBattery(MCharge) & CCharge>=MCharge) {
@@ -642,6 +645,7 @@
 		}
 	}
 	-onMyWay(Aux2List);
+	-::analysing_go_charge;
 	if (not action::impossible) {
 		.print("**** Going to charge my battery at ", FacilityAux2);
 		+::going(FacilityAux2)
@@ -655,7 +659,7 @@
 	.
 +!go_charge(FacilityId)
 	<-
-	.wait(50);
+	.wait({-::analysing_go_charge});
 	!go_charge(FacilityId);
 	.
 +!check_list_charging(List,FacilityId)
