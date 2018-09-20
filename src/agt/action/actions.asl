@@ -480,7 +480,7 @@
 
 //  for verifying battery and going to charging stations
 +!go_charge(Flat,Flon)
-	: new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
+	: not .intend(::go_charge(_,_)) & not .intend(::go_charge(_)) & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
 <-
 	+onMyWay([]);
 	for(.member(ChargingId,List)){
@@ -553,6 +553,11 @@
 		-impossible;
 	}
 	.
++!go_charge(Flat,Flon)
+	<-
+	.wait(50);
+	!go_charge(Flat,Flon);
+	.
 +!check_list_charging(List,Lat,Lon)
 <-
 	?rules::closest_facility(List,Lat,Lon,Facility);
@@ -567,7 +572,7 @@
 	.
 
 +!go_charge(FacilityId)
-	: new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
+	:  not .intend(::go_charge(_,_)) & not .intend(::go_charge(_)) & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
 <-
 	+onMyWay([]);
 	?default::facility(Fac);
@@ -647,6 +652,11 @@
 	else {
 		-impossible;
 	}
+	.
++!go_charge(FacilityId)
+	<-
+	.wait(50);
+	!go_charge(FacilityId);
 	.
 +!check_list_charging(List,FacilityId)
 <-
