@@ -11,7 +11,7 @@
 <-
 	.print("Coming back to life");
 	!forget_the_past;
-	.wait(teste);
+//	.wait(teste);
 	!strategies::change_role(PastRole,NewRole);
 	.wait({+default::actionID(_)}); // wait for beliefs synchronisation
 	!strategies::go_back_to_work;
