@@ -99,6 +99,12 @@
 	}	
 	+strategies::team_ready;
 	!!strategies::go_back_to_work;
+//	if (Me == vehicle34){
+//		!action::goto(48.83208,2.41-0.001);
+//		!action::goto(storage1);
+//	} else{
+//		!strategies::always_recharge;
+//	}
 	.print("Everything Set Up!");
     .
     

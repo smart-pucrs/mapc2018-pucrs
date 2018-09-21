@@ -20,6 +20,35 @@ ranking(List, Ranking) :- ::ranking(List, [], Ranking).
 
 list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency), default::wellType(Type, Cost, Efficiency,_,_), List).
 
+select_best_location_to_build(ChosenPosition)
+:-
+	default::lat(Lat) &
+	default::lon(Lon) & 
+	default::maxLon(MaxLon) &
+	default::minLat(MinLon) &
+	default::maxLat(MaxLat) &
+	default::minLat(MinLat) &
+	PossibleLocations = [pos(Lat,MaxLon-0.001),pos(Lat,MinLon+0.001),pos(MaxLat-0.001,Lon),pos(MinLat+0.001,Lon)] &
+	select_location(PossibleLocations,100,Temp,ChosenPosition)
+	.
+select_location([],Route,Temp,ChosenPosition)
+:-
+	ChosenPosition = Temp
+	.
+select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
+:-
+	default::role(Role,Speed,_,_,_,_,_,_,_,_,_) &
+	default::lat(Lat) &
+	default::lon(Lon) &
+	actions.route(Role,Speed,Lat,Lon,DLat,DLon,_,_,RouteLen) &
+	RouteLen < Route &
+	select_location(List,RouteLen,pos(DLat,DLon),ChosenPosition)
+	.
+select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
+:-
+	select_location(List,Route,Temp,ChosenPosition)
+	.
+
 !make_well_types_ranking.
 
 +!make_well_types_ranking
@@ -37,8 +66,9 @@ list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency), default::wellT
 	.
 
 +!buy_well 
-	: ::get_suitable_well_type(Type) & rules::enough_money
+	: ::get_suitable_well_type(Type) & rules::enough_money & ::select_best_location_to_build(pos(Lat,Lon))
 <-  
+	!action::goto(Lat,Lon);
 	!action::build(Type); 
 	!build_well(Type);	
 	.

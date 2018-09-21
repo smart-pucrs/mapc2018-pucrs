@@ -78,7 +78,17 @@ public class route extends DefaultInternalAction {
 			String from = ts.getUserAgArch().getAgName();
 //			route = MapHelper.getNewRoute(from, to, type);
 			route = MapHelper.getInstance().getNewRoute(from, to, type);
-		}  else {
+		}  else if (args.length == 9){
+			NumberTermImpl locationfromLat = (NumberTermImpl) args[2];
+			NumberTermImpl locationfromLon = (NumberTermImpl) args[3];
+			// Location is first LONGITUDE and then LATITUDE
+			Location from = new Location(locationfromLon.solve(),locationfromLat.solve());
+			NumberTermImpl locationtoLat = (NumberTermImpl) args[4];
+			NumberTermImpl locationtoLon = (NumberTermImpl) args[5];
+			// Location is first LONGITUDE and then LATITUDE
+			Location to = new Location(locationtoLon.solve(),locationtoLat.solve());
+			route = MapHelper.getInstance().getNewRoute(from,to,type);
+		} else {
 			return false;
 		}
 
