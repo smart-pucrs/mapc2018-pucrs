@@ -1,0 +1,136 @@
+{
+	"server" : {
+	  "tournamentMode" : "round-robin",
+	  "teamsPerMatch" : 2,
+	  "teamSize" : 34,
+	  "launch" : "key",
+	  "port" : 12300,
+	  "backlog" : 10000,
+	  "agentTimeout" : 4000,
+	  "resultPath" : "results",
+	  "logLevel" : "normal",
+	  "logPath" : "logs",
+	  "replayPath" : "replays",
+	  "maxPacketLength" : 65536
+	},
+
+	"manual-mode" : [
+	    ["A", "B"],
+	    ["B", "C"],
+	    ["A", "C"]
+	  ],
+
+  "match" : [
+    {
+      "id" : "2018-Test-Berlin",
+      "scenarioClass" : "city.CitySimulation",
+      "steps" : 1000,
+      "map" : "berlin",
+      "seedCapital" : 5000,
+      "minLon" : 13.35,
+      "maxLon" : 13.5,
+      "minLat" : 52.44,
+      "maxLat" : 52.54,
+      "centerLon" : 13.4,
+      "centerLat" : 52.5,
+      "proximity" : 5,
+      "cellSize" : 200,
+      "randomSeed" : 18,
+      "randomFail" : 1,
+      "gotoCost" : 1,
+      "rechargeRate" : 0.3,
+
+      "upgrades" : [
+        {
+          "name" : "skill",
+          "cost" : 1000,
+          "step" : 1
+        },
+        {
+          "name" : "vision",
+          "cost" : 1000,
+          "step" : 50
+        },
+        {
+          "name" : "speed",
+          "cost" : 1000,
+          "step" : 1
+        },
+        {
+          "name" : "load",
+          "cost" : 200,
+          "step" : 10
+        },
+        {
+          "name" : "battery",
+          "cost" : 300,
+          "step" : 5
+        }
+      ],
+
+      "roles" : {
+        "drone" : {
+          "baseSpeed" : 5,
+          "maxSpeed" : 7,
+          "baseLoad" : 15,
+          "maxLoad" : 25,
+          "baseBattery" : 20,
+          "maxBattery" : 40,
+          "baseSkill" : 1,
+          "maxSkill" : 3,
+          "baseVision" : 600,
+          "maxVision" : 1000,
+          "roads" : ["air"]
+        },
+        "motorcycle" : {
+          "baseSpeed" : 4,
+          "maxSpeed" : 6,
+          "baseLoad" : 30,
+          "maxLoad" : 70,
+          "baseBattery" : 30,
+          "maxBattery" : 60,
+          "baseSkill" : 6,
+          "maxSkill" : 10,
+          "baseVision" : 500,
+          "maxVision" : 900,
+          "roads" : ["road"]
+        },
+        "car" : {
+          "baseSpeed" : 3,
+          "maxSpeed" : 5,
+          "baseLoad" : 50,
+          "maxLoad" : 150,
+          "baseBattery" : 40,
+          "maxBattery" : 80,
+          "baseSkill" : 8,
+          "maxSkill" : 12,
+          "baseVision" : 400,
+          "maxVision" : 800,
+          "roads" : ["road"]
+        },
+        "truck" : {
+          "baseSpeed" : 2,
+          "maxSpeed" : 3,
+          "baseLoad" : 100,
+          "maxLoad" : 300,
+          "baseBattery" : 50,
+          "maxBattery" : 100,
+          "baseSkill" : 10,
+          "maxSkill" : 15,
+          "baseVision" : 300,
+          "maxVision" : 700,
+          "roads" : ["road"]
+        }
+      },
+
+      "entities" : [{"drone" : 4}, {"motorcycle" : 8}, {"car" : 10}, {"truck" : 12}],
+
+      "generate" : "$(generate/generate.json)"
+    }
+  ],
+
+  "teams" : {
+    "A" : "$(teams/A.json)",
+    "B" : "$(teams/B.json)"
+  }
+}
