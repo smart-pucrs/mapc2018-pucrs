@@ -64,3 +64,14 @@
 	
 	.abolish(org::_);
 	.
+	
++!synchronise_team_artifact_environment
+	: strategies::centerStorage(Storage) & default::storage(Storage,_,_,_,_,StoredItems)
+<-
+	for(.member(item(Item,Qty,_),StoredItems)){
+//		if (default::item(Item,_,_,parts([]))){
+//			addAvailableItem(Storage,Item,Qty);	
+//		}
+		addAvailableItem(Storage,Item,Qty);
+	}
+	.

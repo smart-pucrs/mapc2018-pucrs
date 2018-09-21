@@ -91,6 +91,7 @@
 	// update the code below for a different strategy
 
 	!strategies::set_center_storage_workshop;
+	if ( Me == vehicle1 ) { !reborn::synchronise_team_artifact_environment; }
 	
 	+strategies::should_become(MyRole);
 	if(MyRole == explorer_drone){
