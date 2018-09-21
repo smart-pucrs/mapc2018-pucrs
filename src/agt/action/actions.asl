@@ -98,6 +98,7 @@
 <-
 	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
 	.print(Result," failure, we don't know what to do, keep going. My battery is ",C);	
+	!clean_route;	
 	!goto(FacilityId);
 	.
 -!goto(FacilityId)[error(unknown),code(IA)]
@@ -172,7 +173,8 @@
 	: default::charge(C)
 <-
 	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
-	.print(Result," failure, we don't know what to do, keep going. My battery is ",C);	
+	.print(Result," failure, we don't know what to do, keep going. My battery is ",C);
+	!clean_route;	
 	!goto(Lat,Lon);
 	.
 -!goto(Lat,Lon)[error(unknown),code(IA)]
