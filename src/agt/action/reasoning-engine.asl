@@ -9,6 +9,7 @@
 +!commit_action(Action)
 	: .current_intention(intention(IntentionId,_)) & ::access_token(IntentionId,IntentionToken) & ::current_token(Token) & IntentionToken < Token
 <-
+	
 	.print("My access was revogated ",IntentionId,", my ",IntentionToken," current ",Token,", shutting down!");
 	-::access_token(IntentionId,_);
 	.drop_intention;
@@ -24,6 +25,10 @@
 +!commit_action(Action)
 	: default::actionID(Id) & not action::action(Id,_) & .current_intention(intention(IntentionId,_))
 <-
+	.current_intention(intention(IntentionId2,_));
+	if(IntentionId \== IntentionId2){
+		.drop_intention;
+	}
 	.abolish(action::action(_,_)); // removes all the possible last actions
 	+action::action(Id,Action);
 	.print("Doing action ",Action, " for ",IntentionId," at step ",Id," . Waiting for step ",Id+1);
