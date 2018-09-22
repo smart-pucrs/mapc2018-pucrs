@@ -76,13 +76,14 @@
 	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_,_)
 <-
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Well);	
-	if (rules::desired_pos_is_valid(Lat,Lon)){
-		.print(Well," is on the road");
-		addEnemyWell(Well,Lat,Lon,road);
-	} else{
-		.print(Well," is on the air");
-		addEnemyWell(Well,Lat,Lon,air);
-	}
+	addEnemyWell(Well,Lat,Lon,road);
+//	if (rules::desired_pos_is_valid(Lat,Lon)){
+//		.print(Well," is on the road");
+//		addEnemyWell(Well,Lat,Lon,road);
+//	} else{
+//		.print(Well," is on the air");
+//		addEnemyWell(Well,Lat,Lon,air);
+//	}
 	.
 
 +default::resNode(NodeId,Lat,Lon,Item)

@@ -16,7 +16,7 @@
 can_I_attack_well(Well)
 :-
 	default::enemyWell(Well,Lat,Lon,_) &
-	desired_pos_is_valid(Lat,Lon)
+	rules::desired_pos_is_valid(Lat,Lon)
 	.
 
 +!dismantle_well(Id)
