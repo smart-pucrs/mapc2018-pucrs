@@ -136,7 +136,7 @@ my_current_pos_is_valid
 	.
 desired_pos_is_valid(Lat,Lon)
 :-
-	default::role(truck, Speed, _, _, _, _, _, _, _, _, _) & 
+	default::role(_, Speed, _, _, _, _, _, _, _, _, _) & 
 	actions.route(truck, Speed, Lat, Lon, _, _, _, RouteLen1) &
 	actions.route(truck, Speed, Lat, Lon, storage0, _, RouteLen2)
 	.

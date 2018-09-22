@@ -386,7 +386,7 @@ select_random_facility(Facility)
 	.
 +!reconsider_attack(Well).
 +!attack
-	: default::enemyWell(Well,_,_) & attack::can_I_attack_well(Well)
+	: default::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I'm going to attack ",Well);
 	!attack::dismantle_well(Well);
