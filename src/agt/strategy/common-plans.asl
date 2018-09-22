@@ -454,7 +454,14 @@ select_random_facility(Facility)
 <-
 	!gather(SelectedResource);
 	.
-+!gather <- !gather::initial_gather.
++!gather
+	: select_random_facility(Facility)
+<-	
+	.print("No need to gather, going to ",Facility," to explore");
+	!action::goto(Facility);
+	!gather;
+	.
+//+!gather <- !gather::initial_gather.
 +!gather(ResourceNode)
 	: default::resNode(ResourceNode,Lat,Lon,Base) & strategies::centerStorage(Storage)
 <-
