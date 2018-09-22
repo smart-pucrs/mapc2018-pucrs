@@ -46,6 +46,7 @@ select_resource_node(SelectedResource)
 :-
 	default::desired_base(List) &
 	remove_unknown_bases(List,[],PrunedList) &
+	.print("list pruned: ",PrunedList)&
 	sum_percentages(PrunedList,Total) & 
 	.random(N) &
 	chosen_item(PrunedList, 0, (N * Total), item(_,Name,_)) &
