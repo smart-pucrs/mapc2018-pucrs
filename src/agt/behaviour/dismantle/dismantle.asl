@@ -1,6 +1,22 @@
+can_I_attack_well(Well)
+:-
+	default::enemyWell(Well,_,_,air) &
+	default::role(drone,_,_,_,_,_,_,_,_,_,_)
+	.
+can_I_attack_well(Well)
+:-
+	default::enemyWell(Well,_,_,road) &
+	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
+	Role \== drone
+	.
+can_I_attack_well(Well)
+:-
+	false
+	.
+
 +!dismantle_well(Id)
 //	: default::well(Id,Lat,Lon,_,_,_)
-	: default::enemyWell(Id,Lat,Lon)
+	: can_I_attack_well(Id) & default::enemyWell(Id,Lat,Lon,_)
 <-  
 	if (not rules::am_I_at_right_position(Lat,Lon)){
 		.print("I'm not at the desired position, going to Lat(",Lat,") Lon(",Lon,")");
@@ -11,7 +27,7 @@
 	.
 +!dismantle_well(Id)
 <-
-	.print(Id," has been destroyed");
+	.print(Id," has been destroyed or I cannot attack well");
 	.
 	
 +!attack(Id)

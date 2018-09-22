@@ -128,3 +128,15 @@ estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
 //	.print("desvio ",StepsToRecharge," ",Route)&
 	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),Locations,TemQty+StepsToRecharge+Route,QtySteps)
 	.
+	
+my_current_pos_is_valid
+:-
+	default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & 
+	actions.route(Role, Speed, storage0, RouteLen1)
+	.
+desired_pos_is_valid(Lat,Lon)
+:-
+	default::role(Role, Speed, _, _, _, _, _, _, _, _, _) & 
+	actions.route(Role, Speed, Lat, Lon, _, _, _, RouteLen1) &
+	actions.route(Role, Speed, Lat, Lon, storage0, _, RouteLen2)
+	.

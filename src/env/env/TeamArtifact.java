@@ -399,21 +399,22 @@ public class TeamArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void addEnemyWell(String wellId, double lat, double lon){
-		Literal litWellId = Literal.parseLiteral(wellId);
+	void addEnemyWell(String wellId, double lat, double lon,String type){
+		Literal litWellId 	= Literal.parseLiteral(wellId);
+		Literal litType 	= Literal.parseLiteral(type);
 		
-		ObsProperty prop = this.getObsPropertyByTemplate("enemyWell",litWellId,null,null);
+		ObsProperty prop = this.getObsPropertyByTemplate("enemyWell",litWellId,null,null,null);
 		if (prop == null) {
-			this.defineObsProperty("enemyWell",litWellId,lat,lon);
+			this.defineObsProperty("enemyWell",litWellId,lat,lon,litType);
 		}
 	}
 	@OPERATION
 	void removeEnemyWell(String wellId){
 		Literal litWellId = Literal.parseLiteral(wellId);
 		
-		ObsProperty prop = this.getObsPropertyByTemplate("enemyWell",litWellId,null,null);
+		ObsProperty prop = this.getObsPropertyByTemplate("enemyWell",litWellId,null,null,null);
 		if (prop != null) {
-			this.removeObsPropertyByTemplate("enemyWell",litWellId,null,null);
+			this.removeObsPropertyByTemplate("enemyWell",litWellId,null,null,null);
 		}
 	}
 	

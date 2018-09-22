@@ -45,6 +45,7 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	actions.route(Role,Speed,Lat,Lon,DLat,DLon,_,_,RouteLen) &
 	.print("depois ",DLat," ",DLon," ",RouteLen) &
 	RouteLen < Route &
+	rules::desired_pos_is_valid(DLat,DLon) &
 	select_location(List,RouteLen,pos(DLat,DLon),ChosenPosition)
 	.
 select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
@@ -69,14 +70,21 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	.
 
 +!buy_well 
-	: ::get_suitable_well_type(Type) & rules::enough_money & new::chargingList(CList) & rules::closest_facility(CList,Facility)
+	: ::get_suitable_well_type(Type) & rules::enough_money & ::select_best_location_to_build(pos(Lat,Lon))
 <-  
-	!action::goto(Facility);
-	?::select_best_location_to_build(pos(Lat,Lon));
 	!action::goto(Lat,Lon);
 	!action::build(Type);
 	!build_well(Type);
 	.
+//+!buy_well 
+//	: ::get_suitable_well_type(Type) & rules::enough_money & new::chargingList(CList) & rules::closest_facility(CList,Facility)
+//<-  
+//	!action::goto(Facility);
+//	?::select_best_location_to_build(pos(Lat,Lon));
+//	!action::goto(Lat,Lon);
+//	!action::build(Type);
+//	!build_well(Type);
+//	.
 //+!buy_well 
 //	: ::get_suitable_well_type(Type) & rules::enough_money
 //<-  

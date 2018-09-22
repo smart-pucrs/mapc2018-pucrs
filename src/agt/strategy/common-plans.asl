@@ -73,10 +73,16 @@
 	.
 
 +default::well(Well,Lat,Lon,Type,Team,Integrity)
-	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_)
+	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_,_)
 <-
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Well);	
-	addEnemyWell(Well,Lat,Lon);
+	if (rules::desired_pos_is_valid(Lat,Lon)){
+		.print(Well," is on the road");
+		addEnemyWell(Well,Lat,Lon,road);
+	} else{
+		.print(Well," is on the air");
+		addEnemyWell(Well,Lat,Lon,air);
+	}
 	.
 
 +default::resNode(NodeId,Lat,Lon,Item)
@@ -276,7 +282,7 @@ select_random_facility(Facility)
 	.nth(0,List,Facility)
 	.
 +!build 
-	: default::enemyWell(Well,_,_)
+	: default::enemyWell(Well,_,_,_)
 <-
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
 	!!become_attacker;
@@ -325,16 +331,16 @@ select_random_facility(Facility)
 //	.
 
 // ### WHAT ATTACKERS DO ###
-+default::enemyWell(Well,Lat,Lon)
-	:  not ::becoming_atacker & ::team_ready
++default::enemyWell(Well,Lat,Lon,Type)
+	:  not ::becoming_atacker & ::team_ready & attack::can_I_attack_well(Well)
 <-	
 	+::becoming_atacker;
-	.print("Some teammate has discovered a well ",Well," at ",Lat," ",Lon,", becoming attacker");	
+	.print("Some teammate has discovered a well ",Well," at ",Lat," ",Lon," on ",Type,", becoming attacker");	
 	.wait({+default::actionID(_)});
 	!!become_attacker;
 	-::becoming_atacker;
 	.
--default::enemyWell(Well,_,_)
+-default::enemyWell(Well,_,_,_)
 	: .desire(attack::dismantle_well(Well))
 <-
 	.print("I was going to dismantle ",Well,", but it's not necessary anymore");
@@ -360,7 +366,7 @@ select_random_facility(Facility)
 //	!::attack;	
 //	.
 +!become_attacker
-	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
 <-
 	.current_intention(intention(IntentionId,_));
 	.print("Becoming attacker ",IntentionId);
@@ -379,7 +385,7 @@ select_random_facility(Facility)
 	.
 +!reconsider_attack(Well).
 +!attack
-	: default::enemyWell(Well,_,_)
+	: default::enemyWell(Well,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I'm going to attack ",Well);
 	!attack::dismantle_well(Well);

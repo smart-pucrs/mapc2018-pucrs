@@ -186,8 +186,14 @@
 -!goto(Lat,Lon)[error(no_applicable)]
 <-
 	.print("The goto context has failed, our internal action in the context has failed, sending action anyway");
-	+::send_anyway(Lat,Lon);
-	!goto(Lat,Lon);
+	if (rules::my_current_pos_is_valid){
+		.print("I want to move to an invalid position");
+		.fail(action(goto(Lat,Lon)),result(desired_pos_unreachable));
+	} else{
+		.print("my position is invalid, I need server to help me out");
+		+::send_anyway(Lat,Lon);
+		!goto(Lat,Lon);
+	}	
 	.
 
 // Charge
