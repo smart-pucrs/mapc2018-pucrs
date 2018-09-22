@@ -282,7 +282,7 @@ select_random_facility(Facility)
 	.nth(0,List,Facility)
 	.
 +!build 
-	: default::enemyWell(Well,_,_,_)
+	: default::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
 	!!become_attacker;
