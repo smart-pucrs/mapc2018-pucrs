@@ -52,7 +52,7 @@ evaluate_steps
 	?sum_up_items(ItemizedAvailableItems,[],AvailableItems);	
 	for(.member(item(Item,Qtd),AvailableItems)){
 		+::partial_stock(Qtd,Item);
-		.print("Partial stock: ",Item," ",Qtd);
+//		.print("Partial stock: ",Item," ",Qtd);
 	} 	
 	.	
 
@@ -61,7 +61,7 @@ evaluate_steps
 <-
 	?evaluate_items(Items,SList);
 	?evaluate_steps;
-	.print(Id," is feasible");
+//	.print(Id," is feasible");
 	.
 //-!priced_estimate(Id,Storage,Items)[error_msg(Message)]
 //<-
@@ -120,7 +120,7 @@ get_real_desired([item(Percentual,Item,Qty)|Desired],Temp,RealDesired)
 	: new::storageList(SList) & default::desired_compound(CList) & ::get_real_desired(CList,[],RCList) & .print("real desired compound items ",RCList) & not .empty(RCList) & .sort(RCList,SCList)
 <-
 	!global_stock;
-	.print("Priority Compound: ",SCList);
+//	.print("Priority Compound: ",SCList);
 	!compound_priority(SCList);
 	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),SelectedItems);
 	.reverse(SelectedItems,Items);
@@ -137,7 +137,7 @@ get_real_desired([item(Percentual,Item,Qty)|Desired],Temp,RealDesired)
 	: default::item(Item,_,_,parts(Parts)) & ::calculate_lot(Item,DesiredQty,Lot)
 <-		
 	.findall(item(TQtd,TItem),::partial_stock(TQtd,TItem),TItems);
-	.print("Our production lot for ",Item," is ",Lot);
+//	.print("Our production lot for ",Item," is ",Lot);
 	!compound_tracking(Parts,Lot,MinimumQty);
 	+::must_assemble(MinimumQty,Item);
 	!compound_priority(List);

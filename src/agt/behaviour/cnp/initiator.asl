@@ -87,6 +87,7 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer_drone),ListAgents)
 <-    
 	announce(assemble(Task),10000,ListAgents,CNPBoardName);
+	.print(CNPBoardName," announced to ",ListAgents);
        
     getBidsTask(Bids) [artifact_name(CNPBoardName)];
 	if (.length(Bids) \== 0) {		

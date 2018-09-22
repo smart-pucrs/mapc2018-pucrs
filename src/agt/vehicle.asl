@@ -72,11 +72,11 @@
 		initMap(Map,CellSize,Proximity);
 		
 		for(default::item(Item,_,_,parts([]))){
-			.print("base: ",Item);
+//			.print("base: ",Item);
 			setDesiredBase(Item,1);
 		}
 		for(default::item(Item,_,_,parts(P)) & P \== []){
-			.print("compound: ",Item);
+//			.print("compound: ",Item);
 			setDesiredCompound(Item,1);
 		}
 	}
@@ -99,12 +99,6 @@
 	}	
 	+strategies::team_ready;
 	!!strategies::go_back_to_work;
-//	if (Me == vehicle34){
-//		!action::goto(48.83208,2.41-0.001);
-//		!action::goto(storage1);
-//	} else{
-//		!strategies::always_recharge;
-//	}
 	.print("Everything Set Up!");
     .
     
