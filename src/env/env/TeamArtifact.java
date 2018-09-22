@@ -298,6 +298,7 @@ public class TeamArtifact extends Artifact {
 			} else {
 				this.desiredCompound.get(item).removeCurrentQty(qty);
 				updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
+				signal("baseStored");
 			}
 			
 			Literal[] itemsAux = availableItems.get(storage).toArray(new Literal[availableItems.get(storage).size()]);
