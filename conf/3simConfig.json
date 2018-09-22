@@ -1,0 +1,89 @@
+{
+  "server" : "$(server/server.json)",
+
+  "manual-mode" : [
+    ["A", "B"],
+    ["B", "C"],
+    ["A", "C"]
+  ],
+
+  "match" : [
+    {
+      "id" : "2018-3Sims-1of3",
+      "scenarioClass" : "city.CitySimulation",
+      "steps" : 100,
+      "map" : "copenhagen",
+      "seedCapital" : 5000,
+      "minLon" : 12.47,
+      "maxLon" : 12.58,
+      "minLat" : 55.6,
+      "maxLat" : 55.71,
+      "centerLon" : 12.5,
+      "centerLat" : 55.65,
+      "proximity" : 5,
+      "cellSize" : 200,
+      "randomSeed" : 18,
+      "randomFail" : 1,
+      "gotoCost" : 1,
+      "rechargeRate" : 0.3,
+
+      "upgrades" : "$(upgrades/upgrades.json)",
+      "roles" : "$(roles/roles.json)",
+      "entities" : [{"drone" : 4}, {"motorcycle" : 8}, {"car" : 10}, {"truck" : 12}],
+      "generate" : "$(generate/generate.json)"
+    },
+    {
+      "id" : "2018-3Sims-2of3",
+      "scenarioClass" : "city.CitySimulation",
+      "steps" : 100,
+      "map" : "berlin",
+      "seedCapital" : 5000,
+      "minLon" : 13.35,
+      "maxLon" : 13.5,
+      "minLat" : 52.44,
+      "maxLat" : 52.54,
+      "centerLon" : 13.4,
+      "centerLat" : 52.5,
+      "proximity" : 5,
+      "cellSize" : 200,
+      "randomSeed" : 18,
+      "randomFail" : 1,
+      "gotoCost" : 1,
+      "rechargeRate" : 0.3,
+
+      "upgrades" : "$(upgrades/upgrades.json)",
+      "roles" : "$(roles/roles.json)",
+      "entities" : [{"drone" : 4}, {"motorcycle" : 8}, {"car" : 10}, {"truck" : 12}],
+      "generate" : "$(generate/generate-manyItems.json)"
+    },
+    {
+      "id" : "2018-3Sims-3of3",
+      "scenarioClass" : "city.CitySimulation",
+      "steps" : 100,
+      "map" : "saopaulo",
+      "seedCapital" : 5000,
+      "minLon" : -46.73,
+      "maxLon" : -46.53,
+      "minLat" : -23.65,
+      "maxLat" : -23.52,
+      "centerLon" : -46.6,
+      "centerLat" : -23.6,
+      "proximity" : 5,
+      "cellSize" : 200,
+      "randomSeed" : 18,
+      "randomFail" : 1,
+      "gotoCost" : 1,
+      "rechargeRate" : 0.3,
+
+      "upgrades" : "$(upgrades/upgrades.json)",
+      "roles" : "$(roles/roles.json)",
+      "entities" : [{"drone" : 4}, {"motorcycle" : 8}, {"car" : 10}, {"truck" : 12}],
+      "generate" : "$(generate/generate-cheapWells.json)"
+    }
+  ],
+
+  "teams" : {
+    "A" : "$(teams/A.json)",
+    "B" : "$(teams/B.json)"
+  }
+}
