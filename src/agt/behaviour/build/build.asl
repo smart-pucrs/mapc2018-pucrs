@@ -70,11 +70,13 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	.
 
 +!buy_well 
-	: ::get_suitable_well_type(Type) & rules::enough_money & ::select_best_location_to_build(pos(Lat,Lon))
+	: ::select_best_location_to_build(pos(Lat,Lon))
 <-  
-	!action::goto(Lat,Lon);
-	!action::build(Type);
-	!build_well(Type);
+	!buy_well(Lat,Lon);
+	.
++!buy_well
+<-
+	.print("cannot select a position to build a well");
 	.
 //+!buy_well 
 //	: ::get_suitable_well_type(Type) & rules::enough_money & new::chargingList(CList) & rules::closest_facility(CList,Facility)
@@ -91,11 +93,30 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 //	!action::build(Type); 
 //	!build_well(Type);	
 //	.
-+!buy_well 
++!buy_well(Lat,Lon)
+	: 	new::chargingList(CList) & 
+		rules::closest_facility(CList,Facility) & 
+		default::charge(Charge) & 
+		rules::my_route_closest_facility(CList,Facility,Route) &
+		Route >= Charge-1
+<-
+	.print(Route," steps to the closest charging station ",Facility," but my charge is ",Charge,", going to recharge");
+	!action::goto(Facility);
+	!action::charge;
+	.
++!buy_well(Lat,Lon)
+	: ::get_suitable_well_type(Type) & rules::enough_money 
+<-  
+	!action::goto(Lat,Lon);
+	!action::build(Type);
+	!build_well(Type);
+	.
++!buy_well(Lat,Lon) 
 <-
 	.print("Not enough money to buy the desired well");
 	.
--!buy_well[code(.fail(action(Action),result(Result)))]
+
+-!buy_well(Lat,Lon)[code(.fail(action(Action),result(Result)))]
 <-
 	!recover_from_failure(Action,Result);
 	.
@@ -136,6 +157,9 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 <-	
 	.print("There is another well/facility here, moving on");
 	!action::goto_one_step(Facility);
+	?default::lat(Lat);
+	?default::lon(Lon);
+	!buy_well(Lat,Lon);
 	.
 +!recover_from_failure(Action, Result)
 <-	

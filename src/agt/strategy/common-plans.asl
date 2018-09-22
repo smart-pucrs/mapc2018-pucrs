@@ -287,18 +287,18 @@ select_random_facility(Facility)
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
 	!!become_attacker;
 	.
-+!build 
-	: 	new::chargingList(CList) & 
-		rules::closest_facility(CList,Facility) & 
-		default::charge(Charge) & 
-		rules::my_route_closest_facility(CList,Facility,Route) &
-		Route >= Charge+2
-<-
-	.print(Route," steps to the closest charging station ",Facility," but my charge is ",Charge,", going to recharge");
-	!action::goto(Facility);
-	!action::charge;
-	!build;
-	.
+//+!build 
+//	: 	new::chargingList(CList) & 
+//		rules::closest_facility(CList,Facility) & 
+//		default::charge(Charge) & 
+//		rules::my_route_closest_facility(CList,Facility,Route) &
+//		Route >= Charge+2
+//<-
+//	.print(Route," steps to the closest charging station ",Facility," but my charge is ",Charge,", going to recharge");
+//	!action::goto(Facility);
+//	!action::charge;
+//	!build;
+//	.
 +!build 
 	: rules::enough_money
 <-
