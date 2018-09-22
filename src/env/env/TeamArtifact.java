@@ -110,7 +110,7 @@ public class TeamArtifact extends Artifact {
 //		this.defineObsProperty("available_items", litStorage, itemsAux);
 //	}
 	
-	private int timesQtyCompundItem = 2;
+	private int timesQtyCompundItem = 4;
 	@OPERATION
 	void setDesiredBase(String item, int qty)  {
 		if (!this.desiredBase.containsKey(item))
