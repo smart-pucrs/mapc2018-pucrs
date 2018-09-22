@@ -366,7 +366,8 @@ select_random_facility(Facility)
 //	!::attack;	
 //	.
 +!become_attacker
-	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
+//	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
 <-
 	.current_intention(intention(IntentionId,_));
 	.print("Becoming attacker ",IntentionId);

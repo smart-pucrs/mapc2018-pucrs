@@ -1,17 +1,22 @@
+//can_I_attack_well(Well)
+//:-
+//	default::enemyWell(Well,_,_,air) &
+//	default::role(drone,_,_,_,_,_,_,_,_,_,_)
+//	.
+//can_I_attack_well(Well)
+//:-
+//	default::enemyWell(Well,_,_,road) &
+//	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
+//	Role \== drone
+//	.
+//can_I_attack_well(Well)
+//:-
+//	false
+//	.
 can_I_attack_well(Well)
 :-
-	default::enemyWell(Well,_,_,air) &
-	default::role(drone,_,_,_,_,_,_,_,_,_,_)
-	.
-can_I_attack_well(Well)
-:-
-	default::enemyWell(Well,_,_,road) &
-	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
-	Role \== drone
-	.
-can_I_attack_well(Well)
-:-
-	false
+	default::enemyWell(Well,Lat,Lon,_) &
+	desired_pos_is_valid(Lat,Lon)
 	.
 
 +!dismantle_well(Id)
