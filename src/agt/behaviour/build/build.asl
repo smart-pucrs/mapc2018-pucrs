@@ -68,19 +68,21 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	!make_well_types_ranking
 	.
 
++!buy_well 
+	: ::get_suitable_well_type(Type) & rules::enough_money & new::chargingList(CList) & rules::closest_facility(CList,Facility)
+<-  
+	!action::goto(Facility);
+	?::select_best_location_to_build(pos(Lat,Lon));
+	!action::goto(Lat,Lon);
+	!action::build(Type);
+	!build_well(Type);
+	.
 //+!buy_well 
-//	: ::get_suitable_well_type(Type) & rules::enough_money & ::select_best_location_to_build(pos(Lat,Lon))
+//	: ::get_suitable_well_type(Type) & rules::enough_money
 //<-  
-//	!action::goto(Lat,Lon);
 //	!action::build(Type); 
 //	!build_well(Type);	
 //	.
-+!buy_well 
-	: ::get_suitable_well_type(Type) & rules::enough_money
-<-  
-	!action::build(Type); 
-	!build_well(Type);	
-	.
 +!buy_well 
 <-
 	.print("Not enough money to buy the desired well");
