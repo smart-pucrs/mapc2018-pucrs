@@ -13,7 +13,7 @@
 { include("behaviour/cnp/bidder.asl", bidder) }
 { include("behaviour/stock/stock.asl", stock) }
 { include("behaviour/assemble/assemble.asl", assemble) }
-//{ include("strategies/round/end-round.asl") }
+{ include("behaviour/round/end-round.asl") }
 { include("behaviour/delivery/delivery.asl", delivery) }
 { include("behaviour/trade/trade.asl", trade) }
 { include("behaviour/reborn/reborn.asl", reborn) }

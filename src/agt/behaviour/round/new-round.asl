@@ -38,8 +38,7 @@
 	+shopList([]);
 	+workshopList([]);
 	+resourceList([]);
-	
-	
+		
 	+noActionCount(0);
 	
 	+metrics::noAction(0);
@@ -49,8 +48,13 @@
 	+metrics::missionHaveFailed(0);
 	+metrics::auctionHaveFailed(0);
 	
-	+default::separateItemTool([],[],[]);
-	+default::removeDuplicateTool([],[]);
+	+action::current_token(0);
+	
+	+explore::n_steps(0);
+	+explore::n_walks(0);
+	
+	+delivery::current_load_item([],0);
+	+delivery::current_load([],0);
 	
 	if (Me == vehicle1) { !lNewRound::add_initiator_beliefs; }
 	setReady;

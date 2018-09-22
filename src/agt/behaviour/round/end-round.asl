@@ -5,21 +5,20 @@
 <-
 	.print("---------------- END OF THE ROUND ----------------");
 	!print_metrics;	
-	?default::focused(vehicleart,team_artifact,Id1);
-	.concat("eis_art_",Me,ArtMeS);
-	.term2string(ArtMe,ArtMeS);
-	?default::focused(vehicleart,ArtMe,Id2);
-	?default::joined(vehicleart,Id3);
-	?default::joined(main,Id4);
-	?default::joined(org,Id5);
-	if (Me == vehicle1) { ?initiator::task_id(TaskId); }
-	.abolish(_::_[source(_)]);
-	+default::focused(vehicleart,team_artifact,Id1);
-	+default::focused(vehicleart,ArtMe,Id2);
-	+default::joined(vehicleart,Id3);
-	+default::joined(main,Id4);
-	+default::joined(org,Id5);
-	if (Me == vehicle1) { +initiator::task_id(TaskId); }
+	.abolish(org::_[source(_)]);
+	.abolish(action::_[source(_)]);
+	.abolish(build::_[source(_)]);
+	.abolish(attack::_[source(_)]);
+	.abolish(gather::_[source(_)]);
+	.abolish(explore::_[source(_)]);
+	.abolish(strategies::_[source(_)]);
+	.abolish(bidder::_[source(_)]);
+	.abolish(stock::_[source(_)]);
+	.abolish(assemble::_[source(_)]);
+	.abolish(delivery::_[source(_)]);
+	.abolish(trade::_[source(_)]);
+	.abolish(reborn::_[source(_)]);
+	if (Me == vehicle1) { clearMaps; }
     .drop_all_intentions;
     .drop_all_desires;
     .drop_all_events;	

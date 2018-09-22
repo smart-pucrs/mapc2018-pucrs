@@ -1,6 +1,3 @@
-n_steps(0).
-n_walks(0).
-
 // Plan to calculate how much the quadrant should be traversed
 +!size_map 
 	: 	default::minLat(MinLat) & default::minLon(MinLon) & 

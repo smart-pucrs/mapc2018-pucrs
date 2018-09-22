@@ -47,34 +47,34 @@ public class TeamArtifact extends Artifact {
 	
 	void init(){
 		logger.info("Team Artifact has been created!");
-		readConf();
+//		readConf();
 		this.defineObsProperty(this.obspDesiredCompound, new Object[0]);
 		this.defineObsProperty(this.obspDesiredBase, new Object[0]);
 	}
 	
-	public void readConf(){		
-		JSONParser parser = new JSONParser();		
-		File currentDir = new File(".");
-		String path = currentDir.getAbsolutePath();		
-		try {			
-			Object obj = parser.parse(new FileReader(path+"//conf//generate//generate.json"));
-			
-			JSONObject jsonObject 		= (JSONObject) obj;			
-			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
-			JSONObject objWells 		= (JSONObject) objFacilities.get("wells");
-						
-			defineObsProperty("conf_baseEfficiencyMin", objWells.get("baseEfficiencyMin"));
-			defineObsProperty("conf_baseEfficiencyMax", objWells.get("baseEfficiencyMax"));
-			defineObsProperty("conf_efficiencyIncreaseMin", objWells.get("efficiencyIncreaseMin"));
-			defineObsProperty("conf_efficiencyIncreaseMax", objWells.get("efficiencyIncreaseMax"));
-			defineObsProperty("conf_baseIntegrityMin", objWells.get("baseIntegrityMin"));
-			defineObsProperty("conf_baseIntegrityMax", objWells.get("baseIntegrityMax"));
-			defineObsProperty("conf_costFactor", objWells.get("costFactor"));			
-			
-		} catch (Exception e) {
-				e.printStackTrace();
-		}
-	}
+//	public void readConf(){		
+//		JSONParser parser = new JSONParser();		
+//		File currentDir = new File(".");
+//		String path = currentDir.getAbsolutePath();		
+//		try {			
+//			Object obj = parser.parse(new FileReader(path+"//conf//generate//generate.json"));
+//			
+//			JSONObject jsonObject 		= (JSONObject) obj;			
+//			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
+//			JSONObject objWells 		= (JSONObject) objFacilities.get("wells");
+//						
+//			defineObsProperty("conf_baseEfficiencyMin", objWells.get("baseEfficiencyMin"));
+//			defineObsProperty("conf_baseEfficiencyMax", objWells.get("baseEfficiencyMax"));
+//			defineObsProperty("conf_efficiencyIncreaseMin", objWells.get("efficiencyIncreaseMin"));
+//			defineObsProperty("conf_efficiencyIncreaseMax", objWells.get("efficiencyIncreaseMax"));
+//			defineObsProperty("conf_baseIntegrityMin", objWells.get("baseIntegrityMin"));
+//			defineObsProperty("conf_baseIntegrityMax", objWells.get("baseIntegrityMax"));
+//			defineObsProperty("conf_costFactor", objWells.get("costFactor"));			
+//			
+//		} catch (Exception e) {
+//				e.printStackTrace();
+//		}
+//	}
 	
 	@OPERATION
 	void createAvailableList(String storage){
@@ -419,11 +419,17 @@ public class TeamArtifact extends Artifact {
 	
 	@OPERATION
 	void clearMaps() {
-		shopItemsQty.clear();
 		agentNames.clear();
+		agentRoles.clear();
 		loads.clear();
+		duplicateLoads.clear();
 		availableItems.clear();
 		buyCoordination.clear();
+		actionsByStep.clear();
+		desiredBase.clear();
+		desiredCompound.clear();
+		this.removeObsProperty(obspDesiredCompound);
+		this.removeObsProperty(obspDesiredBase);
 		this.init();
 	}
 	

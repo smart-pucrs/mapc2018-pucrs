@@ -1,4 +1,3 @@
-::current_token(0).
 +!commit_action(Action)
 	: .current_intention(intention(IntentionId,_)) & not ::access_token(IntentionId,_) & ::current_token(Token)
 <-

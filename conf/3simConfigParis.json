@@ -11,7 +11,7 @@
     {
       "id" : "2018-3Sims-1of3",
       "scenarioClass" : "city.CitySimulation",
-      "steps" : 1000,
+      "steps" : 10,
       "map" : "paris",
       "seedCapital" : 5000,
       "minLon" : 2.26,
@@ -35,7 +35,7 @@
     {
       "id" : "2018-3Sims-2of3",
       "scenarioClass" : "city.CitySimulation",
-      "steps" : 1000,
+      "steps" : 10,
       "map" : "paris",
       "seedCapital" : 5000,
       "minLon" : 2.26,
@@ -59,7 +59,7 @@
     {
       "id" : "2018-3Sims-3of3",
       "scenarioClass" : "city.CitySimulation",
-      "steps" : 1000,
+      "steps" : 10,
       "map" : "paris",
       "seedCapital" : 5000,
       "minLon" : 2.26,
