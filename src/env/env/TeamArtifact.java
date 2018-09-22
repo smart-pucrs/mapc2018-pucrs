@@ -110,7 +110,7 @@ public class TeamArtifact extends Artifact {
 //		this.defineObsProperty("available_items", litStorage, itemsAux);
 //	}
 	
-	private int timesQtyCompundItem = 1;
+	private int timesQtyCompundItem = 2;
 	@OPERATION
 	void setDesiredBase(String item, int qty)  {
 		if (!this.desiredBase.containsKey(item))
@@ -523,7 +523,10 @@ public class TeamArtifact extends Artifact {
 			Literal l = null;
 			try {
 				l = ASSyntax.parseLiteral("item"); 
-				l.addTerm(ASSyntax.parseTerm(String.valueOf(1+(this.getPercentage()*100)/total))); // Priority percent %
+				if (this.currentQty >= this.desiredQty)
+					l.addTerm(ASSyntax.parseTerm(String.valueOf(1))); // Priority percent %
+				else
+					l.addTerm(ASSyntax.parseTerm(String.valueOf(1+(this.getPercentage()*100)/total))); // Priority percent %
 				l.addTerm(ASSyntax.parseTerm(this.name));
 				l.addTerm(ASSyntax.parseTerm(String.valueOf(this.desiredQty)));				
 			} catch (ParseException e) {
