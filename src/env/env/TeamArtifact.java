@@ -201,11 +201,12 @@ public class TeamArtifact extends Artifact {
 		if (this.desiredBase.containsKey(item)) {
 			this.desiredBase.get(item).addCurrentQty(qty);
 			updateDesiredItemsBase(this.desiredBase, this.obspDesiredBase);
-			signal("baseStored");
+//			signal("baseStored");
 		} else {
 			this.desiredCompound.get(item).addCurrentQty(qty);
 			updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
 		}
+		signal("baseStored");
 		
 		this.removeObsPropertyByTemplate("available_items", litStorage, null);
 		this.defineObsProperty("available_items", litStorage, itemsAux);
