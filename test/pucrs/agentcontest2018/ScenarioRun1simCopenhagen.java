@@ -57,7 +57,7 @@ public class ScenarioRun1simCopenhagen {
 			public void run() {
 				try {
 					
-					Server.main(new String[] {"-conf", "conf/1simConfigCopenhagen.json", "--monitor"});				
+					Server.main(new String[] {"-conf", "conf/1SimConfigCopenhagen.json", "--monitor"});				
 					
 				} catch (Exception e) {
 					e.printStackTrace();

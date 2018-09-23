@@ -63,14 +63,60 @@
 //	-::message_storage(_);
 //	.
 	
-+!set_center_storage_workshop
-	: default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2 & new::storageList(SList) & new::workshopList(WList) & rules::closest_facility_truck(SList, CLat, CLon, Storage) & rules::closest_facility_truck(WList, Storage, Workshop)
+centre_map(CLat,CLon)
+:-
+	default::minLat(MinLat) & 
+	default::minLon(MinLon) & 
+	default::maxLat(MaxLat) & 
+	default::maxLon(MaxLon) & 
+	CLat = (MinLat+MaxLat)/2 & 
+	CLon = (MinLon+MaxLon)/2 
+	.
+get_best_facilities([],Lat,Lon,Route,Temp,ChosenFacilities)
+:-
+	ChosenFacilities = Temp
+	.
+get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
+:-
+	actions.route(truck,1,Lat,Lon,Storage,_,RouteStorage) &
+	new::workshopList(WList) & 
+	rules::closest_facility_truck(WList,Storage,Workshop) &
+	actions.route(truck,1,Storage,Workshop,RouteLen) &
+	RouteStorage+RouteLen < Route &
+	get_best_facilities(Storages,Lat,Lon,RouteStorage+RouteLen,chosen(Storage,Workshop),ChosenFacilities)
+	.
+get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
+:-
+	get_best_facilities(Storages,Lat,Lon,Route,Temp,ChosenFacilities)
+	.
++!set_center_storage_workshop(ForbiddenStorages)
+	: 	::centre_map(CLat,CLon) & 
+		new::storageList(SList) &
+		.difference(SList,ForbiddenStorages,NewList) &		 
+		get_best_facilities(NewList,CLat,CLon,500,Temp,chosen(Storage,Workshop)) 
 <-
-	+centerStorage(Storage);
-	+centerWorkshop(Workshop);
+	-+centerStorage(Storage);
+	-+centerWorkshop(Workshop);
 	.print("Closest storage from the center is ",Storage);
 	.print("Closest workshop from the storage above is ",Workshop);
-	.
+	.	
+//+!set_center_storage_workshop
+//	: 	default::minLat(MinLat) & 
+//		default::minLon(MinLon) & 
+//		default::maxLat(MaxLat) & 
+//		default::maxLon(MaxLon) & 
+//		CLat = (MinLat+MaxLat)/2 & 
+//		CLon = (MinLon+MaxLon)/2 & 
+//		new::storageList(SList) & 
+//		new::workshopList(WList) & 
+//		rules::closest_facility_truck(SList, CLat, CLon, Storage) & 
+//		rules::closest_facility_truck(WList, Storage, Workshop)
+//<-
+//	+centerStorage(Storage);
+//	+centerWorkshop(Workshop);
+//	.print("Closest storage from the center is ",Storage);
+//	.print("Closest workshop from the storage above is ",Workshop);
+//	.
 
 +default::well(Well,Lat,Lon,Type,Team,Integrity)
 	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_,_)
