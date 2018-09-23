@@ -288,7 +288,7 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	!gather;
 	.
 +!go_back_to_work
-	: .my_name(Me) & default::play(Me,explorer_drone,g1)
+	: .my_name(Me) & default::play(Me,Role,g1) & (Role==explorer_drone | Role==super_explorer)
 <-
 //	!!explore::size_map; 
 	!action::forget_old_action;
