@@ -40,7 +40,7 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 	.
 	
 +!evaluate_bids(Tasks,Bids)
-	: .sort(Bids,SortedBids) &.print("a ",Tasks)& volume_task(Tasks,20,TLoad) &task_can_be_accomplished(TLoad,SortedBids,0,MaxStep) & bids_by_step(SortedBids,MaxStep,[],SelectedBids)
+	: .sort(Bids,SortedBids) & volume_task(Tasks,20,TLoad) &task_can_be_accomplished(TLoad,SortedBids,0,MaxStep) & bids_by_step(SortedBids,MaxStep,[],SelectedBids)
 <-	
 //	.print("Required load ",TLoad,"can be transported in ",MaxStep);
 //	.print("Selected bids for delivery ",SelectedBids);

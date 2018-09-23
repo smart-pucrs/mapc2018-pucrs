@@ -86,7 +86,8 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
  +!allocate_tasks(Id,Task,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer_drone),ListAgents)
 <-    
-	announce(assemble(Task),10000,ListAgents,CNPBoardName);
+//	announce(assemble(Task),10000,ListAgents,CNPBoardName);
+	announce(assemble(Task),2000,ListAgents,CNPBoardName);
 	.print(CNPBoardName," announced to ",ListAgents);
        
     getBidsTask(Bids) [artifact_name(CNPBoardName)];
@@ -164,7 +165,9 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 +!allocate_delivery_tasks(JobId,Tasks,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer),ListAgents)
 <-     
-	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),10000,JobId,ListAgents,CNPBoardName);
+//	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),10000,JobId,ListAgents,CNPBoardName);
+	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),2000,JobId,ListAgents,CNPBoardName);
+	.print(CNPBoardName," announced to ",ListAgents);
      
     getBidsTask(Bids) [artifact_name(CNPBoardName)];
 	if (.length(Bids) \== 0) {	
