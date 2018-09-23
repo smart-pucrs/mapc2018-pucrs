@@ -1,5 +1,5 @@
 +!goto(Facility)
-	: .substring("node",Facility) & default::resNode(ResourceNode,Lat,Lon,Base)
+	: .substring("node",Facility) & team::resNode(ResourceNode,Lat,Lon,Base)
 <-
 	!action::goto(Lat, Lon)
 	.

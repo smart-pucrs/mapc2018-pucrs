@@ -1,11 +1,11 @@
 //can_I_attack_well(Well)
 //:-
-//	default::enemyWell(Well,_,_,air) &
+//	team::enemyWell(Well,_,_,air) &
 //	default::role(drone,_,_,_,_,_,_,_,_,_,_)
 //	.
 //can_I_attack_well(Well)
 //:-
-//	default::enemyWell(Well,_,_,road) &
+//	team::enemyWell(Well,_,_,road) &
 //	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
 //	Role \== drone
 //	.
@@ -15,13 +15,13 @@
 //	.
 can_I_attack_well(Well)
 :-
-	default::enemyWell(Well,Lat,Lon,_) &
+	team::enemyWell(Well,Lat,Lon,_) &
 	rules::desired_pos_is_valid(Lat,Lon)
 	.
 
 +!dismantle_well(Id)
 //	: default::well(Id,Lat,Lon,_,_,_)
-	: can_I_attack_well(Id) & default::enemyWell(Id,Lat,Lon,_)
+	: can_I_attack_well(Id) & team::enemyWell(Id,Lat,Lon,_)
 <-  
 	if (not rules::am_I_at_right_position(Lat,Lon)){
 		.print("I'm not at the desired position, going to Lat(",Lat,") Lon(",Lon,")");

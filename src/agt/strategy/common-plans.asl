@@ -9,7 +9,7 @@
 	
 // ### PRINTS ###	
 //@printdesirebase[atomic]
-//+default::desired_base(DB)
+//+team::desired_base(DB)
 ////	: not ::message_base(_)
 //<-
 //	+::message_base("--- Desired Base: ");
@@ -23,7 +23,7 @@
 //	-::message_base(_);
 //	.
 //@printdesirecompound[atomic]
-//+default::desired_compound(DC)
+//+team::desired_compound(DC)
 ////	: not ::message_compound(_)
 //<-
 //	+::message_compound("--- Desired Compound: ");
@@ -37,7 +37,7 @@
 //	-::message_compound(_);
 //	.
 //@printavailable[atomic]
-//+default::available_items(Storage,A)
+//+team::available_items(Storage,A)
 //<-
 //	+::message_available("");
 //	for(.member(item(Item,CurrentQty),A)){
@@ -121,7 +121,7 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	.
 
 +default::well(Well,Lat,Lon,Type,Team,Integrity)
-	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_,_)
+	: default::team(MyTeam) & not .substring(MyTeam,Team) & not team::enemyWell(Well,_,_,_)
 <-
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Well);	
 	addEnemyWell(Well,Lat,Lon,road);
@@ -134,8 +134,8 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 //	}
 	.
 
-+default::resNode(NodeId,Lat,Lon,Item)
-	: not ::analysing_resource & .findall(Item,default::resNode(_,_,_,Item),List) & .length(List)==1 & .my_name(Me) & default::play(Me,gatherer,g1)
++team::resNode(NodeId,Lat,Lon,Item)
+	: not ::analysing_resource & .findall(Item,team::resNode(_,_,_,Item),List) & .length(List)==1 & .my_name(Me) & default::play(Me,gatherer,g1)
 <- 
 	+::analysing_resource;
 	.print("Found resource node: ",NodeId," for item: ",Item,", I can go there");
@@ -143,7 +143,7 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	!!reconsider_gather;
 	-::analysing_resource;
 	.
-+default::resNode(NodeId,Lat,Lon,Item)
++team::resNode(NodeId,Lat,Lon,Item)
 <- 
 	.print("Found resource node: ",NodeId," for item: ",Item);
 	.
@@ -331,7 +331,7 @@ select_random_facility(Facility)
 	.nth(0,List,Facility)
 	.
 +!build 
-	: default::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
 	!!become_attacker;
@@ -380,7 +380,7 @@ select_random_facility(Facility)
 //	.
 
 // ### WHAT ATTACKERS DO ###
-+default::enemyWell(Well,Lat,Lon,Type)
++team::enemyWell(Well,Lat,Lon,Type)
 	:  not ::becoming_atacker & ::team_ready & attack::can_I_attack_well(Well)
 <-	
 	+::becoming_atacker;
@@ -389,7 +389,7 @@ select_random_facility(Facility)
 	!!become_attacker;
 	-::becoming_atacker;
 	.
--default::enemyWell(Well,_,_,_)
+-team::enemyWell(Well,_,_,_)
 	: .desire(attack::dismantle_well(Well))
 <-
 	.print("I was going to dismantle ",Well,", but it's not necessary anymore");
@@ -435,7 +435,7 @@ select_random_facility(Facility)
 	.
 +!reconsider_attack(Well).
 +!attack
-	: default::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I'm going to attack ",Well);
 	!attack::dismantle_well(Well);
@@ -511,7 +511,7 @@ select_random_facility(Facility)
 	.
 //+!gather <- !gather::initial_gather.
 +!gather(ResourceNode)
-	: default::resNode(ResourceNode,Lat,Lon,Base) & strategies::centerStorage(Storage)
+	: team::resNode(ResourceNode,Lat,Lon,Base) & strategies::centerStorage(Storage)
 <-
 	.print("Going to resource node ",ResourceNode," to gather ",Base);
 	!action::goto(Lat,Lon);

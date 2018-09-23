@@ -17,7 +17,7 @@ can_gather(Base)
 //	!go_gather(Base,NBase);
 //	.
 //+!go_gather(Base,NBase)
-//	: default::resNode(NodeId,Lat,Lon,Base)
+//	: team::resNode(NodeId,Lat,Lon,Base)
 //<- 
 //	.print("I am going to gather ",Base," at ",NodeId);
 //	!action::goto(Lat,Lon);
@@ -27,7 +27,7 @@ can_gather(Base)
 //	.
 
 +!initial_gather
-	: default::resNode(_,_,_,_)
+	: team::resNode(_,_,_,_)
 <-
 	?new::resourceList(List);
 	?rules::closest_facility(List,ResourceNode);

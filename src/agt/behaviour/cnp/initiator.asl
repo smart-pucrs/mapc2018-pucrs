@@ -58,7 +58,7 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	
 // ### ASSEMBLE COMPOUND ITEMS ###
 //@checkAssemble[atomic]
-+default::baseStored
++team::baseStored
 	: not ::must_check_compound  & strategies::centerStorage(Storage)
 <-
 	+::must_check_compound;
@@ -131,7 +131,7 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	!mission_done;
 	.
 @compound_stored[atomic]
-+default::compound_stored
++team::compound_stored
 <-
 	!mission_done;
 	.

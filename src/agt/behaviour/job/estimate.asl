@@ -4,7 +4,7 @@ get_available_items([],Temp,ListItems)
 	ListItems = Temp.
 get_available_items([Storage|Storages],Temp,ListItems)
 :-
-	default::available_items(Storage,Items) & 
+	team::available_items(Storage,Items) & 
 	.concat(Items,Temp,NewList)&
 	get_available_items(Storages,NewList,ListItems) 
 	.
@@ -117,7 +117,7 @@ get_real_desired([item(Percentual,Item,Qty)|Desired],Temp,RealDesired)
 	.
 
 +!compound_estimate(Items)
-	: new::storageList(SList) & default::desired_compound(CList) & ::get_real_desired(CList,[],RCList) & .print("real desired compound items ",RCList) & not .empty(RCList) & .sort(RCList,SCList)
+	: new::storageList(SList) & team::desired_compound(CList) & ::get_real_desired(CList,[],RCList) & .print("real desired compound items ",RCList) & not .empty(RCList) & .sort(RCList,SCList)
 <-
 	!global_stock;
 //	.print("Priority Compound: ",SCList);

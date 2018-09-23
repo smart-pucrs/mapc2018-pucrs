@@ -5,6 +5,7 @@
 <-
 	.print("---------------- END OF THE ROUND ----------------");
 	!print_metrics;	
+	?strategies::should_become(Role);
 	.abolish(org::_[source(_)]);
 	.abolish(action::_[source(_)]);
 	.abolish(build::_[source(_)]);
@@ -18,7 +19,9 @@
 	.abolish(delivery::_[source(_)]);
 	.abolish(trade::_[source(_)]);
 	.abolish(reborn::_[source(_)]);
+	.abolish(team::_[source(_)]);
 	if (Me == vehicle1) { clearMaps; }
+	!strategies::change_role(_,Role);
     .drop_all_intentions;
     .drop_all_desires;
     .drop_all_events;	

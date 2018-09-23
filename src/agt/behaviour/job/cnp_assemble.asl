@@ -17,7 +17,7 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 task_can_be_accomplished(Item,Qtd,[],TemQtd,Temp,Result) :- false.
 task_can_be_accomplished(Item,Qtd,[bid(Step,Storage,Agent)|Bids],TempQtd,Temp,Result)
 :- 
-	default::available_items(Storage,Items)&
+	team::available_items(Storage,Items)&
 	.member(item(Item,QtdS),Items) &
 //	(TempQtd+QtdS >= Qtd & Result=[storageItem(QtdS,Storage,Agent)|Temp]
 	(QtdS >= Qtd & Result=[storageItem(QtdS,Storage,Agent)|Temp]

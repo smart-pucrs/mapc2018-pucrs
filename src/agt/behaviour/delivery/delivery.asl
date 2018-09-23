@@ -22,7 +22,7 @@ steps_to_storages(Destination,Item,[],Temp,Result)
 	.
 steps_to_storages(Destination,Item,[Storage|Storages],Temp,Result)
 :-
-	default::available_items(Storage,Items) &
+	team::available_items(Storage,Items) &
 	.member(item(Item,_),Items) &
 	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
 	default::speed(Speed) &

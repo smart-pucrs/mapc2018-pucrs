@@ -76,7 +76,7 @@
 	}
 	for ( strategies::buyList(ItemIdAux,QtyAux,ShopAux) ) {
 		.term2string(ShopAux,ShopAuxS);
-		?default::buy_coordination(ShopAuxS,ListS);
+		?team::buy_coordination(ShopAuxS,ListS);
 		?default::convertListString2Term(ListS,[],List);
 		if (.member(item(ItemIdAux,QtyAux2),List)) {
 			?default::shop(ShopAux, _, _, Restock, ListItems);
