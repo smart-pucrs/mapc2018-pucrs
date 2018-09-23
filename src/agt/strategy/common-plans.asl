@@ -160,7 +160,7 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	if (::noActionCount(C) & C+1 < 3){
 		-+::noActionCount(C+1);
 	} else{
-		-+::noActionCount(0);
+//		-+::noActionCount(0);
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
 		!reborn::revive;
 	}

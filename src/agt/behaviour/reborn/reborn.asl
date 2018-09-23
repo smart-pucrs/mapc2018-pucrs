@@ -61,6 +61,7 @@
 	+strategies::centerWorkshop(Workshop);
 	+strategies::centerStorage(Storage);
 	+strategies::team_ready;
+	+strategies::noActionCount(0);
 	
 	.abolish(org::_);
 	.
