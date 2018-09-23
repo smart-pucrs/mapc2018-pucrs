@@ -20,6 +20,8 @@
 	.abolish(trade::_[source(_)]);
 	.abolish(reborn::_[source(_)]);
 	.abolish(team::_[source(_)]);
+	.abolish(default::mission(_,_,_,_,_,_,_,_,_)[source(_)]);
+	.abolish(default::job(_,_,_,_,_,_)[source(_)]);
 	if (Me == vehicle1) { clearMaps; }
 	!strategies::change_role(_,Role);
     .drop_all_intentions;

@@ -39,7 +39,7 @@ get_items_names([required(Item,_)|Items],Temp,NewItems) :- get_items_names(Items
 get_items_names(Items,NewItems) :- get_items_names(Items,[],NewItems).
 
 // has enough money to buy a well
-enough_money :- default::massium(Money) & strategies::minimum_money(RequiredMoney) & Money >= RequiredMoney.
+enough_money :- default::massium(Money) & build::minimum_money(RequiredMoney) & Money >= RequiredMoney.
 
 // select what base item is needed most and pick a resource node to go
 select_resource_node(SelectedResource)
@@ -71,7 +71,6 @@ remove_unknown_bases([item(X,Base,Y)|List],AuxList,PrunedList) :- remove_unknown
 
 can_I_bid
 :-
-	not default::biding(_) &
 	not strategies::winner(_,_,_,_,_) & // assembly winner
 	not strategies::winner(_,_,_) // delivery winner
 	.

@@ -10,7 +10,6 @@
 { include("behaviour/explore/explore.asl",explore) }
 { include("strategy/common-plans.asl", strategies) }
 { include("behaviour/org/scheme-plans.asl", org) }
-{ include("behaviour/cnp/bidder.asl", bidder) }
 { include("behaviour/stock/stock.asl", stock) }
 { include("behaviour/assemble/assemble.asl", assemble) }
 { include("behaviour/round/end-round.asl") }
@@ -100,7 +99,11 @@
 	+strategies::should_become(MyRole);
 	if(MyRole == explorer_drone){
 		!explore::size_map; 
-	}	
+	}
+	if (MyRole == builder){
+		!build::choose_minimum_well_price;
+		!build::make_well_types_ranking;
+	}
 	+strategies::team_ready;
 	!!strategies::go_back_to_work;
 	.print("Everything Set Up!");

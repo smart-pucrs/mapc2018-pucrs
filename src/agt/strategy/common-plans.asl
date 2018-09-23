@@ -1,12 +1,3 @@
-!configure_first_strategies.
-
-+!configure_first_strategies
-	: true
-<-
-	.wait( default::actionID(S) & S \== 0 );
-	!choose_minimum_well_price;
-	.
-	
 // ### PRINTS ###	
 //@printdesirebase[atomic]
 //+team::desired_base(DB)
@@ -193,13 +184,6 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	leaveRole(OldRole)[artifact_id(GroupId)];
 	adoptRole(NewRole)[artifact_id(GroupId)];
 	.wait(default::play(Me,NewRole,g1));
-	.
-	
-// how do we pick a minimum money to start building wells
-+!choose_minimum_well_price
-	: .findall(Cost,default::wellType(_,Cost,_,_,_),Wells) & .sort(Wells,SortedWells) & .nth(0,SortedWells,MinimumCost)
-<-
-	-+minimum_money(MinimumCost);
 	.
 	
 // ### AWARD ###

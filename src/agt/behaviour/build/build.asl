@@ -9,7 +9,7 @@ get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], 
 & get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType).
 get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) :- Cost>Massium 
 & get_suitable_well_type(RemainingList, Massium, SuitableType).
-get_suitable_well_type(SuitableType) :- default::myRanking(Ranking) & default::massium(Massium) & ::get_suitable_well_type(Ranking, Massium, SuitableType).
+get_suitable_well_type(SuitableType) :- ::myRanking(Ranking) & default::massium(Massium) & ::get_suitable_well_type(Ranking, Massium, SuitableType).
 
 calc(Type, Cost, Efficiency, Result) :- (CostPerEfficiency = Cost/Efficiency) & (Result = wellType(Type, Cost, CostPerEfficiency)).
 
@@ -53,20 +53,18 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	select_location(List,Route,Temp,ChosenPosition)
 	.
 
-!make_well_types_ranking.
-
 +!make_well_types_ranking
 	: default::actionID(S) & list_of_wells(List) & ::ranking(List, Ranking)
 <-
 	.print("Ranking: ", Ranking);
-	+default::myRanking(Ranking);
+	+myRanking(Ranking);
 	.
 	
-+!make_well_types_ranking
-	: true
+// how do we pick a minimum money to start building wells
++!choose_minimum_well_price
+	: .findall(Cost,default::wellType(_,Cost,_,_,_),Wells) & .sort(Wells,SortedWells) & .nth(0,SortedWells,MinimumCost)
 <-
-	.wait( default::actionID(S) & S \== 0 );
-	!make_well_types_ranking
+	-+minimum_money(MinimumCost);
 	.
 
 +!buy_well 
