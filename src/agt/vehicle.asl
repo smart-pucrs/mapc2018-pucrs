@@ -94,8 +94,6 @@
 	}
 	
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
-	.wait(strategies::centerStorage(_));
-	.wait(strategies::centerWorkshop(_));
 	
 	// update the code below for a different strategy	
 	+strategies::should_become(MyRole);
@@ -106,6 +104,10 @@
 		!build::choose_minimum_well_price;
 		!build::make_well_types_ranking;
 	}
+	
+	.wait(strategies::centerStorage(_));
+	.wait(strategies::centerWorkshop(_));
+	
 	+strategies::team_ready;
 	!!strategies::go_back_to_work;
 	.print("Everything Set Up!");
