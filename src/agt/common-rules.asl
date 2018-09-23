@@ -121,6 +121,13 @@ estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
 :-
 //	.print("não tenho bateria ",Facility)&
 	new::chargingList(CList) & 
+	.member(Facility,CList) & // I'm already on a charging station I won't go to another
+	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),[],1000,QtySteps)
+	.
+estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
+:-
+//	.print("não tenho bateria ",Facility)&
+	new::chargingList(CList) & 
 	.difference(CList,[Facility],List) &
 	rules::closest_facility(List,Facility,ChargingStation) & 
 	actions.route(Role,Speed,Facility,ChargingStation,Route) & 
