@@ -97,7 +97,7 @@
 	
 	// update the code below for a different strategy	
 	+strategies::should_become(MyRole);
-	if(MyRole == explorer_drone){
+	if(MyRole == explorer_drone | MyRole ==super_explorer){
 		!explore::size_map; 
 	} 
 	if (MyRole == builder){
