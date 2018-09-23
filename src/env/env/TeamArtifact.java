@@ -453,9 +453,9 @@ public class TeamArtifact extends Artifact {
 			this.defineObsProperty("chosenActions", step, agents.toArray());
 			
 //			clean belief
-			if (actionsByStep.containsKey(step-1)) {
-				actionsByStep.remove(step-1);
-				this.removeObsPropertyByTemplate("chosenActions", step-1, null);
+			if (actionsByStep.containsKey(step-3)) {
+				actionsByStep.remove(step-3);
+				this.removeObsPropertyByTemplate("chosenActions", step-3, null);
 			}
 		}	
 	}

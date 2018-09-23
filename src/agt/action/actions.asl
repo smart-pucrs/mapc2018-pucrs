@@ -628,33 +628,30 @@ check_list_charging(List,FacilityId,ChosenFacility)
 :-
 	rules::closest_facility(List,FacilityId,Facility) &
 	rules::enough_battery_charging(Facility, ResultC) & 
-	ResultC == "true" &
-	ChosenFacility = Facility
+	(	(ResultC == "true" &
+		ChosenFacility = Facility)
+		|
+		(.delete(Facility,List,ListAux) &
+		check_list_charging(ListAux,FacilityId,ChosenFacility))	
+	)
 	.
-check_list_charging(List,FacilityId,ChosenFacility)
-:-
-	rules::closest_facility(List,FacilityId,Facility) &
-	.delete(Facility,List,ListAux) & 
-	check_list_charging(ListAux,FacilityId,ChosenFacility)
-	.	
 check_list_charging(List,Lat,Lon,ChosenCharging)
 :-
 	rules::closest_facility(List,Lat,Lon,Facility) &
 	rules::enough_battery_charging(Facility, ResultC) &
-	ResultC == "true" & 
-	ChosenCharging = Facility
-	.
-check_list_charging(List,Lat,Lon,ChosenCharging)
-:-
-	rules::closest_facility(List,Lat,Lon,Facility) &
-	.delete(Facility,List,ListAux) & 
-	check_list_charging(ListAux,Lat,Lon,ChosenCharging)
+	(	(ResultC == "true" & 
+		ChosenCharging = Facility)
+		|
+		(.delete(Facility,List,ListAux) &
+		check_list_charging(ListAux,Lat,Lon,ChosenCharging))	
+	)
 	.
 
 +!go_charge(Flat,Flon)
 	: new::chargingList(CList) & ::get_charge_list(FeasibleCList) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
 <-
 	?::chargings_on_my_way(FeasibleCList,FLat,FLon,[],Aux2List);
+//	.print("on my way lat ",Aux2List);
 	if(.empty(Aux2List)){
 		?rules::closest_facility(CList,Facility);
 		?rules::closest_facility(CList,Flat,Flon,FacilityId2);
@@ -713,7 +710,7 @@ check_list_charging(List,Lat,Lon,ChosenCharging)
 	:  new::chargingList(CList) & ::get_charge_list(FeasibleCList) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_,Speed,_,_,_,_,_,_,_,BatteryCap,_)
 <-
 	?::chargings_on_my_way(FeasibleCList,FLat,FLon,[],Aux2List);
-	
+//	.print("on my way fac ",Aux2List);
 	if(.empty(Aux2List)){
 		?rules::closest_facility(FeasibleCList,Facility);
 		?rules::closest_facility(CList,FacilityId,FacilityId2);
