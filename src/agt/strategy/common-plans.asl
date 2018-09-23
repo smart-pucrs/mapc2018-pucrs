@@ -95,28 +95,30 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 		.difference(SList,ForbiddenStorages,NewList) &		 
 		get_best_facilities(NewList,CLat,CLon,500,Temp,chosen(Storage,Workshop)) 
 <-
+	.broadcast(tell,strategies::centerStorage(Storage));
+	.broadcast(tell,strategies::centerWorkshop(Workshop));
 	-+centerStorage(Storage);
 	-+centerWorkshop(Workshop);
 	.print("Closest storage from the center is ",Storage);
 	.print("Closest workshop from the storage above is ",Workshop);
 	.	
-//+!set_center_storage_workshop
-//	: 	default::minLat(MinLat) & 
-//		default::minLon(MinLon) & 
-//		default::maxLat(MaxLat) & 
-//		default::maxLon(MaxLon) & 
-//		CLat = (MinLat+MaxLat)/2 & 
-//		CLon = (MinLon+MaxLon)/2 & 
-//		new::storageList(SList) & 
-//		new::workshopList(WList) & 
-//		rules::closest_facility_truck(SList, CLat, CLon, Storage) & 
-//		rules::closest_facility_truck(WList, Storage, Workshop)
-//<-
-//	+centerStorage(Storage);
-//	+centerWorkshop(Workshop);
-//	.print("Closest storage from the center is ",Storage);
-//	.print("Closest workshop from the storage above is ",Workshop);
-//	.
++!set_center_storage_workshop
+	: 	default::minLat(MinLat) & 
+		default::minLon(MinLon) & 
+		default::maxLat(MaxLat) & 
+		default::maxLon(MaxLon) & 
+		CLat = (MinLat+MaxLat)/2 & 
+		CLon = (MinLon+MaxLon)/2 & 
+		new::storageList(SList) & 
+		new::workshopList(WList) & 
+		rules::closest_facility_truck(SList, CLat, CLon, Storage) & 
+		rules::closest_facility_truck(WList, Storage, Workshop)
+<-
+	+centerStorage(Storage);
+	+centerWorkshop(Workshop);
+	.print("Closest storage from the center is ",Storage);
+	.print("Closest workshop from the storage above is ",Workshop);
+	.
 
 +default::well(Well,Lat,Lon,Type,Team,Integrity)
 	: default::team(MyTeam) & not .substring(MyTeam,Team) & not default::enemyWell(Well,_,_,_)

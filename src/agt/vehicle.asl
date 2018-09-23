@@ -86,13 +86,17 @@
 	if ( Me \== vehicle1 ) { setMap; }
 //	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
 	!action::recharge_is_new_skip;
+	
+//	!strategies::set_center_storage_workshop([]);
+//	!strategies::set_center_storage_workshop;
+	if ( Me == vehicle1 ) { 
+		!strategies::set_center_storage_workshop([]); 
+		!reborn::synchronise_team_artifact_environment;
+	}
+	
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	
-	// update the code below for a different strategy
-
-	!strategies::set_center_storage_workshop([]);
-	if ( Me == vehicle1 ) { !reborn::synchronise_team_artifact_environment; }
-	
+	// update the code below for a different strategy	
 	+strategies::should_become(MyRole);
 	if(MyRole == explorer_drone){
 		!explore::size_map; 
