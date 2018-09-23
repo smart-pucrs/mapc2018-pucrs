@@ -53,6 +53,10 @@
 	+explore::n_steps(0);
 	+explore::n_walks(0);
 	
+	+explore::vLat(0);
+	+explore::vLon(0);
+	+explore::vVolta(0);
+	
 	+delivery::current_load_item([],0);
 	+delivery::current_load([],0);
 	

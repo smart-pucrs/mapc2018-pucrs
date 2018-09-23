@@ -99,7 +99,7 @@
 	+strategies::should_become(MyRole);
 	if(MyRole == explorer_drone){
 		!explore::size_map; 
-	}
+	} 
 	if (MyRole == builder){
 		!build::choose_minimum_well_price;
 		!build::make_well_types_ranking;
