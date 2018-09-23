@@ -56,6 +56,8 @@
 	+delivery::current_load_item([],0);
 	+delivery::current_load([],0);
 	
+	+strategies::noActionCount(0);
+	
 	if (Me == vehicle1) { !lNewRound::add_initiator_beliefs; }
 	setReady;
 	.
