@@ -116,7 +116,7 @@
 	} else{
 		-+::noActionCount(0);
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
-//		!reborn::revive;
+		!reborn::revive;
 	}
 	.
 	
