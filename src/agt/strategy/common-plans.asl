@@ -482,7 +482,15 @@ select_random_facility(Facility)
 	.
 +!reconsider_gather.
 +!gather
-	: rules::select_resource_node(SelectedResource) & .literal(SelectedResource)
+	: rules::can_I_use_center_storage & default::load(Load) & default::maxLoad(Max) & (Load*2 > Max) & strategies::centerStorage(Storage)
+<-	
+	.print("Going to storage ",Storage," to store items");
+	!action::goto(Storage);
+	!stock::store_all_items(Storage);
+	!gather;
+	.
++!gather
+	: rules::can_I_use_center_storage & rules::select_resource_node(SelectedResource) & .literal(SelectedResource)
 <-
 	!gather(SelectedResource);
 	.
@@ -495,14 +503,11 @@ select_random_facility(Facility)
 	.
 //+!gather <- !gather::initial_gather.
 +!gather(ResourceNode)
-	: team::resNode(ResourceNode,Lat,Lon,Base) & strategies::centerStorage(Storage)
+	: team::resNode(ResourceNode,Lat,Lon,Base)
 <-
 	.print("Going to resource node ",ResourceNode," to gather ",Base);
 	!action::goto(Lat,Lon);
 	!gather::gather_full(Base);
-	.print("Going to storage ",Storage," to store items");
-	!action::goto(Storage);
-	!stock::store_all_items(Storage);
 	!gather;
 	.
 	

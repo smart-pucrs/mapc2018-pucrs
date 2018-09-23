@@ -57,9 +57,12 @@
 	.
 
 +!recover_from_failure(Action, failed_capacity)
+	: strategies::should_become(PreviousRole)
 <-	
-	.print("HOUSTON WE HAVE A BUG! ",Action," failed_capacity");
-	.wait(para);
+	.print("The storage capacity is full");
+	!strategies::change_role(_,PreviousRole);
+	!!strategies::go_back_to_work;
+	.drop_intention;
 	.	
 +!recover_from_failure(Action, failed_location)
 <-	

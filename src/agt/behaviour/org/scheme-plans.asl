@@ -25,18 +25,28 @@
 +!retrive_items
 	: strategies::winner(Name,Type,Duty,Tasks,TaskId) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop)
 <-
-	!action::goto(Storage);
-	?default::facility(Teste);
-	?default::lat(Lat);
-	?default::lon(Lon);
-	.print("I'm at ",Teste," ",Lat," ",Lon," I should be at ",Storage);
-	!stock::store_all_items(Storage);
+	!clean_up_load(Storage);
 	!go_retrieve(Tasks);
 	!action::goto(Workshop);	
 	-strategies::winner(Name,Type,Duty,Tasks,TaskId); // at this point we won't use this belief anymore	
 	!!strategies::always_recharge;
 	.resume(::retrive_items);
 	.
++!clean_up_load(CenterStorage)
+	: rules::can_I_use_center_storage
+<-
+	!action::goto(CenterStorage);
+	!stock::store_all_items(CenterStorage);
+	.
++!clean_up_load(CenterStorage)
+	: new::dumpList(DList) & rules::closest_facility(DList,Facility)
+<-
+	!action::goto(Facility);
+	for(default::hasItem(Item,Qty)){
+		!action::dump(Item,Qty);
+	}
+	!action::goto(CenterStorage);
+	.		
 +!go_retrieve([])
 <-
 	.print("I've collected all items");	

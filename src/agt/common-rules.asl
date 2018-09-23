@@ -148,3 +148,10 @@ desired_pos_is_valid(Lat,Lon)
 	actions.route(truck,Speed,Lat,Lon,_,_,_,RouteLen1) &
 	actions.route(truck,Speed,Lat,Lon,storage0,_,RouteLen2)
 	.
+
+can_I_use_center_storage
+:-
+	strategies::centerStorage(Storage) &
+	default::storage(Storage,_,_,TotalCpt,CurrentCpt,_) &
+	CurrentCpt+500 <= TotalCpt
+	.
