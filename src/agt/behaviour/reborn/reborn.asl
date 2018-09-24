@@ -25,7 +25,7 @@
 
 	.abolish(attack::_);
 	
-	.abolish(build::_);	
+//	.abolish(build::_);	
 	
 	.abolish(cnpa::_);
 	
