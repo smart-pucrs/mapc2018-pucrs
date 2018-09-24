@@ -333,7 +333,7 @@ select_random_facility(Facility)
 	!build;
 	.
 +!build 
-	: default::play(Me,builder,g1) & team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+	: .my_name(Me) & default::play(Me,builder,g1) & team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
 	!!become_attacker;
@@ -421,8 +421,8 @@ select_random_facility(Facility)
 +!reconsider_attack(Well).
 +!attack
 //	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
-//	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,Lat,Lon,_),Wells) & 	rules::closest_facility(Wells,Well)
-	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,_,_,_),Wells) & .shuffle(Wells,ShuffleWells) & .nth(0,ShuffleWells,Well)
+	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,Lat,Lon,_),Wells) & 	rules::closest_facility(Wells,Well)
+//	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,_,_,_),Wells) & .shuffle(Wells,ShuffleWells) & .nth(0,ShuffleWells,Well)
 <-
 	.print("I'm going to attack ",Well);
 	!attack::dismantle_well(Well);
