@@ -295,7 +295,7 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	!explore::go_walk;
 	.
 +!go_back_to_work
-	: .my_name(Me) & default::play(Me,builder,g1)
+	: .my_name(Me) & default::play(Me,Role,g1) & (Role==builder | Role==super_builder)
 <-
 	!action::forget_old_action;
 	!strategies::build;
@@ -333,7 +333,7 @@ select_random_facility(Facility)
 	!build;
 	.
 +!build 
-	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+	: default::play(Me,builder,g1) & team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 <-
 	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
 	!!become_attacker;

@@ -9,6 +9,7 @@
 	 <role id="explorer" />
 	 <role id="explorer_drone" />
 	 <role id="super_explorer" />
+	 <role id="super_builder" />
 	 <role id="gatherer" />	 
 	 <role id="deliveryagent" />
 	 <role id="assembler" />
@@ -31,6 +32,7 @@
 			  <role id="explorer" />
 			  <role id="explorer_drone" />
 			  <role id="super_explorer" />
+			  <role id="super_builder" />
 			  <role id="gatherer" />
 			  <role id="assembler" />
 			  <role id="deliveryagent" />
