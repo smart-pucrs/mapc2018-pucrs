@@ -7,8 +7,7 @@
 <- 
 	VHipo = ((((CLat - MinLat)/2) * ((CLat - MinLat)/2)) + (((CLon - MinLon)/2) * ((CLon - MinLon)/2)));
 	HalfH = VHipo / 2;
-//	+s_total(math.floor((math.sqrt(HalfH)/0.0060))-2);
-	+s_total(1);
+	+s_total(math.floor((math.sqrt(HalfH)/0.0060))-2);
 	!which_map;
 	.
 	
