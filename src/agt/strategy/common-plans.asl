@@ -314,12 +314,6 @@ select_random_facility(Facility)
 	.shuffle(AllList,List) &
 	.nth(0,List,Facility)
 	.
-+!build 
-	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
-<-
-	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
-	!!become_attacker;
-	.
 //+!build 
 //	: 	new::chargingList(CList) & 
 //		rules::closest_facility(CList,Facility) & 
@@ -337,6 +331,12 @@ select_random_facility(Facility)
 <-
 	!build::buy_well; 	
 	!build;
+	.
++!build 
+	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+<-
+	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
+	!!become_attacker;
 	.
 +!build
 	: select_random_facility(Facility)
@@ -400,7 +400,8 @@ select_random_facility(Facility)
 //	.
 +!become_attacker
 //	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
-	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
+	//: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & (Role==gatherer)
 <-
 	.current_intention(intention(IntentionId,_));
 	.print("Becoming attacker ",IntentionId);
