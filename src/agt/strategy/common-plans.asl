@@ -400,8 +400,8 @@ select_random_facility(Facility)
 //	.
 +!become_attacker
 //	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
-	//: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
-	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & (Role==gatherer)
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
+//	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & (Role==gatherer)
 <-
 	.current_intention(intention(IntentionId,_));
 	.print("Becoming attacker ",IntentionId);
@@ -420,7 +420,9 @@ select_random_facility(Facility)
 	.
 +!reconsider_attack(Well).
 +!attack
-	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+//	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+//	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,Lat,Lon,_),Wells) & 	rules::closest_facility(Wells,Well)
+	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,_,_,_),Wells) & .shuffle(Wells,ShuffleWells) & .nth(0,ShuffleWells,Well)
 <-
 	.print("I'm going to attack ",Well);
 	!attack::dismantle_well(Well);

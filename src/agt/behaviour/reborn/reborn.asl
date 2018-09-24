@@ -57,23 +57,23 @@
 	+strategies::team_ready;
 	+strategies::noActionCount(0);
 	
-	if (Role == explorer_drone){
-		?explore::n_steps(NS);
-		?explore::n_walks(NW);
-	}
-	if (Role == super_explorer){
-		?explore::vLat(VLat);
-		?explore::vLon(VLon);
-		?explore::vVolta(VV);
-		?explore::n_steps(NS);
-		?explore::n_walks(NW);
-	}
-	.abolish(explore::_);
-	+explore::n_steps(NS);
-	+explore::n_walks(NW);
-	+explore::vLat(0);
-	+explore::vLon(0);
-	+explore::vVolta(0);
+//	if (Role == explorer_drone){
+//		?explore::n_steps(NS);
+//		?explore::n_walks(NW);
+//	}
+//	if (Role == super_explorer){
+//		?explore::vLat(VLat);
+//		?explore::vLon(VLon);
+//		?explore::vVolta(VV);
+//		?explore::n_steps(NS);
+//		?explore::n_walks(NW);
+//	}
+//	.abolish(explore::_);
+//	+explore::n_steps(NS);
+//	+explore::n_walks(NW);
+//	+explore::vLat(VLat);
+//	+explore::vLon(VLon);
+//	+explore::vVolta(VV);
 	
 	.abolish(org::_);
 	.
