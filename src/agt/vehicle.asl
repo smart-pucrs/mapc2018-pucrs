@@ -91,11 +91,6 @@
 	if ( Me == vehicle1 ) { 
 		!strategies::set_center_storage_workshop([]); 
 		!reborn::synchronise_team_artifact_environment;
-		?new::chargingList(CList);
-		!prune_charging_list(CList);
-//		?new::chargingList(C);
-//		.print("@@@@@@@@@@@@@@@@");
-//		.print(C);
 	}
 	
 	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
@@ -105,7 +100,7 @@
 	if(MyRole == explorer_drone | MyRole ==super_explorer){
 		!explore::size_map; 
 	} 
-	if (MyRole == builder | MyRole == super_builder ){
+	if (MyRole == builder){
 		!build::choose_minimum_well_price;
 		!build::make_well_types_ranking;
 	}
@@ -118,24 +113,3 @@
 	.print("Everything Set Up!");
     .
     
-+!prune_charging_list([])
-	: new::chargingList(List)
-<-
-	.broadcast(achieve,default::updateChargingList(List));
-	.
-+!prune_charging_list([ChargingId|List])
-	:  rules::closest_facility_truck(List,ChargingId,ClosestCharging) & actions.route(truck,2,ChargingId,ClosestCharging,Route) & Route <= 10
-<-
-	?new::chargingList(OldList);
-	.delete(ChargingId,OldList,NewList);
-	-+new::chargingList(NewList);
-	!prune_charging_list(List);
-	.
-+!prune_charging_list([ChargingId|List]) <- !prune_charging_list(List).
-
-+!updateChargingList(List)
-<-
-	-+new::chargingList(List);
-//	?new::chargingList(Test);
-//	.print("@@@@@@@@@@@@@@ ",Test);
-	.

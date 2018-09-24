@@ -91,7 +91,7 @@
 	!go_for;
 	.
 	
-+!go_for : n_times(N) & s_total(S) & N == 2 &
++!go_for : n_times(N) & s_total(S) & N == 3 &
 	 m_Lat(M) & m_Lon(L) & n_Lat(P) & n_Lon(O)
 <-
 	.print("Explorer full map completed!");
@@ -155,13 +155,27 @@
 +!go_explore_map // Only vehicle 4
 	: .my_name(vehicle4) & m_Lat(R) & m_Lon(S) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
 <-	
-	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
-	!action::goto(CLat - R, MinLon + 0.00001 + S);
-	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
-	!action::goto(MinLat + 0.00001 + R, CLon + S);
-	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);
+
+	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);	
+	!action::goto(MinLat + ((CLat - MinLat)/2) + R, MaxLon - 0.00001 - S)
 	!action::goto(CLat - R, MaxLon - 0.00001 - S);
-	!action::goto(MaxLat - 0.00001 - R, MaxLon - 0.00001 - S);
-	!action::goto(MaxLat - 0.00001 - R, CLon + S);
+	
+	!action::goto(CLat + ((MaxLat - CLat)/2) + R, MaxLon - 0.00001 - S)
+	!action::goto(MaxLat - 0.00001 - R, MaxLon - 0.00001 - S);	
+	!action::goto(MaxLat - 0.00001 - R, MaxLon - ((MaxLon - CLon)/2) - S);
+	
+	!action::goto(MaxLat - 0.00001 - R, CLon + S);	
+	!action::goto(MaxLat - 0.00001 - R, MinLon + ((CLon - MinLon)/2) + S);	
 	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
+	
+	!action::goto(MaxLat - ((MaxLat - CLat)/2) - R, MinLon + 0.00001 + S)
+	!action::goto(CLat - R, MinLon + 0.00001 + S);	
+	!action::goto(MinLat + ((CLat - MinLat)/2) + R, MinLon + 0.00001 + S);
+	
+	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);	
+	!action::goto(MinLat + 0.00001 + R, MinLon + ((CLon - MinLon)/2) + S);
+	!action::goto(MinLat + 0.00001 + R, CLon + S);
+	
+	!action::goto(MinLat + 0.00001 + R, CLon + ((MaxLon - CLon)/2) + S);
+	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);
 	.
