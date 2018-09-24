@@ -7,7 +7,8 @@
 <- 
 	VHipo = ((((CLat - MinLat)/2) * ((CLat - MinLat)/2)) + (((CLon - MinLon)/2) * ((CLon - MinLon)/2)));
 	HalfH = VHipo / 2;
-	+s_total(math.floor((math.sqrt(HalfH)/0.0060))-2);
+//	+s_total(math.floor((math.sqrt(HalfH)/0.0060))-2);
+	+s_total(1);
 	!which_map;
 	.
 	
@@ -66,8 +67,6 @@
 	if(.my_name(vehicle4)){
 		// Run after all agents explorer all quadrants
 		!go_full_map;
-	} else {
-		!go_walk;
 	}	
 	.
 +!go_walk
@@ -81,7 +80,7 @@
 	!go_walk;
 	.
 
-+!go_full_map : .my_name(vehicle4)
++!go_full_map 
 <-
 	+n_Lat(0.00550);
 	+n_Lon(0.00800);
@@ -91,11 +90,14 @@
 	!go_for;
 	.
 	
-+!go_for : n_times(N) & s_total(S) & N == (S * 2)
++!go_for : n_times(N) & s_total(S) & N == 2 &
+	 m_Lat(M) & m_Lon(L) & n_Lat(P) & n_Lon(O)
 <-
-	.print("Explorer full map completed!")
+	.print("Explorer full map completed!");
 	//Call again the explorer in which quadrant
-	!go_walk;
+	-n_times(N);
+	+n_times(0);
+	!go_for;
 	.	
 	
 +!go_for
@@ -116,28 +118,6 @@
 // |---|---|
 // | 3 | 4 |
 // |---|---| 
-
-
-//+!go_explore_edges // Quarter 1
-//	: .my_name(vehicle1) & n_walks(W) & vLat(V) & vLon(L) & vVolta(T) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
-//<-	
-//	!action::goto(MinLat + V, MinLon + L);
-//	.
-//+!go_explore_edges // Quarter 2
-//	: .my_name(vehicle2) & n_walks(W) & vLat(V) & vLon(L) & vVolta(T) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
-//<-	
-//	!action::goto(MinLat + V + (T * 1), MinLon + L + (T * 1));
-//	.
-//+!go_explore_edges // Quarter 3
-// 	: .my_name(vehicle3) & n_walks(W) & vLat(V) & vLon(L) & vVolta(T) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
-//<-	
-//	!action::goto(MinLat + V + (T * 2), MinLon + L + (T * 2));
-//	.
-//+!go_explore_edges // Quarter 4
-//	: .my_name(vehicle4) & n_walks(W) & vLat(V) & vLon(L) & vVolta(T) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
-//<-	
-//	!action::goto(MinLat + V + (T * 3), MinLon + L + (T * 3));
-//	.
 
 +!go_explore_edges // Quarter 1
 	: .my_name(vehicle1) & n_walks(W) & vLat(V) & vLon(L) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
