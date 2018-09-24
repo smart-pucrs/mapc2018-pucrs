@@ -29,7 +29,7 @@ select_best_location_to_build(ChosenPosition)
 	default::maxLat(MaxLat) &
 	default::minLat(MinLat) &
 	PossibleLocations = [pos(Lat,MaxLon-0.001),pos(Lat,MinLon+0.001),pos(MaxLat-0.001,Lon),pos(MinLat+0.001,Lon)] &
-	.print("possible ",PossibleLocations) &
+//	.print("possible ",PossibleLocations) &
 	select_location(PossibleLocations,100,pos(Lat,Lon),ChosenPosition)
 	.
 select_location([],Route,Temp,ChosenPosition)
@@ -41,9 +41,9 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	default::role(Role,Speed,_,_,_,_,_,_,_,_,_) &
 	default::lat(Lat) &
 	default::lon(Lon) &
-	.print("antes",DLat," ",DLon)&
+//	.print("antes",DLat," ",DLon)&
 	actions.route(Role,Speed,Lat,Lon,DLat,DLon,_,_,RouteLen) &
-	.print("depois ",DLat," ",DLon," ",RouteLen) &
+//	.print("depois ",DLat," ",DLon," ",RouteLen) &
 	RouteLen < Route &
 	rules::desired_pos_is_valid(DLat,DLon) &
 	select_location(List,RouteLen,pos(DLat,DLon),ChosenPosition)

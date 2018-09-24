@@ -66,6 +66,8 @@
 	if(.my_name(vehicle4)){
 		// Run after all agents explorer all quadrants
 		!go_full_map;
+	} else{
+		!go_walk;		
 	}	
 	.
 +!go_walk

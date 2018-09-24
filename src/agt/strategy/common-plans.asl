@@ -150,7 +150,7 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	-+new::noActionCount(Count+1);
 	.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Step ",S-1," I have done ",Count+1," noActions.");
 	-+metrics::noAction(Count+1);
-	if (::noActionCount(C) & C+1 < 3){
+	if ((not ::team_ready) | (::noActionCount(C) & C+1 < 3)){
 		-+::noActionCount(C+1);
 	} else{
 //		-+::noActionCount(0);
@@ -159,14 +159,14 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	}
 	.
 	
-+default::massim(Money)
-	: rules::my_role(builder,CurrentRole) & not .desire(build::_) & rules::enough_money
++default::massium(Money)
+	: not ::becoming_builder & .my_name(Me) & default::play(Me,Role,g1) & (Role==builder | Role==super_builder)
 <-
-	.print("We have enough money calling build");
-	!action::forget_old_action;
- 	+action::committedToAction(Id);
-	
-	!build;
+	+::becoming_builder;
+	.print("We have enough money!!!");
+	.wait({+default::actionID(_)});
+	!!demanded_well;
+	-::becoming_builder;
 	.
 
 +!always_recharge <- !action::recharge_is_new_skip; !always_recharge.
@@ -314,18 +314,15 @@ select_random_facility(Facility)
 	.shuffle(AllList,List) &
 	.nth(0,List,Facility)
 	.
-//+!build 
-//	: 	new::chargingList(CList) & 
-//		rules::closest_facility(CList,Facility) & 
-//		default::charge(Charge) & 
-//		rules::my_route_closest_facility(CList,Facility,Route) &
-//		Route >= Charge+2
-//<-
-//	.print(Route," steps to the closest charging station ",Facility," but my charge is ",Charge,", going to recharge");
-//	!action::goto(Facility);
-//	!action::charge;
-//	!build;
-//	.
++!demanded_well
+	: not .desire(build::_) & rules::enough_money
+<-
+	.current_intention(intention(IntentionId,_));
+	.print("I need to build a Well right now!!! ",IntentionId);
+	!action::forget_old_action;	
+	!::build;	
+	.
++!demanded_well.
 +!build 
 	: rules::enough_money
 <-
@@ -400,7 +397,7 @@ select_random_facility(Facility)
 //	.
 +!become_attacker
 //	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
-	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer))
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_) & not rules::enough_money) | (Role==gatherer))
 //	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & (Role==gatherer)
 <-
 	.current_intention(intention(IntentionId,_));
@@ -419,6 +416,13 @@ select_random_facility(Facility)
 	!::attack;
 	.
 +!reconsider_attack(Well).
++!attack
+	: ::should_become(builder) & rules::enough_money
+<-
+	.print("I was attacking but I can build a well");
+	!change_role(attacker,builder);
+	!!go_back_to_work;
+	.
 +!attack
 //	: team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
 	: team::enemyWell(Some,_,_,_) & .findall(Well,team::enemyWell(Well,Lat,Lon,_),Wells) & 	rules::closest_facility(Wells,Well)
