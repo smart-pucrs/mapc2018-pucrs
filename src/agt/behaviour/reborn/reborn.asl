@@ -35,11 +35,17 @@
 	
 	.abolish(estimate::_);	
 	
+	?explore::vLat(VLat);
+	?explore::vLon(VLon);
+	?explore::vVolta(VV);
 	?explore::n_steps(NS);
 	?explore::n_walks(NW);
 	.abolish(explore::_);
 	+explore::n_steps(NS);
 	+explore::n_walks(NW);
+	+explore::vLat(VLat);
+	+explore::vLon(VLon);
+	+explore::vVolta(VV);
 	
 	.findall(mission(MissionId,Storage,Reward,End,Fine,Items),initiator::mission(MissionId,Storage,Reward,End,Fine,Items),MissionList);
 	.findall(compound_item_quantity(Item,Qty),initiator::compound_item_quantity(Item,Qty),ItemList);
