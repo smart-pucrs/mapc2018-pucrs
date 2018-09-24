@@ -202,7 +202,7 @@ mas scenario {
 		join: vehicleart
 		focus: vehicleart.eis_art_vehicle34, team::vehicleart.team_artifact
 		goals: register("connectionA34")
-		roles: builder in g1
+		roles: super_builder in g1
 	}
 	
 	workspace vehicleart {
