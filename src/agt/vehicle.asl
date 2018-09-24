@@ -105,7 +105,7 @@
 	if(MyRole == explorer_drone | MyRole ==super_explorer){
 		!explore::size_map; 
 	} 
-	if (MyRole == builder | MyRole == super_explorer){
+	if (MyRole == builder | MyRole == super_builder){
 		!build::choose_minimum_well_price;
 		!build::make_well_types_ranking;
 	}
