@@ -93,6 +93,13 @@
 <-
 	-+chargingList([ChargingId|List]);
 	.
+@chargingList2[atomic]
++default::chargingStation(ChargingId,Lat,Lon,Rate) 
+	:  chargingList(List) & not .member(ChargingId,List) 
+<-
+	-+chargingList([ChargingId|List]);
+	.
+
 	
 @workshopList[atomic]
 +default::workshop(WorkshopId,Lat,Lon) 
