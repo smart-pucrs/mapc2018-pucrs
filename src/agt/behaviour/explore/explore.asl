@@ -175,8 +175,12 @@
 	: .my_name(vehicle4) & m_Lat(R) & m_Lon(S) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
 <-	
 	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
+	!action::goto(CLat - R, MinLon + 0.00001 + S);
 	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
+	!action::goto(MinLat + 0.00001 + R, CLon + S);
 	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);
+	!action::goto(CLat - R, MaxLon - 0.00001 - S);
 	!action::goto(MaxLat - 0.00001 - R, MaxLon - 0.00001 - S);
+	!action::goto(MaxLat - 0.00001 - R, CLon + S);
 	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
 	.
