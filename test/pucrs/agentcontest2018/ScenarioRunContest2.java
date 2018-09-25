@@ -20,7 +20,7 @@ public class ScenarioRunContest2 {
 		File currentDir = new File("");
 		String path = currentDir.getAbsolutePath();	
 				
-		ScenarioRun1simParis deletefiles = new ScenarioRun1simParis();
+		ScenarioRunContest2 deletefiles = new ScenarioRunContest2();
 		deletefiles.delete(5, path + "\\logs");
 		deletefiles.delete(5, path + "\\log");
 		deletefiles.delete(5, path + "\\replays");	
