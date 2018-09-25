@@ -63,6 +63,9 @@
 	+n_steps(0);
 	-n_walks(W);
 	+n_walks(0);
+	if(.my_name(vehicle3)){
+		!go_full_map;
+	}
 	if(.my_name(vehicle4)){
 		// Run after all agents explorer all quadrants
 		!go_full_map;
@@ -155,13 +158,70 @@
 +!go_explore_map // Only vehicle 4
 	: .my_name(vehicle4) & m_Lat(R) & m_Lon(S) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
 <-	
-	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
-	!action::goto(CLat - R, MinLon + 0.00001 + S);
-	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
-	!action::goto(MinLat + 0.00001 + R, CLon + S);
+	//1
 	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);
+	//2	
+	!action::goto(MinLat + ((CLat - MinLat)/2) + R, MaxLon - 0.00001 - S)
+	//3
 	!action::goto(CLat - R, MaxLon - 0.00001 - S);
+	
+	//4
+	!action::goto(CLat + ((MaxLat - CLat)/2) + R, MaxLon - 0.00001 - S)
+	//5
 	!action::goto(MaxLat - 0.00001 - R, MaxLon - 0.00001 - S);
+	//6	
+	!action::goto(MaxLat - 0.00001 - R, MaxLon - ((MaxLon - CLon)/2) - S);
+	//7
 	!action::goto(MaxLat - 0.00001 - R, CLon + S);
+	//8	
+	!action::goto(MaxLat - 0.00001 - R, MinLon + ((CLon - MinLon)/2) + S);
+	//9	
 	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
+	//10
+	!action::goto(MaxLat - ((MaxLat - CLat)/2) - R, MinLon + 0.00001 + S)
+	//11
+	!action::goto(CLat - R, MinLon + 0.00001 + S);
+	//12	
+	!action::goto(MinLat + ((CLat - MinLat)/2) + R, MinLon + 0.00001 + S);
+	//13
+	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
+	//14	
+	!action::goto(MinLat + 0.00001 + R, MinLon + ((CLon - MinLon)/2) + S);
+	//15
+	!action::goto(MinLat + 0.00001 + R, CLon + S);
+	//16
+	!action::goto(MinLat + 0.00001 + R, CLon + ((MaxLon - CLon)/2) + S);
+	//17
+	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);
+	.
+
++!go_explore_map // Only vehicle 3
+	: .my_name(vehicle3) & m_Lat(R) & m_Lon(S) & default::minLat(MinLat) & default::minLon(MinLon) & default::maxLat(MaxLat) & default::maxLon(MaxLon) & CLat = (MinLat+MaxLat)/2 & CLon = (MinLon+MaxLon)/2
+<-	
+	
+	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
+	!action::goto(MinLat + ((CLat - MinLat)/2) + R, MinLon + 0.00001 + S);
+	!action::goto(CLat - R, MinLon + 0.00001 + S);
+	
+	!action::goto(MaxLat - ((MaxLat - CLat)/2) - R, MinLon + 0.00001 + S);
+	!action::goto(MaxLat - 0.00001 - R, MinLon + 0.00001 + S);
+	!action::goto(MaxLat - 0.00001 - R, MinLon + ((CLon - MinLon)/2) + S);
+
+	!action::goto(MaxLat - 0.00001 - R, CLon + S);
+	!action::goto(MaxLat - 0.00001 - R, MaxLon - ((MaxLon - CLon)/2) - S);
+	!action::goto(MaxLat - 0.00001 - R, MaxLon - 0.00001 - S);
+	
+	!action::goto(MaxLat - 0.00001 - R, MaxLon - 0.00001 - S);
+	!action::goto(CLat + ((MaxLat - CLat)/2) + R, MaxLon - 0.00001 - S);
+	!action::goto(CLat - R, MaxLon - 0.00001 - S);
+	
+	!action::goto(MinLat + ((CLat - MinLat)/2) + R, MaxLon - 0.00001 - S);
+	!action::goto(MinLat + 0.00001 + R, MaxLon - 0.00001 - S);
+	!action::goto(MinLat + 0.00001 + R, CLon + ((MaxLon - CLon)/2) + S);
+	
+	!action::goto(MinLat + 0.00001 + R, CLon + S);
+	!action::goto(MinLat + 0.00001 + R, MinLon + ((CLon - MinLon)/2) + S);
+	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
+	
+	
 	.

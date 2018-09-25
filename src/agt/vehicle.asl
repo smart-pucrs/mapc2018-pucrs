@@ -115,6 +115,7 @@
 		!build::choose_minimum_well_price;
 		!build::make_well_types_ranking;
 	}
+
 	
 	.wait(strategies::centerStorage(_));
 	.wait(strategies::centerWorkshop(_));
