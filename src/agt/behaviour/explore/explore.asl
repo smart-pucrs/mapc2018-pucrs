@@ -56,7 +56,7 @@
 	.
 
 +!go_walk
-	: n_steps(S) & n_walks(W) & s_total(T) & S == T
+	: n_steps(S) & n_walks(W) & s_total(T) & S == (T+1)
 <- 
 	.print("Explorer completed, exploring again.");
 	-n_steps(S);
@@ -73,14 +73,26 @@
 		!go_walk;		
 	}	
 	.
+//EXPLORER OUTSIDE TO INSIDE
+//+!go_walk
+//	: n_steps(S) & n_walks(W) & vVolta(V)
+//<- 
+//	!go_explore_edges;
+//	-n_steps(S);
+//	+n_steps(S+1);
+//	-n_walks(W);
+//	+n_walks(V * (S + 1));
+//	!go_walk;
+//	.
+//EXPLORER INSIDE TO OUTSIDE
 +!go_walk
-	: n_steps(S) & n_walks(W) & vVolta(V)
+	: n_steps(S) & n_walks(W) & vVolta(V) & s_total(T)
 <- 
+	-n_walks(W);
+	+n_walks(V * (T - S));
 	!go_explore_edges;
 	-n_steps(S);
-	+n_steps(S+1);
-	-n_walks(W);
-	+n_walks(V * (S + 1));
+	+n_steps(S + 1);
 	!go_walk;
 	.
 
@@ -94,7 +106,7 @@
 	!go_for;
 	.
 	
-+!go_for : n_times(N) & s_total(S) & N == 2 &
++!go_for : n_times(N) & s_total(S) & N == 3 &
 	 m_Lat(M) & m_Lon(L) & n_Lat(P) & n_Lon(O)
 <-
 	.print("Explorer full map completed!");
@@ -222,6 +234,5 @@
 	!action::goto(MinLat + 0.00001 + R, CLon + S);
 	!action::goto(MinLat + 0.00001 + R, MinLon + ((CLon - MinLon)/2) + S);
 	!action::goto(MinLat + 0.00001 + R, MinLon + 0.00001 + S);
-	
 	
 	.
