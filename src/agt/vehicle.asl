@@ -92,6 +92,11 @@
 	if ( Me == vehicle1 ) { 
 		!strategies::set_center_storage_workshop([]); 
 		!reborn::synchronise_team_artifact_environment;
+		?new::chargingList(CList);
+		!prune_charging_list(CList);
+//		?new::chargingList(C);
+//		.print("@@@@@@@@@@@@@@@@");
+//		.print(C);
 	}
 	
 	if (MyRole==super_explorer){
@@ -119,4 +124,26 @@
 	!!strategies::go_back_to_work;
 	.print("Everything Set Up!");
     .
+    
++!prune_charging_list([])
+	: new::chargingList(List)
+<-
+	.broadcast(achieve,default::updateChargingList(List));
+	.
++!prune_charging_list([ChargingId|List])
+	:  rules::closest_facility_truck(List,ChargingId,ClosestCharging) & actions.route(truck,2,ChargingId,ClosestCharging,Route) & Route <= 10
+<-
+	?new::chargingList(OldList);
+	.delete(ChargingId,OldList,NewList);
+	-+new::chargingList(NewList);
+	!prune_charging_list(List);
+	.
++!prune_charging_list([ChargingId|List]) <- !prune_charging_list(List).
+
++!updateChargingList(List)
+<-
+	-+new::chargingList(List);
+//	?new::chargingList(Test);
+//	.print("@@@@@@@@@@@@@@ ",Test);
+	.
     
