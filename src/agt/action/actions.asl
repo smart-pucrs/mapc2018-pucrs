@@ -11,6 +11,11 @@
     !action::commit_action(build(Type));
 	.
 
++!upgrade(Skill)
+<-
+	!action::commit_action(upgrade(Skill));
+	.
+
 // ##### DISMANTLE ACTION #####
 // Uses zero (0) parameters to dismantle an existing well. 
 +!dismantleWell

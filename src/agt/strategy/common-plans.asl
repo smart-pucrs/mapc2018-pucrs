@@ -329,12 +329,12 @@ select_random_facility(Facility)
 	!build::buy_well; 	
 	!build;
 	.
-+!build 
-	: .my_name(Me) & default::play(Me,builder,g1) & team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
-<-
-	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
-	!!become_attacker;
-	.
+//+!build 
+//	: .my_name(Me) & default::play(Me,builder,g1) & team::enemyWell(Well,_,_,_) & attack::can_I_attack_well(Well)
+//<-
+//	.print("I was a builder, but there is an enemy well ",Well,", going to destroy it");
+//	!!become_attacker;
+//	.
 +!build
 	: select_random_facility(Facility)
 <-	
@@ -395,9 +395,33 @@ select_random_facility(Facility)
 //	.drop_desire(::gather);
 //	!::attack;	
 //	.
+canUpdateSkill 
+:- 
+	default::skill(Skill) & 
+	default::role(drone,_,_,_,_,_,MaxSkill,_,_,_,_) & 
+	(Skill < MaxSkill) & 
+	default::upgrade(skill,Cost,_) & 
+	default::massium(Massium) & 
+	(Cost <= Massium)
+	.
++!make_upgrade
+	: canUpdateSkill & new::shopList(List) & rules::closest_facility(List,Facility)
+<-
+	.print("I'm going to make an upgrade at ",Facility);
+	!action::goto(Facility);
+	!action::upgrade(skill);
+	!make_upgrade;
+	.
++!make_upgrade.
+-!make_upgrade(Lat,Lon)[code(.fail(action(Action),result(Result)))]
+
+<-
+	.print("Action ",Action," failed because of ",Result);
+	.
 +!become_attacker
 //	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_)) | (Role==gatherer) | (Role==explorer_drone))
-	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_) & not rules::enough_money) | (Role==gatherer))
+//	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & ((Role==builder & not .desire(build::_) & not rules::enough_money) | (Role==gatherer))
+	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & (Role==super_explorer)
 //	: not rules::am_I_winner & .my_name(Me) & default::play(Me,Role,g1) & (Role==gatherer)
 <-
 	.current_intention(intention(IntentionId,_));
@@ -416,6 +440,12 @@ select_random_facility(Facility)
 	!::attack;
 	.
 +!reconsider_attack(Well).
++!attack
+	: ::canUpdateSkill
+<-
+	.print("I was attacking but I make an upgrade");
+	!make_upgrade;
+	.
 +!attack
 	: ::should_become(builder) & rules::enough_money
 <-

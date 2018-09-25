@@ -84,7 +84,8 @@
 	
 	if ( Me \== vehicle1 ) { setMap; }
 //	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
-	!action::recharge_is_new_skip;
+
+	!action::recharge_is_new_skip;	
 	
 //	!strategies::set_center_storage_workshop([]);
 //	!strategies::set_center_storage_workshop;
@@ -98,7 +99,12 @@
 //		.print(C);
 	}
 	
-	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
+	if (MyRole==super_explorer){
+		!strategies::make_upgrade;
+	} else{
+		!action::recharge_is_new_skip;	
+	}	
+//	!action::recharge_is_new_skip; // had to add skip another step to make sure it works on slower computers
 	
 	// update the code below for a different strategy	
 	+strategies::should_become(MyRole);
