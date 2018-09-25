@@ -56,7 +56,7 @@
 	.
 
 +!go_walk
-	: n_steps(S) & n_walks(W) & s_total(T) & S == T
+	: n_steps(S) & n_walks(W) & s_total(T) & S == (T+1)
 <- 
 	.print("Explorer completed, exploring again.");
 	-n_steps(S);
@@ -70,14 +70,26 @@
 		!go_walk;		
 	}	
 	.
+//EXPLORER OUTSIDE TO INSIDE
+//+!go_walk
+//	: n_steps(S) & n_walks(W) & vVolta(V)
+//<- 
+//	!go_explore_edges;
+//	-n_steps(S);
+//	+n_steps(S+1);
+//	-n_walks(W);
+//	+n_walks(V * (S + 1));
+//	!go_walk;
+//	.
+//EXPLORER INSIDE TO OUTSIDE
 +!go_walk
-	: n_steps(S) & n_walks(W) & vVolta(V)
+	: n_steps(S) & n_walks(W) & vVolta(V) & s_total(T)
 <- 
+	-n_walks(W);
+	+n_walks(V * (T - S));
 	!go_explore_edges;
 	-n_steps(S);
-	+n_steps(S+1);
-	-n_walks(W);
-	+n_walks(V * (S + 1));
+	+n_steps(S + 1);
 	!go_walk;
 	.
 
