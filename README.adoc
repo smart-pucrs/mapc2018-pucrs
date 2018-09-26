@@ -1,0 +1,53 @@
+SMART_JaCaMo Team
+=================
+:toc:
+:toc-placement: preamble
+:smart-team: SMART_JaCaMo
+:jacamo: JaCaMo
+:eclipse: Eclipse
+:junit: JUnit
+:jasondtu: Jason-DTU
+:akuanduba: Akuanduba-UDESC
+:dtg: Dumping to Gather
+:tubdai: TUBDAI
+
+
+This is the source code of {smart-team} team, one of the participating teams of https://multiagentcontest.org/2018/[2018 Multi-Agent Programming Contest]. 
+In this repository you will find all the information required to run our code. 
+
+*Have fun!*
+
+// Need some preamble to get TOC:
+{empty}
+
+== Prepare the Environment
+To start developing and contributing to this repository, open {eclipse}, and select from the toolbar:
+
+> File > Import > Git > Projects from Git > Clone URI
+
+Copy https://github.com/smart-pucrs/mapc2018-pucrs.git and paste it on the URI field.
+
+If you're fond of command line, just copy and paste the following command at your terminal at your desired folder:
+
+> git clone https://github.com/smart-pucrs/mapc2018-pucrs.git
+
+And import this project from local git repository at {eclipse}.
+
+== Run the Code
+We use {junit} to run both server and our {jacamo} code.
+
+To run the simulation with one round, choose your appropriate {junit} test depending on the map you're interested in and at folder `test/pucrs/agentcontest2018/` right-click ScenarioRun1sim{desired_map}.java file, "Run as", "jUnit Test".
+
+To run the simulation with three rounds, right-click test/pucrs/agentcontest2018/ScenarioRun3sim.java file, "Run as", "jUnit Test".
+
+On the {eclipse} console the server output is shown. The {jacamo} output is loaded in a separated `gui`. Press `enter` at the server output ({eclipse} console) to start the simulation.
+
+== Review Matches
+If you'd like to view our matches, follow the links below:
+
+- Against *{jasondtu}*: https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-3of3[São Paulo];
+- Against *{akuanduba}*: https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-3of3[São Paulo];
+- Against *{dtg}*: https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-3of3[São Paulo];
+- Against *{tubdai}*: https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-3of3[São Paulo].
+
+To see all the matches, https://multiagentcontest.org/2018/[click this link] and search for Section *Replays*.
