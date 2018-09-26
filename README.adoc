@@ -11,8 +11,7 @@ SMART_JaCaMo Team
 :dtg: Dumping to Gather
 :tubdai: TUBDAI
 
-
-This is the source code of {smart-team} team, one of the participating teams of https://multiagentcontest.org/2018/[2018 Multi-Agent Programming Contest]. 
+This is the source code of {smart-team} team, one of the participating teams of https://multiagentcontest.org/2018/[2018 Multi-Agent Programming Contest (MAPC)]. 
 In this repository you will find all the information required to run our code. 
 
 *Have fun!*
@@ -42,12 +41,12 @@ To run the simulation with three rounds, right-click test/pucrs/agentcontest2018
 
 On the {eclipse} console the server output is shown. The {jacamo} output is loaded in a separated `gui`. Press `enter` at the server output ({eclipse} console) to start the simulation.
 
-== Review Matches
-If you'd like to view our matches, follow the links below:
+== See Matches
+If you'd like to see our matches, follow the links below:
 
-- Against *{jasondtu}*: https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-3of3[São Paulo];
-- Against *{akuanduba}*: https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-3of3[São Paulo];
-- Against *{dtg}*: https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-3of3[São Paulo];
-- Against *{tubdai}*: https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-3of3[São Paulo].
+- Versus *{jasondtu}*: https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-3of3[São Paulo];
+- Versus *{akuanduba}*: https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-16-26-12-Contest-2018-3of3[São Paulo];
+- Versus *{dtg}*: https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-18-31-08-Contest-2018-3of3[São Paulo];
+- Versus *{tubdai}*: https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-3of3[São Paulo].
 
-To see all the matches, https://multiagentcontest.org/2018/[click this link] and search for Section *Replays*.
+To see all the MAPC matches, https://multiagentcontest.org/2018/[click this link] and search for Section *Replays*.
