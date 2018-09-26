@@ -46,13 +46,9 @@ select_resource_node(SelectedResource)
 :-
 	team::desired_base(List) &
 	remove_unknown_bases(List,[],PrunedList) &
-	.print("list pruned: ",PrunedList)&
 	sum_percentages(PrunedList,Total) & 
 	.random(N) &
 	chosen_item(PrunedList, 0, (N * Total), item(_,Name,_)) &
-//	.print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n") &
-//	.print("[ TEST ] Pruned List: ",PrunedList) &
-//	.print("[ TEST ] Sun of Percentages (Total): ",Total,"\n | Random Number [0 to Total]: ",(N*Total),"\n | Chosen Item: ",Name,"\n") &
 	.findall(ResourceNode,team::resNode(ResourceNode,Lat,Lon,Name),Resources) & 
 	closest_facility(Resources,SelectedResource)
 	.
@@ -91,19 +87,16 @@ estimate_route(Role,Speed,Battery,location(Lat,Lon),[location(Facility)|Location
 	rules::closest_facility(CList,Facility,SafeHaven) &
 	actions.route(Role,Speed,Facility,SafeHaven,RouteSafeHaven) & 
 	Battery > (RouteFacility+RouteSafeHaven) & 
-//	.print("tenho bateria my position ate ",Facility," bateria: ",Battery," rota: ",RouteFacility," safe haven: ",RouteSafeHaven)&
 	estimate_route(Role,Speed,Battery-RouteFacility,location(Facility),Locations,TemQty+RouteFacility,QtySteps)
 	.
 estimate_route(Role,Speed,Battery,location(Lat,Lon),Locations,TemQty,QtySteps)
 :-
-//	.print("não tenho bateria my position ")&
 	new::chargingList(CList) & 
 	rules::closest_facility(CList,Lat,Lon,ChargingStation) & 
 	actions.route(Role,Speed,Lat,Lon,ChargingStation,_,RouteFacility) & 
 	default::maxBattery(MaxBattery) &
 	default::chargingStation(ChargingStation,_,_,Rate) &
 	StepsToRecharge = math.ceil(MaxBattery / Rate) &
-//	.print("desvio ",StepsToRecharge," ",RouteFacility)&
 	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),Locations,TemQty+StepsToRecharge+RouteFacility,QtySteps)
 	.
 estimate_route(Role,Speed,Battery,location(Facility),[location(Destination)|Locations],TemQty,QtySteps)
@@ -113,19 +106,16 @@ estimate_route(Role,Speed,Battery,location(Facility),[location(Destination)|Loca
 	rules::closest_facility(CList,Destination,SafeHaven) &
 	actions.route(Role,Speed,Destination,SafeHaven,RouteSafeHaven) & 
 	Battery > (Route+RouteSafeHaven) &
-//	.print("tenho bateria ",Facility," ate ",Destination," bateria: ",Battery," rota: ",Route," safe haven: ",RouteSafeHaven)&
 	estimate_route(Role,Speed,Battery-Route,location(Destination),Locations,TemQty+Route,QtySteps)
 	.
 estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
 :-
-//	.print("não tenho bateria ",Facility)&
 	new::chargingList(CList) & 
 	.member(Facility,CList) & // I'm already on a charging station I won't go to another
 	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),[],1000,QtySteps)
 	.
 estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
 :-
-//	.print("não tenho bateria ",Facility)&
 	new::chargingList(CList) & 
 	.difference(CList,[Facility],List) &
 	rules::closest_facility(List,Facility,ChargingStation) & 
@@ -133,7 +123,6 @@ estimate_route(Role,Speed,Battery,location(Facility),Locations,TemQty,QtySteps)
 	default::maxBattery(MaxBattery) &
 	default::chargingStation(ChargingStation,_,_,Rate) &
 	StepsToRecharge = math.ceil(MaxBattery / Rate) &
-//	.print("desvio ",StepsToRecharge," ",Route)&
 	estimate_route(Role,Speed,MaxBattery,location(ChargingStation),Locations,TemQty+StepsToRecharge+Route,QtySteps)
 	.
 	

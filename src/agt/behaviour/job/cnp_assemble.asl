@@ -73,7 +73,7 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 +!evaluate_bids(JobId,Tasks,Bids)
 	: .sort(Bids,SortedBids) & available_resources(SortedBids,TLoad,TRoles)
 <-	
-	.print("Preparing evaluation ",SortedBids," ",TLoad," ",TRoles);
+//	.print("Preparing evaluation ",SortedBids," ",TLoad," ",TRoles);
 	!evaluate_task(Tasks,TLoad,TRoles,0,0,SortedBids);
 	.	
 
@@ -126,12 +126,6 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 +!award_agents(TaskId,DeliveryPoint,Winners)
 	: ::selected_bids(Bids) & .sort(Bids,SortedBids) & .reverse(SortedBids,RBids)
 <-
-	.print("Sorted bids ",RBids," to ",DeliveryPoint);
-	
-//	for(::selected_task(TPItem,TCompound,TQty,_)){
-//		.print("selected task ",TPItem," ",TCompound," ",TQty);
-//	}
-	
 	for(.member(bid(Load,Role,Name),RBids)){
 		+::awarded_agent(Name,Role,Load,[],[]);
 	}
@@ -142,7 +136,6 @@ total_qty_item(TVol,CVol,MaxQty,VolTask,Qty)
 			manufactureItem(Item, Qty);
 		}
 		for(.member(retrieve(Storage,Item,Qty),Tasks)){
-//			.print("retrieve ",Storage," ",Item," ",Qty);
 			removeAvailableItem(Storage,Item,Qty,Result);
 		}
 	}		
@@ -171,22 +164,21 @@ assembler(Compound,Qty,Name)
 +!award_task(DeliveryPoint,Bids)
 	: ::selected_task(Item,Compound,Qty,_)  & assembler(Compound,Qty,Assembler)
 <-
-	.print(Assembler," was selected as assembler of ",Compound);
+//	.print(Assembler," was selected as assembler of ",Compound);
 	!award_assembler(Compound,Qty,Assembler);
 	!award_retrieve(DeliveryPoint,Compound,Assembler,Assembler);
 	!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
-//	while(::selected_task(Item,Compound,Qty) & Qty > 1){
 	while(::selected_task(MItem,Compound,MQty,MType) & MQty > 1){
 		Qty1 = MQty div 2;
 		Qty2 = (MQty div 2) + (MQty mod 2);
-		.print("%%%%%%%%%%%%%%%%%%%%%% Failed allocation of ",MItem," ",Compound," ",MQty," spliting item in ",Qty1," ",Qty2);
+//		.print("%%%%%%%%%%%%%%%%%%%%%% Failed allocation of ",MItem," ",Compound," ",MQty," spliting item in ",Qty1," ",Qty2);
 		-::selected_task(MItem,Compound,MQty,MType);
 		+::selected_task(MItem,Compound,Qty1,half_1);
 		+::selected_task(MItem,Compound,Qty2,half_2);
 		!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
 	}	
 	if (::selected_task(IfItem,Compound,IfQty,_)){
-		.print(IfItem," ",IfQty," of ",Compound," was not allocated, revogating this allocation process");
+//		.print(IfItem," ",IfQty," of ",Compound," was not allocated, revogating this allocation process");
 		.abolish(::selected_task(_,_,_,_));
 		.abolish(::awarded_agent(_,_,_,_,_));
 	}
@@ -198,7 +190,6 @@ assembler(Compound,Qty,Name)
 +!award_retrieves(DeliveryPoint,Compound,Assembler,Bids)
 	: ::constraint_role(Role,Compound) & ::awarded_agent(Agent,Role,_,_,_)
 <-
-	.print(Compound," has constraint ",Role);
 	!award_assist(Agent,Compound,Assembler);
 	!award_retrieve(DeliveryPoint,Compound,Assembler,Agent);
 	!award_retrieves(DeliveryPoint,Compound,Assembler,Bids);
@@ -212,7 +203,7 @@ assembler(Compound,Qty,Name)
 +!award_retrieve(DeliveryPoint,Compound,Assembler,Agent)
 	: ::selected_task(Item,Compound,Qty,Type) & ::awarded_agent(Agent,Role,Load,Duty,AssignedTasks) & default::item(Item,Vol,_,_) & (Qty*Vol) <= Load
 <-
-	.print("awarded ",Agent," ",AssignedTasks," to retrieve ",Item," in ",Qty," for ",Compound);
+//	.print("awarded ",Agent," ",AssignedTasks," to retrieve ",Item," in ",Qty," for ",Compound);
 	-::awarded_agent(Agent,_,_,_,_);
 	+::awarded_agent(Agent,Role,Load-(Qty*Vol),Duty,[retrieve(DeliveryPoint,Item,Qty)|AssignedTasks]);
 	-::selected_task(Item,Compound,Qty,Type);
@@ -224,7 +215,7 @@ assembler(Compound,Qty,Name)
 +!award_assist(Agent,Compound,Assembler)
 	: ::awarded_agent(Agent,Role,Load,Duty,AssignedTasks) & not .member(assist(Assembler,Compound),Duty) & Agent \== Assembler
 <-
-	.print("awarded assist ",Agent," to ",Assembler);
+//	.print("awarded assist ",Agent," to ",Assembler);
 	-::awarded_agent(Agent,_,_,_,_);
 	.union([assist(Assembler,Compound)],Duty,NewDuty);
 	+::awarded_agent(Agent,Role,Load,NewDuty,AssignedTasks);
@@ -234,7 +225,7 @@ assembler(Compound,Qty,Name)
 +!award_assembler(Compound,Qty,Agent)
 	: ::awarded_agent(Agent,Role,Load,Duty,AssignedTasks)
 <-
-	.print("awarded assembler ",Agent," ",Compound," ",Qty);
+//	.print("awarded assembler ",Agent," ",Compound," ",Qty);
 	-::awarded_agent(Agent,_,_,_,_);
 	.union([assemble(Compound,Qty)],Duty,NewDuty);
 	+::awarded_agent(Agent,Role,Load,NewDuty,AssignedTasks);

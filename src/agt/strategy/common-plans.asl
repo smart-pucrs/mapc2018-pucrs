@@ -1,59 +1,3 @@
-// ### PRINTS ###	
-//@printdesirebase[atomic]
-//+team::desired_base(DB)
-////	: not ::message_base(_)
-//<-
-//	+::message_base("--- Desired Base: ");
-//	for(.member(item(Percent,Item,DesiredQty),DB)){
-//		?::message_base(Msg);
-//		.concat(Msg,Item,"_",Percent,"%_",DesiredQty," ",String);
-//		-+::message_base(String);
-//	}
-//	?::message_base(Msg);
-//	.print(Msg);
-//	-::message_base(_);
-//	.
-//@printdesirecompound[atomic]
-//+team::desired_compound(DC)
-////	: not ::message_compound(_)
-//<-
-//	+::message_compound("--- Desired Compound: ");
-//	for(.member(item(Percent,Item,DesiredQty),DC)){
-//		?::message_compound(Msg);
-//		.concat(Msg,Item,"_",Percent,"%_",DesiredQty," ",String);
-//		-+::message_compound(String);
-//	}
-//	?::message_compound(Msg);
-//	.print(Msg);
-//	-::message_compound(_);
-//	.
-//@printavailable[atomic]
-//+team::available_items(Storage,A)
-//<-
-//	+::message_available("");
-//	for(.member(item(Item,CurrentQty),A)){
-//		?::message_available(Msg);
-//		.concat(Msg,Item,"_",CurrentQty," ",String);
-//		-+::message_available(String);
-//	}
-//	?::message_available(Msg);
-//	.print("--- Available at ",Storage,": ",Msg);
-//	-::message_available(_);
-//	.
-//@printstorage[atomic]
-//+default::storage(Storage,_,_,_,_,A)
-//<-
-//	+::message_storage("");
-//	for(.member(item(Item,CurrentQty,Delivered),A)){
-//		?::message_storage(Msg);
-//		.concat(Msg,Item,"_",CurrentQty," ",String);
-//		-+::message_storage(String);
-//	}
-//	?::message_storage(Msg);
-//	.print("--- MAPC at ",Storage,": ",Msg);
-//	-::message_storage(_);
-//	.
-	
 centre_map(CLat,CLon)
 :-
 	default::minLat(MinLat) & 
@@ -93,36 +37,12 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	.print("Closest storage from the center is ",Storage);
 	.print("Closest workshop from the storage above is ",Workshop);
 	.	
-+!set_center_storage_workshop
-	: 	default::minLat(MinLat) & 
-		default::minLon(MinLon) & 
-		default::maxLat(MaxLat) & 
-		default::maxLon(MaxLon) & 
-		CLat = (MinLat+MaxLat)/2 & 
-		CLon = (MinLon+MaxLon)/2 & 
-		new::storageList(SList) & 
-		new::workshopList(WList) & 
-		rules::closest_facility_truck(SList, CLat, CLon, Storage) & 
-		rules::closest_facility_truck(WList, Storage, Workshop)
-<-
-	+centerStorage(Storage);
-	+centerWorkshop(Workshop);
-	.print("Closest storage from the center is ",Storage);
-	.print("Closest workshop from the storage above is ",Workshop);
-	.
 
 +default::well(Well,Lat,Lon,Type,Team,Integrity)
 	: default::team(MyTeam) & not .substring(MyTeam,Team) & not team::enemyWell(Well,_,_,_)
 <-
 	.print(">>>>>>>>>>>>>>>>>>>> I found a well that doesn't belong to my team ",Well);	
 	addEnemyWell(Well,Lat,Lon,road);
-//	if (rules::desired_pos_is_valid(Lat,Lon)){
-//		.print(Well," is on the road");
-//		addEnemyWell(Well,Lat,Lon,road);
-//	} else{
-//		.print(Well," is on the air");
-//		addEnemyWell(Well,Lat,Lon,air);
-//	}
 	.
 
 +team::resNode(NodeId,Lat,Lon,Item)
@@ -153,7 +73,6 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	if ((not ::team_ready) | (::noActionCount(C) & C+1 < 3)){
 		-+::noActionCount(C+1);
 	} else{
-//		-+::noActionCount(0);
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I died");
 		!reborn::revive;
 	}
@@ -190,23 +109,15 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 +default::winner(Me,assembly,Duty,Tasks,TaskId)
 	: .my_name(Me) & default::joined(org,OrgId) & .term2string(TaskId,STaskId) & default::play(Me,CurrentRole,g1)
 <-
-//	+action::reasoning_about_belief(TaskId);
 	+::winner(Me,assembly,Duty,Tasks,TaskId);
 	-default::winner(Me,assembly,Duty,Tasks,TaskId);
 	.print("*************************************************** I'm winner ",TaskId," ",Duty," ",Tasks);
-
-	!action::forget_old_action;
-	.drop_desire(::gather(_));
-//	.drop_desire(explore::_);
-	
+	!action::forget_old_action;	
  	!change_role(CurrentRole,assembler);
-
  	!prepare_assembly(TaskId,Duty);
-// 	-action::reasoning_about_belief(TaskId);
 	.
 +!prepare_assembly(TaskId,[]).
 +!prepare_assembly(TaskId,[assemble(Item,Qty)|Duty])
-//	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
 	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,"_group",GroupName) & .concat(TaskId,"_",Item,SchemeName) & .my_name(Me)
 <-
 	org::createGroup(GroupName, manufactory, GroupId)[artifact_id(OrgId)];
@@ -222,7 +133,6 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
    	!prepare_assembly(TaskId,Duty);
 	.
 +!prepare_assembly(TaskId,[assist(Assembler,Item)|Duty])
-//	: default::joined(org,OrgId) & .concat(TaskId,"_gr_",Item,GroupName) & .concat(TaskId,"_",Item,SchemeName)
 	: default::joined(org,OrgId) & .concat(TaskId,"_",Item,"_group",GroupName) & .concat(TaskId,"_",Item,SchemeName)
 <-	
 	org::focusWhenAvailable(GroupName)[wid(OrgId)];
@@ -238,15 +148,9 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 <-
 	+::winner(TaskId,Tasks,DeliveryPoint);
 	-default::winner(TaskId,Tasks,DeliveryPoint);
-	.print("*************************************************** I'm winner ",TaskId," ",Tasks," at ",DeliveryPoint);
-	
-	!change_role(CurrentRole,deliveryagent);
-	
-	!action::forget_old_action;
-	.drop_desire(::gather(_));
- 	
- 	.print("I was a ",CurrentRole);	
-	
+	.print("*************************************************** I'm winner ",TaskId," ",Tasks," at ",DeliveryPoint);	
+	!change_role(CurrentRole,deliveryagent);	
+	!action::forget_old_action; 		
 	!perform_delivery;
 	.	
 -default::job(JobId,Storage,Reward,Start,End,Items)
@@ -258,7 +162,6 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 	: ::winner(JobId,_,_) & default::lastAction(LastAction) & .substring("deliver_job",LastAction) & default::lastActionResult(successful)
 <-
 	.print("### Priced Job ",JobId," Done, ",Reward,"$ in cash ###");
-//	-::winner(JobId,_,_);
 	.
 -default::job(JobId,_,Reward,Start,End,Items)
 	: ::winner(JobId,_,_)
@@ -278,7 +181,6 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 -default::mission(MissionId,_,Reward,_,_,_,_,_,_)
 <-
 	.print("### Mission ",MissionId," Done, ",Reward,"$ in cash ###");
-//	-::winner(JobId,_,_);
 	.
 	
 +!go_back_to_work
@@ -290,7 +192,6 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 +!go_back_to_work
 	: .my_name(Me) & default::play(Me,Role,g1) & (Role==explorer_drone | Role==super_explorer)
 <-
-//	!!explore::size_map; 
 	!action::forget_old_action;
 	!explore::go_walk;
 	.
@@ -304,12 +205,10 @@ get_best_facilities([Storage|Storages],Lat,Lon,Route,Temp,ChosenFacilities)
 // ### WHAT BUILDERS DO ###
 select_random_facility(Facility)
 :-
-//	new::chargingList(CList) &
 	new::dumpList(DList) &
 	new::storageList(StList) &
 	new::shopList(ShList) & 
 	new::workshopList(WList) &
-//	.concat(CList,DList,StList,ShList,WList,AllList) &
 	.concat(DList,StList,ShList,WList,AllList) &
 	.shuffle(AllList,List) &
 	.nth(0,List,Facility)
@@ -338,27 +237,10 @@ select_random_facility(Facility)
 +!build
 	: select_random_facility(Facility)
 <-	
-//	.print("Going to my farthest charging station",Facility," to explore");
 	.print("Going to ",Facility," to explore");
 	!action::goto(Facility);
-//	!action::charge;
 	!build;
 	.
-//+!build 
-////	: not rules::enough_money & new::chargingList(List) & rules::farthest_facility(List, Facility)
-//	: not rules::enough_money & select_random_facility(Facility)
-//<-
-////	.print("Going to my farthest charging station",Facility," to explore");
-//	.print("Going to ",Facility," to explore");
-//	!action::goto(Facility);
-////	!action::charge;
-//	!build;
-//	.
-//+!build
-//<-
-//	!build::buy_well; 	
-//	!build;
-//	.
 
 // ### WHAT ATTACKERS DO ###
 +team::enemyWell(Well,Lat,Lon,Type)
@@ -377,24 +259,6 @@ select_random_facility(Facility)
 	.wait({+default::actionID(_)});
 	!!reconsider_attack(Well);
 	.
-//+!become_attacker
-//	: .my_name(Me) & default::play(Me,builder,g1) & not .desire(build::_)
-//<-
-//	!change_role(builder,attacker);	
-//	!action::forget_old_action;	
-//	.drop_desire(::build);
-//	!::attack;	
-//	.
-//+!become_attacker
-//	: .my_name(Me) & default::play(Me,gatherer,g1)
-//<-
-//	!change_role(gatherer,attacker);	
-//	!action::forget_old_action;	
-//	.drop_desire(::reconsider_gather);
-//	.drop_desire(::gather(_));
-//	.drop_desire(::gather);
-//	!::attack;	
-//	.
 canUpdateSkill 
 :- 
 	default::skill(Skill) & 
@@ -444,7 +308,7 @@ canUpdateSkill
 +!attack
 	: ::should_become(super_explorer) & ::canUpdateSkill
 <-
-	.print("I was attacking but I make an upgrade");
+	.print("I was attacking but I had better to make an upgrade");
 	!make_upgrade;
 	!attack;
 	.
@@ -477,11 +341,8 @@ canUpdateSkill
 	: ::winner(JobId,Deliveries,DeliveryPoint)
 <-
 	.print("I won the tasks to ",Deliveries," at ",DeliveryPoint);	
-	
-	!delivery::delivery_job(JobId,Deliveries,DeliveryPoint);
-	
-	-::winner(JobId,Deliveries,DeliveryPoint);
-	
+	!delivery::delivery_job(JobId,Deliveries,DeliveryPoint);	
+	-::winner(JobId,Deliveries,DeliveryPoint);	
 	.print("I've finished my deliveries'");
 	?::should_become(Role);
 	!change_role(deliveryagent,Role);
@@ -489,12 +350,9 @@ canUpdateSkill
 	.
 +!recover_delivery(JobId)
 <-
-	!action::forget_old_action;
-	
-	!give_back_delivery;
-	
-	-::winner(JobId,_,_);
-	
+	!action::forget_old_action;	
+	!give_back_delivery;	
+	-::winner(JobId,_,_);	
 	?::should_become(Role);
 	!change_role(deliveryagent,Role);
 	!!go_back_to_work;
@@ -540,7 +398,6 @@ canUpdateSkill
 	!action::goto(Facility);
 	!gather;
 	.
-//+!gather <- !gather::initial_gather.
 +!gather(ResourceNode)
 	: team::resNode(ResourceNode,Lat,Lon,Base)
 <-

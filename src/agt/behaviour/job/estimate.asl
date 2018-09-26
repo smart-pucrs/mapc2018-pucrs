@@ -52,7 +52,6 @@ evaluate_steps
 	?sum_up_items(ItemizedAvailableItems,[],AvailableItems);	
 	for(.member(item(Item,Qtd),AvailableItems)){
 		+::partial_stock(Qtd,Item);
-//		.print("Partial stock: ",Item," ",Qtd);
 	} 	
 	.	
 
@@ -63,16 +62,7 @@ evaluate_steps
 	?evaluate_steps;
 //	.print(Id," is feasible");
 	.
-//-!priced_estimate(Id,Storage,Items)[error_msg(Message)]
-//<-
-//	maybe perform the metrics for failed evaluation here
-//	.fail;
-//	.
 
-//calculate_lot(Item,DesiredQty,Lot)
-//:-
-//	Lot = math.ceil(DesiredQty*0.5)
-//	.
 max_capacity([],Temp,Capacity)
 :-
 	Capacity = Temp
@@ -97,7 +87,7 @@ calculate_lot(Item,DesiredQty,Lot)
 :-
 	default::item(Item,Vol,roles(Roles),_) &
 	max_capacity(Roles,30,Capacity) &
-	MaxQty = math.floor(Capacity/Vol) & // truck load
+	MaxQty = math.floor(Capacity/Vol) & 
 	Temp = math.floor(DesiredQty*0.5) &
 	HalfQty = math.max(Temp,1) &
 	Lot = math.min(HalfQty,MaxQty)	
@@ -117,10 +107,9 @@ get_real_desired([item(Percentual,Item,Qty)|Desired],Temp,RealDesired)
 	.
 
 +!compound_estimate(Items)
-	: new::storageList(SList) & team::desired_compound(CList) & ::get_real_desired(CList,[],RCList) & .print("real desired compound items ",RCList) & not .empty(RCList) & .sort(RCList,SCList)
+	: new::storageList(SList) & team::desired_compound(CList) & ::get_real_desired(CList,[],RCList) & not .empty(RCList) & .sort(RCList,SCList)
 <-
 	!global_stock;
-//	.print("Priority Compound: ",SCList);
 	!compound_priority(SCList);
 	.findall(item(Item,MinimumQty),::must_assemble(MinimumQty,Item),SelectedItems);
 	.reverse(SelectedItems,Items);

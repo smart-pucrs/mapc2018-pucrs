@@ -45,18 +45,6 @@ public class TaskBoard extends Artifact {
 			logger.info("announce_failed");
 		}
 	}
-//	@OPERATION void announce(String taskDescr, int duration, int agents, OpFeedbackParam<String> id){
-//		taskId++;
-//		try {
-//			String artifactName = "cnp_board_"+taskId;
-//			ArtifactId teste = makeArtifact(artifactName, "cnp.ContractNetBoard", new ArtifactConfig(taskDescr,duration,agents));
-//			logger.info("teste "+this.getId().getWorkspaceId()+" tes "+teste.getWorkspaceId().toString());
-//			defineObsProperty("task", Literal.parseLiteral(taskDescr), artifactName, taskId);
-//			id.set(artifactName);
-//		} catch (Exception ex){
-//			logger.info("announce_failed");
-//		}
-//	}
 	
 	@OPERATION void award(Object[] winners){
 		Literal[] winner = new Literal[winners.length];

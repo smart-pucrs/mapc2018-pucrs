@@ -81,14 +81,8 @@
 	: ::schemes(Schemes)[artifact_name(_,GroupName)] & .member(Scheme,Schemes) & ::play(Assembler,assembler,GroupName) & default::joined(org,OrgId) 
 <-
 	.print("stop assisting to ",Assembler);
-//	.succeed_goal(assemble::assist_assemble(Assembler));
-//    .drop_desire(assemble::assist_assemble(Assembler));
-//    !action::forget_old_action(assemble,assist_assemble(Assembler));
-
 	!action::forget_old_action(org,assist_assemble[scheme(Scheme)]);
-    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
-	.print("stopped ",Assembler);
-	
+    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];	
 	if (not .desire(::assemble) & not .desire(::assist_assemble) ){
 		!!go_back_to_work;
 	}
@@ -96,22 +90,14 @@
 +!stop_assist[scheme(Scheme)]
 	: ::goalState(Scheme,assemble,ListAssembler,_,_) & .nth(0,ListAssembler,Assembler)
 <-
-	.print("stop assisting to without assembler belief ",Assembler);
-
+	.print("stop assisting without assembler belief ",Assembler);
 	!action::forget_old_action(org,assist_assemble[scheme(Scheme)]);
-    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
-	.print("stopped ",Assembler);
-	
+    org::goalAchieved(assist_assemble)[artifact_name(Scheme),wid(OrgId)];	
 	if (not .desire(::assemble) & not .desire(::assist_assemble) ){
 		!!go_back_to_work;
 	}
 	.
-	   
-//+!assemble[scheme(Scheme)]
-//	: ::goalArgument(Scheme,_,"Item",SItem) & .term2string(Item,SItem) & ::goalArgument(Scheme,_,"Qty",Qty)
-//<-
-//	!do_assemble(Scheme,Item,Qty);
-//	. 
+
 +!assemble[scheme(Scheme)]
 	: ::goalArgument(Scheme,_,"Item",Item) & ::goalArgument(Scheme,_,"Qty",Qty)
 <-
@@ -124,7 +110,6 @@
 +!do_assemble(Scheme,Item,Qty)
 	: default::joined(org,OrgId) 
 <-
-//	org::resetGoal(assist_assemble)[artifact_name(Scheme),wid(OrgId)];
 	!assemble::assemble(Item,Qty);
 	!do_assemble(Scheme,Item,Qty);
 	.    

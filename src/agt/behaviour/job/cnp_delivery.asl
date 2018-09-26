@@ -42,8 +42,6 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 +!evaluate_bids(Tasks,Bids)
 	: .sort(Bids,SortedBids) & volume_task(Tasks,20,TLoad) &task_can_be_accomplished(TLoad,SortedBids,0,MaxStep) & bids_by_step(SortedBids,MaxStep,[],SelectedBids)
 <-	
-//	.print("Required load ",TLoad,"can be transported in ",MaxStep);
-//	.print("Selected bids for delivery ",SelectedBids);
 	for(.member(required(Item,Qty),Tasks)){
 		+::selected_task(Item,Qty,entire);
 	}
@@ -54,12 +52,9 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 	.print("Insufficient load to delivery load");
 	.
 	
-	
 +!award_agents(TaskId,DeliveryPoint,Winners)
 	: ::selected_bids(Bids) & .sort(Bids,SortedBids) & .reverse(SortedBids,RBids)
 <-
-	.print("Sorted bids ",RBids," to ",DeliveryPoint);
-	
 	for(.member(bid(Load,Name),RBids)){
 		+::awarded_agent(Name,Load,[]);
 	}
@@ -82,7 +77,6 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 		.send(Name,tell,default::winner(TaskId,Tasks,DeliveryPoint));
 	}		
 	.findall(winner(Name,Tasks,TaskId),::awarded_agent(Name,Load,Tasks) & Tasks \== [],Winners);
-//	.send(Ag,tell,strategies::winner(JobId,Deliveries,DeliveryPoint));
 		
 	.abolish(::selected_bids(_));
 	.abolish(::awarded_agent(_,_,_));
@@ -110,5 +104,5 @@ bids_by_step(Bids,MaximumStep,Temp,Result)
 +!enclose(CNPBoardName)
 <- 		
 	remove[artifact_name(CNPBoardName)];
-	.print("Artefact ",CNPBoardName," removed");
+//	.print("Artefact ",CNPBoardName," removed");
 	.

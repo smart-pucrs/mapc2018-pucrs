@@ -42,10 +42,8 @@ public class EISArtifact extends Artifact implements AgentListener {
 	private List<Literal> start = new ArrayList<Literal>();
 	private List<Literal> percs = new ArrayList<Literal>();
 	private List<Literal> signalList = new ArrayList<Literal>();
-//	private List<Literal> jobDone = new ArrayList<Literal>();
 	private int mapSet = 0;
 	private int ready = 0;
-//	private long startTime;
 	
 	private static Set<String> agents = new ConcurrentSkipListSet<String>();
 
@@ -108,7 +106,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 	@OPERATION
 	void action(String action) throws NoValueException {
 		try {
-		Literal literal = Literal.parseLiteral(action);
+			Literal literal = Literal.parseLiteral(action);
 		
 			String agent = getCurrentOpAgentId().getAgentName();
 			Action a = Translator.literalToAction(literal);
@@ -117,10 +115,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 //			long duration = (endTime - startTime) / 1000000;
 //			logger.info("Executed action "+a+" step "+lastStep+". Time from percept: "+duration);
 		} catch (Exception e) {
-//			e.printStackTrace();
-			logger.info("DEU PAU BUG 47: "+e.getMessage());
 			e.printStackTrace();
-			fail("preciso parar");
 		}
 	}
 	
@@ -213,13 +208,6 @@ public class EISArtifact extends Artifact implements AgentListener {
 					//						logger.info("removing old perception "+literal);
 				}
 			}
-//			else if (old.getName().equals("job") || old.getName().equals("mission")) {
-//				if (!percepts.contains(old)) {
-////					logger.info("Job/mission failed or completed");
-//					Literal literal = Translator.perceptToLiteral(old);
-//					jobDone.add(literal);
-//				}
-//			}
 		}
 		
 		// compute new perception
@@ -271,11 +259,6 @@ public class EISArtifact extends Artifact implements AgentListener {
 		}
 			
 		if (step != null) {
-//			logger.info("adding "+step);
-//			if (agent.equals("vehicle1") && acceptJobs != 1)
-//				acceptJobs += 1;
-//			if (acceptJobs == 1)
-//				logger.info("Accepting jobs now!");
 			for (Literal a : auction) {
 				defineObsProperty(a.getFunctor(), (Object[]) a.getTermsArray());
 			}
@@ -295,16 +278,7 @@ public class EISArtifact extends Artifact implements AgentListener {
 				signalList.clear();
 			}
 			
-//			await_time(100);
 			defineObsProperty(actionID.getFunctor(), (Object[]) actionID.getTermsArray());
-			
-//			if (!jobDone.isEmpty()) {
-//				await_time(500);
-//				for (Literal lit: jobDone) {
-//					signal("job_done",(Object[]) lit.getTermsArray());
-//				}
-//				jobDone.clear();
-//			}
 		}
 	}
 	

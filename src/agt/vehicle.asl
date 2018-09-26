@@ -19,7 +19,7 @@
 	
 +!add_initiator
 <- 
-	.include("behaviour/cnp/initiator.asl", initiator);
+	.include("behaviour/job/initiator.asl", initiator);
 	.
 	
 +!register(E)
@@ -29,29 +29,6 @@
     .print("Registering...");
     register(E);
 	.
-
-//+default::step(_)
-//	: not initiator(_) & .my_name(Me) 
-//<-  
-//	actions.getAgentNumber(Me,Number);
-//	.count(play(_,_,_), NoP);
-//	+numberOfPlayers(NoP);
-//	+initiator(Number);
-//	.
-//    
-//+default::step(Step)
-//	: initiator(Number) & Number == Step 
-//<- 	
-//	?numberOfPlayers(NoP);
-//	-+initiator(Number + NoP);
-//	.
-//	
-//+default::step(Step)
-//	: initiator(Number) & Number < Step 
-//<-  
-//	?numberOfPlayers(NoP);
-//	-+initiator(Number + NoP);
-//	.
 
 +default::name(ServerMe)
 	: .my_name(Me)
@@ -71,11 +48,9 @@
 		initMap(Map,CellSize,Proximity);
 		
 		for(default::item(Item,_,_,parts([]))){
-//			.print("base: ",Item);
 			setDesiredBase(Item,1);
 		}
 		for(default::item(Item,_,_,parts(P)) & P \== []){
-//			.print("compound: ",Item);
 			setDesiredCompound(Item,1);
 		}
 	}
@@ -83,20 +58,13 @@
 	?default::joined(org,OrgId);
 	
 	if ( Me \== vehicle1 ) { setMap; }
-//	if ( Me == vehicle1 ) { org::createScheme("init_exp", exp, SchArtId)[wid(OrgId)]; }
 
 	!action::recharge_is_new_skip;	
-	
-//	!strategies::set_center_storage_workshop([]);
-//	!strategies::set_center_storage_workshop;
 	if ( Me == vehicle1 ) { 
 		!strategies::set_center_storage_workshop([]); 
 		!reborn::synchronise_team_artifact_environment;
 		?new::chargingList(CList);
 		!prune_charging_list(CList);
-//		?new::chargingList(C);
-//		.print("@@@@@@@@@@@@@@@@");
-//		.print(C);
 	}
 	
 	if (MyRole==super_explorer){
@@ -143,7 +111,5 @@
 +!updateChargingList(List)
 <-
 	-+new::chargingList(List);
-//	?new::chargingList(Test);
-//	.print("@@@@@@@@@@@@@@ ",Test);
 	.
     

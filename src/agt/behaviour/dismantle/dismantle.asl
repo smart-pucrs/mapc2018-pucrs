@@ -1,18 +1,3 @@
-//can_I_attack_well(Well)
-//:-
-//	team::enemyWell(Well,_,_,air) &
-//	default::role(drone,_,_,_,_,_,_,_,_,_,_)
-//	.
-//can_I_attack_well(Well)
-//:-
-//	team::enemyWell(Well,_,_,road) &
-//	default::role(Role,_,_,_,_,_,_,_,_,_,_) &
-//	Role \== drone
-//	.
-//can_I_attack_well(Well)
-//:-
-//	false
-//	.
 can_I_attack_well(Well)
 :-
 	team::enemyWell(Well,Lat,Lon,_) &
@@ -20,7 +5,6 @@ can_I_attack_well(Well)
 	.
 
 +!dismantle_well(Id)
-//	: default::well(Id,Lat,Lon,_,_,_)
 	: can_I_attack_well(Id) & team::enemyWell(Id,Lat,Lon,_)
 <-  
 	if (not rules::am_I_at_right_position(Lat,Lon)){
@@ -28,7 +12,6 @@ can_I_attack_well(Well)
 		!action::goto(Lat,Lon);
 	}
 	!attack(Id);
-//	!strategies::free; // remove this once the rest of this behaviour is implemented
 	.
 +!dismantle_well(Id)
 <-

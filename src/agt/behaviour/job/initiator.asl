@@ -23,7 +23,7 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	}	
 	.abolish(::final_qty_item(_,_));
 	-must_update;
-	.print("Stock updated");
+//	.print("Stock updated");
 	.
 +!compound_item_quantity([]).
 +!compound_item_quantity([required(Item,Qty)|Items])
@@ -57,12 +57,10 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	.
 	
 // ### ASSEMBLE COMPOUND ITEMS ###
-//@checkAssemble[atomic]
 +team::baseStored
 	: not ::must_check_compound  & strategies::centerStorage(Storage)
 <-
 	+::must_check_compound;
-	.print("Chamou o Based Stored");
 	.wait({+default::actionID(_)});
 	+action::reasoning_about_belief(Storage);
 	
@@ -86,13 +84,9 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
  +!allocate_tasks(Id,Task,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer_drone),ListAgents)
 <-    
-	announce(assemble(Task),10000,ListAgents,CNPBoardName);
-//	announce(assemble(Task),2000,ListAgents,CNPBoardName);
-	.print(CNPBoardName," announced to ",ListAgents);
-       
+	announce(assemble(Task),10000,ListAgents,CNPBoardName);       
     getBidsTask(Bids) [artifact_name(CNPBoardName)];
 	if (.length(Bids) \== 0) {		
-		.print("bids of ",CNPBoardName,": ",Bids);
 		!cnpa::evaluate_bids(Id,Task,Bids);
        
 	    !cnpa::award_agents(CNPBoardName,DeliveryPoint,Winners);
@@ -101,7 +95,6 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	}
 	else {
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
-//		.fail(noBids);
 	} 
 	clear(CNPBoardName);  
     .
@@ -114,11 +107,8 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 <-	
 	+action::reasoning_about_belief(Id);
  	.print("Received ",Id,", Items ",Items," starting the priced job process.");
- 	!compound_item_quantity(Items);
- 	
-//	!!accomplished_job(Id,Storage,Items);
+ 	!compound_item_quantity(Items); 	
 	!!pick_task(accomplished_job(Id,Storage,Items))[priority(3)];
-//	-action::reasoning_about_belief(Id);
 	.
 	
 // ### MISSION ###
@@ -166,13 +156,9 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 +!allocate_delivery_tasks(JobId,Tasks,DeliveryPoint)
 	: .findall(Agent,default::play(Agent,Role,g1) & (Role==gatherer|Role==explorer),ListAgents)
 <-     
-	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),10000,JobId,ListAgents,CNPBoardName);
-//	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),2000,JobId,ListAgents,CNPBoardName);
-	.print(CNPBoardName," announced to ",ListAgents);
-     
+	!cnpd::announce(delivery_task(DeliveryPoint,Tasks),10000,JobId,ListAgents,CNPBoardName);     
     getBidsTask(Bids) [artifact_name(CNPBoardName)];
 	if (.length(Bids) \== 0) {	
-		.print("bids of ",CNPBoardName,": ",Bids);
 		!cnpd::evaluate_bids(Tasks,Bids);
        
     	!cnpd::award_agents(JobId,DeliveryPoint,Winners);
@@ -184,8 +170,7 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 	else {
 		.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No bids ",JobId);
 		.fail(noBids);
-	}      
-       
+	}             
     !cnpd::enclose(CNPBoardName);
     .
     
@@ -211,9 +196,4 @@ get_final_qty_item(Item,Qty) :- ::final_qty_item(Item,Qty) | Qty=0.
 <-
 	.wait({-::requesting_help});
 	!pick_task(G)[priority(P)];
-	.
- 	
-    
-
-
-	
+	.	

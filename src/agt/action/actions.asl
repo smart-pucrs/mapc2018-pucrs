@@ -11,6 +11,7 @@
     !action::commit_action(build(Type));
 	.
 
+// ##### UPGRADE ACTION #####
 +!upgrade(Skill)
 <-
 	!action::commit_action(upgrade(Skill));
@@ -77,7 +78,6 @@
 	.
 // We should not test battery if we are already going to a charging station	
 +!goto(FacilityId)
-//: not .desire(action::go_charge(_)) & new::chargingList(List) & .member(FacilityId,List)
 	: new::chargingList(List) & .member(FacilityId,List)
 <-	
 	+::going(FacilityId);
@@ -86,7 +86,6 @@
 	.
 // Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
 +!goto(FacilityId)
-//: not .desire(action::go_charge(_)) & new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
 	: new::chargingList(List) & rules::closest_facility(List, FacilityId, FacilityId2) & rules::enough_battery(FacilityId, FacilityId2, Result)
 <-	
     if (Result == "false") { 
@@ -101,7 +100,6 @@
 -!goto(FacilityId)[code(.fail(action(Action),result(Result)))]
 	: default::charge(C)
 <-
-	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
 	.print(Result," failure, we don't know what to do, keep going. My battery is ",C);	
 	!clean_route;	
 	!goto(FacilityId);
@@ -162,7 +160,6 @@
 	.
 // Tests if there is enough battery to go to my goal AND to the nearest charging station around that goal	
 +!goto(Lat,Lon)
-//: not .desire(go_charge(_,_)) & new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
 	: new::chargingList(List) & rules::closest_facility(List, Lat, Lon, FacilityId2) & rules::enough_battery(Lat, Lon, FacilityId2, Result)
 <-	
     if (Result == "false") { 
@@ -177,7 +174,6 @@
 -!goto(Lat,Lon)[code(.fail(action(Action),result(Result)))]
 	: default::charge(C)
 <-
-	.print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ROTA FALHOU VER SE ESTA NULO");
 	.print(Result," failure, we don't know what to do, keep going. My battery is ",C);
 	!clean_route;	
 	!goto(Lat,Lon);
@@ -203,8 +199,6 @@
 
 // Charge
 // No parameters
-//& (((Role == truck | Role == car) & C < math.round(CCap / 1.3)) | (Role \== truck & Role \== car & C < CCap))
-//not sure if the rule above is still effective, since recharge got nerfed, we will have to test it in the future
 +!charge
 	: default::charge(C) & default::role(_, _, _, _, _, _, _, _, _, BatteryCap, _) & C < BatteryCap
 <-
@@ -472,24 +466,6 @@
 	
 // Gather
 // No parameters
-//+!gather(Item)
-//	: default::role(_, _, _, LoadCap, _, _, _, _, _, _, _) & default::load(Load) & default::item(Item,Vol,_,_) & Load + Vol <= LoadCap
-//<-
-//	!action::commit_action(gather);
-//	!gather(Vol);
-//	.
-//+!gather(Item)
-//<-
-//	.print("My load is full.");
-//	.
-//	
-//+!gather(Item,NItem)
-//	: not default::hasItem(Item,_) | (default::hasItem(Item,NItemNew) & NItemNew < NItem)
-//<-
-//	!action::commit_action(gather);
-//	!gather(Item,NItem);
-//	.
-//+!gather(Item,NItem).
 +!gather
 <-
 	!action::commit_action(gather);
@@ -502,101 +478,6 @@
 <-
 	!action::commit_action(abort);
 	.
-
-//  for verifying battery and going to charging stations
-//+!go_charge(Flat,Flon)
-//	: not ::analysing_go_charge & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
-//<-
-//	+::analysing_go_charge;
-//	+onMyWay([]);
-//	for(.member(ChargingId,List)){
-//		?default::chargingStation(ChargingId,Clat,Clon,_);
-//		if(math.sqrt((Lat-Flat)**2+(Lon-Flon)**2)>(math.sqrt((Lat-Clat)**2+(Lon-Clon)**2)) & math.sqrt((Lat-Flat)**2+(Lon-Flon)**2)>(math.sqrt((Clat-Flat)**2+(Clon-Flon)**2))){
-//			?onMyWay(AuxList);
-//			-onMyWay(AuxList);
-//			+onMyWay([ChargingId|AuxList]);
-//		}
-//	}
-//	?onMyWay(Aux2List);
-//	if(.empty(Aux2List)){
-//		?rules::closest_facility(List,Facility);
-//		?rules::closest_facility(List,Flat,Flon,FacilityId2);
-//		?rules::enough_battery2(Facility, Flat, Flon, FacilityId2, Result, BatteryCap);
-//		if (Result == "false") {
-//			+impossible;
-//			.print("@@@@ Impossible route, going to try anyway.");
-//			+::going(Flat,Flon);
-//			!action::commit_action(goto(Flat,Flon));
-//			!goto(Flat,Flon);
-//		}
-//		else {
-//			FacilityAux2 = Facility;
-//			.print("There is no charging station between me and my goal, going to the nearest one.");
-//		}
-//	}
-//	else{
-//		?rules::closest_facility(Aux2List,Facility);
-//		?rules::enough_battery_charging(Facility, Result);
-//		if (Result == "false") {
-//			?rules::closest_facility(List,FacilityAux);
-//			?rules::enough_battery_charging2(FacilityAux, Facility, Result2, BatteryCap);
-//			if (Result2 == "false") {
-//				+impossible;
-//				.print("@@@@ Impossible route, going to try anyway and hopefully call service breakdown.");
-//				+::going(Flat,Flon);
-//				!action::commit_action(goto(Flat,Flon));
-//				!goto(Flat,Flon);
-//			}
-//			else {
-//				FacilityAux2 = FacilityAux;
-//				.print("There is no charging station between me and my goal, going to the nearest one.");
-//			}
-//		}
-//		else {
-//			?rules::closest_facility(Aux2List,Flat,Flon,FacilityAux);
-//			?rules::enough_battery_charging(FacilityAux, ResultAux);
-//			if (ResultAux == "true") {
-//				FacilityAux2 = FacilityAux;
-//			}
-//			else {
-//				.delete(FacilityAux,Aux2List,Aux2List2);
-//				!check_list_charging(Aux2List2,Flat,Flon);
-//				?charge_in(FacAux);
-//				-charge_in(FacAux);
-//				FacilityAux2 = FacAux;
-//			}
-//		}
-//	}
-//	-onMyWay(Aux2List);
-//	-::analysing_go_charge;
-//	if (not action::impossible) {
-//		.print("**** Going to charge my battery at ", FacilityAux2);
-//		+::going(FacilityAux2);
-//		!action::commit_action(goto(FacilityAux2));
-//		!goto(FacilityAux2);
-//		!charge;		
-//	}
-//	else {
-//		-impossible;
-//	}
-//	.
-//+!go_charge(Flat,Flon)
-//	<-
-//	.wait({-::analysing_go_charge});
-//	!go_charge(Flat,Flon);
-//	.
-//+!check_list_charging(List,Lat,Lon)
-//<-
-//	?rules::closest_facility(List,Lat,Lon,Facility);
-//	?rules::enough_battery_charging(Facility, ResultC);
-//	if (ResultC == "true") {
-//		+charge_in(Facility);
-//	}
-//	else {
-//		.delete(Facility,List,ListAux);
-//		!check_list_charging(ListAux,Lat,Lon);
-//	}
-//	.
 
 get_charge_list(CList)
 :-
@@ -656,7 +537,6 @@ check_list_charging(List,Lat,Lon,ChosenCharging)
 	: new::chargingList(CList) & ::get_charge_list(FeasibleCList) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
 <-
 	?::chargings_on_my_way(FeasibleCList,FLat,FLon,[],Aux2List);
-//	.print("on my way lat ",Aux2List);
 	if(.empty(Aux2List)){
 		?rules::closest_facility(CList,Facility);
 		?rules::closest_facility(CList,Flat,Flon,FacilityId2);
@@ -715,7 +595,6 @@ check_list_charging(List,Lat,Lon,ChosenCharging)
 	:  new::chargingList(CList) & ::get_charge_list(FeasibleCList) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_,Speed,_,_,_,_,_,_,_,BatteryCap,_)
 <-
 	?::chargings_on_my_way(FeasibleCList,FLat,FLon,[],Aux2List);
-//	.print("on my way fac ",Aux2List);
 	if(.empty(Aux2List)){
 		?rules::closest_facility(FeasibleCList,Facility);
 		?rules::closest_facility(CList,FacilityId,FacilityId2);
@@ -770,104 +649,3 @@ check_list_charging(List,Lat,Lon,ChosenCharging)
 		}		
 	}	
 	.
-//+!go_charge(FacilityId)
-//	:  not ::analysing_go_charge & new::chargingList(List) & default::lat(Lat) & default::lon(Lon) & rules::getFacility(FacilityId,Flat,Flon,Aux1,Aux2) & default::role(_, Speed, _, _, _, _, _, _, _, BatteryCap, _)
-//<-
-//	+::analysing_go_charge;
-//	+onMyWay([]);
-//	?default::facility(Fac);
-//	if (.member(Fac,List) & default::charge(CCharge) & default::maxBattery(MCharge) & CCharge>=MCharge) {
-//		.delete(Fac,List,List2);
-//	}
-//	else {
-//		List2 = List;
-//	}
-//	for(.member(ChargingId,List2)){
-//		?default::chargingStation(ChargingId,Clat,Clon,_);
-//		if(math.sqrt((Lat-Flat)**2+(Lon-Flon)**2)>(math.sqrt((Lat-Clat)**2+(Lon-Clon)**2)) & math.sqrt((Lat-Flat)**2+(Lon-Flon)**2)>(math.sqrt((Clat-Flat)**2+(Clon-Flon)**2))){
-//			?onMyWay(AuxList);
-//			-onMyWay(AuxList);
-//			+onMyWay([ChargingId|AuxList]);
-//		}
-//	}
-//	?onMyWay(Aux2List);
-//	if(.empty(Aux2List)){
-//		?rules::closest_facility(List2,Facility);
-//		?rules::closest_facility(List,FacilityId,FacilityId2);
-////		?enough_battery_charging2(Facility, FacilityId, Result, BatteryCap);
-//		?rules::enough_battery2(Facility, FacilityId, FacilityId2, Result, BatteryCap);
-//		if (Result == "false") {
-//			+impossible;
-//			.print("@@@@ Impossible route, going to try anyway.");
-//			+::going(FacilityId);
-//			!action::commit_action(goto(FacilityId));
-//			!goto(FacilityId);
-//		}
-//		else {
-//			FacilityAux2 = Facility;
-//			.print("There is no charging station between me and my goal, going to the nearest one.");
-//		}
-//	}
-//	else{
-//		?rules::closest_facility(Aux2List,Facility);
-//		?rules::enough_battery_charging(Facility, Result);
-//		if (Result == "false") {
-//			?rules::closest_facility(List2,FacilityAux);
-//			?rules::enough_battery_charging2(FacilityAux, Facility, Result2, BatteryCap);
-//			if (Result2 == "false") {
-//				+impossible;
-//				.print("@@@@ Impossible route, going to try anyway and hopefully call service breakdown.");
-//				+::going(FacilityId);
-//				!action::commit_action(goto(FacilityId));
-//				!goto(FacilityId);
-//			}
-//			else {
-//				FacilityAux2 = FacilityAux;
-//				.print("There is no charging station between me and my goal, going to the nearest one.");
-//			}
-//		}
-//		else {
-//			?rules::closest_facility(Aux2List,FacilityId,FacilityAux);
-//			?rules::enough_battery_charging(FacilityAux, ResultAux);
-//			if (ResultAux == "true") {
-//				FacilityAux2 = FacilityAux;
-//			}
-//			else {
-//				.delete(FacilityAux,Aux2List,Aux2List2);
-//				!check_list_charging(Aux2List2,FacilityId);
-//				?charge_in(FacAux);
-//				-charge_in(FacAux);
-//				FacilityAux2 = FacAux;
-//			}
-//		}
-//	}
-//	-onMyWay(Aux2List);
-//	-::analysing_go_charge;
-//	if (not action::impossible) {
-//		.print("**** Going to charge my battery at ", FacilityAux2);
-//		+::going(FacilityAux2)
-//		!action::commit_action(goto(FacilityAux2));
-//		!goto(FacilityAux2);
-//		!charge;		
-//	}
-//	else {
-//		-impossible;
-//	}
-//	.
-//+!go_charge(FacilityId)
-//	<-
-//	.wait({-::analysing_go_charge});
-//	!go_charge(FacilityId);
-//	.
-//+!check_list_charging(List,FacilityId)
-//<-
-//	?rules::closest_facility(List,FacilityId,Facility);
-//	?rules::enough_battery_charging(Facility, ResultC);
-//	if (ResultC == "true") {
-//		+charge_in(Facility);
-//	}
-//	else {
-//		.delete(Facility,List,ListAux);
-//		!check_list_charging(ListAux,FacilityId);
-//	}
-//	.

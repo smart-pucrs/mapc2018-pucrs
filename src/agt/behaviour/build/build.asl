@@ -1,22 +1,61 @@
-get_suitable_well_type([], wellType(Type,_,_), Massium, SuitableType) :- SuitableType=Type.
-get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) :-  
-CostPerEfficiencyTemp<=CostPerEfficiency & get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) :-  
-CostPerEfficiencyTemp>CostPerEfficiency & Cost>Massium & get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) :-  
-CostPerEfficiencyTemp>CostPerEfficiency & Cost<=Massium & get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) :- Cost<=Massium 
-& get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType).
-get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) :- Cost>Massium 
-& get_suitable_well_type(RemainingList, Massium, SuitableType).
-get_suitable_well_type(SuitableType) :- ::myRanking(Ranking) & default::massium(Massium) & ::get_suitable_well_type(Ranking, Massium, SuitableType).
+get_suitable_well_type([], wellType(Type,_,_), Massium, SuitableType) 
+:- 
+	SuitableType=Type
+	.
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) 
+:-  
+	CostPerEfficiencyTemp<=CostPerEfficiency & 
+	get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType)
+	.
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) 
+:-  
+	CostPerEfficiencyTemp>CostPerEfficiency & 
+	Cost>Massium & 
+	get_suitable_well_type(RemainingList, wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType)
+	.
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], wellType(TypeTemp, CostTemp, CostPerEfficiencyTemp), Massium, SuitableType) 
+:-  
+	CostPerEfficiencyTemp>CostPerEfficiency & 
+	Cost<=Massium & 
+	get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType)
+	.
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) 
+:- 
+	Cost<=Massium & 
+	get_suitable_well_type(RemainingList, wellType(Type, Cost, CostPerEfficiency), Massium, SuitableType)
+	.
+get_suitable_well_type([wellType(Type, Cost, CostPerEfficiency)|RemainingList], Massium, SuitableType) 
+:- 
+	Cost>Massium & 
+	get_suitable_well_type(RemainingList, Massium, SuitableType)
+	.
+get_suitable_well_type(SuitableType) 
+:- 
+	::myRanking(Ranking) & 
+	default::massium(Massium) & 
+	::get_suitable_well_type(Ranking, Massium, SuitableType)
+	.
 
-calc(Type, Cost, Efficiency, Result) :- (CostPerEfficiency = Cost/Efficiency) & (Result = wellType(Type, Cost, CostPerEfficiency)).
+calc(Type, Cost, Efficiency, Result) 
+:- 
+	(CostPerEfficiency = Cost/Efficiency) & 
+	(Result = wellType(Type, Cost, CostPerEfficiency))
+	.
 
-ranking([], PartialList, Ranking) :- Ranking=PartialList.
-ranking([wellType(Type, Cost, Efficiency)|RemainingList], PartialList, Ranking) :- ::calc(Type, Cost, Efficiency, Result)
-& .concat(PartialList, [Result], NewList) & ::ranking(RemainingList, NewList, Ranking).
-ranking(List, Ranking) :- ::ranking(List, [], Ranking).
+ranking([], PartialList, Ranking) 
+:- 
+	Ranking=PartialList
+	.
+ranking([wellType(Type, Cost, Efficiency)|RemainingList], PartialList, Ranking) 
+:- 
+	::calc(Type, Cost, Efficiency, Result) & 
+	.concat(PartialList, [Result], NewList) & 
+	::ranking(RemainingList, NewList, Ranking)
+	.
+ranking(List, Ranking) 
+:- 
+	::ranking(List, [], Ranking)
+	.
 
 list_of_wells(List) :- .findall(wellType(Type, Cost, Efficiency), default::wellType(Type, Cost, Efficiency,_,_), List).
 
@@ -29,7 +68,6 @@ select_best_location_to_build(ChosenPosition)
 	default::maxLat(MaxLat) &
 	default::minLat(MinLat) &
 	PossibleLocations = [pos(Lat,MaxLon-0.001),pos(Lat,MinLon+0.001),pos(MaxLat-0.001,Lon),pos(MinLat+0.001,Lon)] &
-//	.print("possible ",PossibleLocations) &
 	select_location(PossibleLocations,100,pos(Lat,Lon),ChosenPosition)
 	.
 select_location([],Route,Temp,ChosenPosition)
@@ -41,9 +79,7 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	default::role(Role,Speed,_,_,_,_,_,_,_,_,_) &
 	default::lat(Lat) &
 	default::lon(Lon) &
-//	.print("antes",DLat," ",DLon)&
 	actions.route(Role,Speed,Lat,Lon,DLat,DLon,_,_,RouteLen) &
-//	.print("depois ",DLat," ",DLon," ",RouteLen) &
 	RouteLen < Route &
 	rules::desired_pos_is_valid(DLat,DLon) &
 	select_location(List,RouteLen,pos(DLat,DLon),ChosenPosition)
@@ -54,17 +90,17 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 	.
 
 +!make_well_types_ranking
-	: default::actionID(S) & list_of_wells(List) & ::ranking(List, Ranking)
+	: default::actionID(S) & ::list_of_wells(List) & ::ranking(List, Ranking)
 <-
 	.print("Ranking: ", Ranking);
-	+myRanking(Ranking);
+	+::myRanking(Ranking);
 	.
 	
 // how do we pick a minimum money to start building wells
 +!choose_minimum_well_price
 	: .findall(Cost,default::wellType(_,Cost,_,_,_),Wells) & .sort(Wells,SortedWells) & .nth(0,SortedWells,MinimumCost)
 <-
-	-+minimum_money(MinimumCost);
+	-+::minimum_money(MinimumCost);
 	.
 
 +!buy_well 
@@ -76,21 +112,6 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 <-
 	.print("cannot select a position to build a well");
 	.
-//+!buy_well 
-//	: ::get_suitable_well_type(Type) & rules::enough_money & new::chargingList(CList) & rules::closest_facility(CList,Facility)
-//<-  
-//	!action::goto(Facility);
-//	?::select_best_location_to_build(pos(Lat,Lon));
-//	!action::goto(Lat,Lon);
-//	!action::build(Type);
-//	!build_well(Type);
-//	.
-//+!buy_well 
-//	: ::get_suitable_well_type(Type) & rules::enough_money
-//<-  
-//	!action::build(Type); 
-//	!build_well(Type);	
-//	.
 +!buy_well(Lat,Lon)
 	: 	new::chargingList(CList) & 
 		rules::closest_facility(CList,Facility) & 
@@ -144,12 +165,6 @@ select_location([pos(DLat,DLon)|List],Route,Temp,ChosenPosition)
 <-	
 	.print("Some agent bought the well before me");
 	.
-//+!recover_from_failure(Action, failed_location)
-//	: default::lat(Lat) & default::lon(Lon) 
-//<-	
-//	.print("There is another well/facility here, moving on");
-//	!action::goto(Lat + 0.001,Lon + 0.001);
-//	.
 +!recover_from_failure(Action, failed_location)
 	: new::chargingList(List) & rules::farthest_facility(List, Facility)
 <-	

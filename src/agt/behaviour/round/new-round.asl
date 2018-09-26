@@ -3,11 +3,8 @@
 +!add_initiator_beliefs
 	: true
 <-
-//	+initiator::completed_jobs(0); // debugging
-//	+initiator::vehicle_job(truck,2);
 	+initiator::max_bid_time(2000);
-	+initiator::max_bidders(28);
-	
+	+initiator::max_bidders(28);	
 	+metrics::money(0);
 	+metrics::completedJobs(0);
 	+metrics::failedJobs(0);
@@ -21,10 +18,7 @@
 	+metrics::failedEvalJobs(0);
 	+metrics::noBids(0);
 	+metrics::missBidAuction(0);
-	
-	//!!evaluation_auction::triggerFuturePlan;
 	.
-
 {end}
 
 {begin namespace(new, global)}

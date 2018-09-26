@@ -31,13 +31,9 @@
 	.abolish(action::action(_,_)); // removes all the possible last actions
 	+action::action(Id,Action);
 	.print("Doing action ",Action, " for ",IntentionId," at step ",Id," . Waiting for step ",Id+1);
-//	if ( Action \== recharge & Action \== continue) {
-//		.print("Doing action ",Action, " at step ",S," . Waiting for step ",S+1);
-//	}
 	
 	!!wait_request_for_help(Id);
 	chosenAction(Id);
-//	.wait( default::actionID(Id2) & Id2 \== Id & not action::reasoning_about_belief(_)); 
 	.wait({+default::actionID(_)}); 
 	.wait(not action::reasoning_about_belief(_)); 
 	
@@ -63,21 +59,8 @@
 			}
 		}
 	}
-	
-//	if (Action \== recharge & Action \== continue & not .substring("deliver",Action) & not .substring("assist_assemble",Action) & not .substring("buy",Action) & not .substring("bid_for_job",Action) & Result \== successful) {
-//		.print("Failed to execute action ",Action," with actionId ",Id,". Executing it again.");
-////		!commit_action(Action);
-//		.fail(action(Action),result(Result));
-//	}
-//	else {
-//		if (.substring("deliver",Action) & Result == failed ) { !commit_action(Action); }
-//		if (.substring("deliver",Action) & Result \== failed_job_status & default::winner(_, assemble(_, JobId, _))) { +strategies::jobDone(JobId); }
-//		if (strategies::free) { !!action::recharge_is_new_skip; }
-//	}
 	.
-//+!commit_action(Action) : Action == recharge <- .wait({+default::actionID(_)});.
 +!commit_action(Action) : Action == recharge <- .suspend;.
-//+!commit_action(Action) : .print(">>>>>>>>>>>>>>>>>>> Plano nao encontrado ",Action) & False.
 +!commit_action(Action)
 	: default::actionID(Id) & action::action(Id,ChosenAction) & ChosenAction \== recharge & .current_intention(intention(IntentionId,_))
 <-
@@ -98,7 +81,6 @@
 	: ::action_sent(Id)
 <-
 	.print("An action has been sent to the Server, I have to wait for the perceptions to be updated");
-//	.wait(default::actionID(Id2) & Id2 \== Id);
 	.wait({-::action_sent(_)});
 	. 
 +!update_percepts.
@@ -124,12 +106,11 @@
 	!forget_old_action(Module,Goal) ;
 	.
 	
-+!forget_old_action
++!forget_old_action // if an intention has sent an action to the server, we have to let it drops itself. This intention may have to update some team information
 	: ::action_sent(_)
 <-
 	!revogate_tokens;
 	!update_percepts;
-//	!forget_old_action; // trying to get the error (it's dangerous)
 	.
 @forgetCommitAction[atomic]
 +!forget_old_action
@@ -197,5 +178,5 @@
 +!send_action_to_server(ActionId)
 <-
 	.print("SHOULDN'T PASS HERE ON ",ActionId);
-	. // action already sent to the server
+	. // action already sent to the server, our team is slowly
 

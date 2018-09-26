@@ -47,40 +47,14 @@ public class TeamArtifact extends Artifact {
 	
 	void init(){
 		logger.info("Team Artifact has been created!");
-//		readConf();
 		this.defineObsProperty(this.obspDesiredCompound, new Object[0]);
 		this.defineObsProperty(this.obspDesiredBase, new Object[0]);
 	}
-	
-//	public void readConf(){		
-//		JSONParser parser = new JSONParser();		
-//		File currentDir = new File(".");
-//		String path = currentDir.getAbsolutePath();		
-//		try {			
-//			Object obj = parser.parse(new FileReader(path+"//conf//generate//generate.json"));
-//			
-//			JSONObject jsonObject 		= (JSONObject) obj;			
-//			JSONObject objFacilities 	= (JSONObject) jsonObject.get("facilities");
-//			JSONObject objWells 		= (JSONObject) objFacilities.get("wells");
-//						
-//			defineObsProperty("conf_baseEfficiencyMin", objWells.get("baseEfficiencyMin"));
-//			defineObsProperty("conf_baseEfficiencyMax", objWells.get("baseEfficiencyMax"));
-//			defineObsProperty("conf_efficiencyIncreaseMin", objWells.get("efficiencyIncreaseMin"));
-//			defineObsProperty("conf_efficiencyIncreaseMax", objWells.get("efficiencyIncreaseMax"));
-//			defineObsProperty("conf_baseIntegrityMin", objWells.get("baseIntegrityMin"));
-//			defineObsProperty("conf_baseIntegrityMax", objWells.get("baseIntegrityMax"));
-//			defineObsProperty("conf_costFactor", objWells.get("costFactor"));			
-//			
-//		} catch (Exception e) {
-//				e.printStackTrace();
-//		}
-//	}
 	
 	@OPERATION
 	void createAvailableList(String storage){
 		availableItems.put(storage, new ArrayList<Literal>());
 		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
-//		this.defineObsProperty("available_items", storage, itemsAux);
 		this.defineObsProperty("available_items", Literal.parseLiteral(storage), itemsAux);
 	}
 	
@@ -90,25 +64,6 @@ public class TeamArtifact extends Artifact {
 		String[] itemsAux = buyCoordination.get(shop).toArray(new String[buyCoordination.get(shop).size()]);
 		this.defineObsProperty("buy_coordination", shop, itemsAux);
 	}
-	
-//	@OPERATION void addAvailableItem(String storage, String item, int qty){
-//		Literal litStorage = Literal.parseLiteral(storage);
-//		if (availableItems.get(storage).toString().contains(item)) {
-//			for (String s: availableItems.get(storage)) {
-//				if (s.contains(item)) {
-//					int ind = availableItems.get(storage).indexOf(s);
-//					int newqty = qty + Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1));
-//					availableItems.get(storage).set(ind,"item("+item+","+newqty+")");
-////					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
-//				}
-//			}
-//		}
-//		else { availableItems.get(storage).add("item("+item+","+qty+")"); }
-//		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
-////		logger.info("@@@@@@@@@ Adding available item "+item+" to storage "+storage+". Result = "+Arrays.toString(itemsAux)+". Size = "+availableItems.get(storage).size());
-//		this.removeObsPropertyByTemplate("available_items", litStorage, null);
-//		this.defineObsProperty("available_items", litStorage, itemsAux);
-//	}
 	
 	private int timesQtyCompundItem = 4;
 	@OPERATION
@@ -133,16 +88,12 @@ public class TeamArtifact extends Artifact {
 	}
 	
 	private void updateDesiredItemsCompound(Map<String,DesiredItem> desiredItems, String obspName) {
-		
-//		System.out.println("\n[  TEST  ] << updateDesiredItemsCompound >>                                                   <<---------------$$ \n");
 		Object[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral()).toArray(Literal[]::new);
 		this.removeObsProperty(obspName);
 		this.defineObsProperty(obspName, new Object[] {itemsAux});
 	}
 	
 	private void updateDesiredItemsBase(Map<String,DesiredItem> desiredItems, String obspName) {
-		
-//		System.out.println("\n[  TEST  ] << updateDesiredItemsBase >>                                                   <<---------------$$ \n");
 		int totalDesiredItems = getTotalDesiredItems(desiredItems);
 		Object[] itemsAux = desiredItems.entrySet().stream().map(d -> d.getValue().getLiteral(totalDesiredItems)).toArray(Literal[]::new);
 		this.removeObsProperty(obspName);
@@ -151,24 +102,14 @@ public class TeamArtifact extends Artifact {
 	
 	private int getTotalDesiredItems(Map<String,DesiredItem> storedItems) {
 		int total = 0;
-		
-//		System.out.println("[  TEST  ] Item | Current Qty | Desired Qty | Percentual % | C_Qty - D_Qty");
 		for (String key : storedItems.keySet()) {			
             DesiredItem desiredItem = storedItems.get(key);
-            
-//            System.out.println("[  TEST  ] " + key +
-//            		" | " + desiredItem.getCurrentQty() +
-//            		" | " + desiredItem.getDesiredQty() +
-//            		" | " + desiredItem.getPercentage() + 
-//            		" | " + (desiredItem.getCurrentQty() - desiredItem.getDesiredQty()));
-            
             if(desiredItem.getCurrentQty() < desiredItem.getDesiredQty()) {
             	total = total + desiredItem.getPercentage();
             } else {
             	total = total + 1;
             }
 		}
-//		System.out.println("[  TEST  ] % Total = "+total);
 		return total;
 	}
 	
@@ -212,20 +153,6 @@ public class TeamArtifact extends Artifact {
 		this.defineObsProperty("available_items", litStorage, itemsAux);
 	}
 	
-//	private void print_all() {
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append("\n"+"Desired Base Item"+"\n");
-//		this.desiredBase.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
-//		sb.append("\n"+"Desired Compound Item"+"\n");
-//		this.desiredCompound.forEach((name,item) -> {sb.append(" "+name+" {"+item.currentQty+" of "+item.desiredQty+"}");});
-//		
-//		sb.append("\n"+"Storage1"+"\n");
-//		this.availableItems.get("storage1").forEach(l -> sb.append(l.toString()));
-//		
-//		logger.info(sb.toString());
-//	}
-	
 	@OPERATION
 	void addManufactoredItem(String storage, String item, int qty){	
 		this.desiredCompound.get(item).removeCurrentQty(qty);		
@@ -239,30 +166,6 @@ public class TeamArtifact extends Artifact {
 		this.desiredCompound.get(item).addCurrentQty(qty);
 		updateDesiredItemsCompound(this.desiredCompound, this.obspDesiredCompound);
 	}
-	
-//	@OPERATION void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
-//		int remove = -1;
-//		String result = "false";
-//		if (availableItems.get(storage) != null && availableItems.get(storage).toString().contains(item)) {
-//			for (String s: availableItems.get(storage)) {
-//				if (s.contains(item)) {
-//					int ind = availableItems.get(storage).indexOf(s);
-//					int newqty = Integer.parseInt(""+s.subSequence(s.indexOf(",")+1, s.length()-1)) - qty;
-//					if (newqty < 0) { result = "false"; }
-//					else if (newqty != 0) { result = "true"; availableItems.get(storage).set(ind,"item("+item+","+newqty+")"); }
-//					else { result = "true"; remove = ind; }
-////					logger.info("@@@@@ List "+availableItems.get(storage)+" already contains "+item+" index "+availableItems.get(storage).indexOf(s));
-//				}
-//			}
-//			if (remove != -1) { availableItems.get(storage).remove(remove); }
-//		}
-//		if (result.equals("true")) {
-//			String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
-//			this.removeObsPropertyByTemplate("available_items", storage, null);
-//			this.defineObsProperty("available_items", storage, itemsAux);
-//		}
-//		res.set(result);
-//	}
 	
 	@OPERATION
 	void removeAvailableItem(String storage, String item, int qty, OpFeedbackParam<String> res){
@@ -327,9 +230,7 @@ public class TeamArtifact extends Artifact {
 	
 	@OPERATION
 	void addLoad(String agent, int load){
-//		logger.info("Loads before "+loads);
 		loads.put(agent,load);
-//		logger.info("Loads after "+loads);
 	}
 	
 	@OPERATION

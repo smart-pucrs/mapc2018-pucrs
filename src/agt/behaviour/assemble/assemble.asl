@@ -4,7 +4,6 @@
 <-
 	.print("Received a bid request for ",TaskId);
 	if (rules::can_I_bid){
-//		+default::biding(TaskId);
 		!create_bid(Bid);
 		.print("My bid for task assemble ",TaskId," is ",Bid);
 	    manyBids(Bid)[artifact_name(ContractNetName)];
@@ -13,19 +12,6 @@
 	.print(ContractNetName);
 	.
 
-//+!create_bid(Bid)
-//	: default::role(Role,_,_,_,_,_,_,_,_,_,_) & default::maxLoad(MaxLoad) & strategies::centerStorage(Storage) & strategies::centerWorkshop(Workshop) & default::speed(Speed)
-//<-
-//	actions.route(Role,Speed,Storage,RouteStorage);
-//	actions.route(Role,Speed,Storage,Workshop,RouteWorkshop);
-//	actions.route(Role,Speed,Workshop,Storage,RouteStorage2);
-//	Distance = RouteStorage + RouteWorkshop + RouteStorage2;
-//	Bid = [bid(Distance,MaxLoad,Role)];
-//	.
-//+!create_bid(Bid)
-//<-
-//	Bid = [];
-//	.
 +!create_bid(Bid)
 	: 	default::role(Role,_,_,_,_,_,_,_,_,_,_) & 
 		default::maxLoad(MaxLoad) & 

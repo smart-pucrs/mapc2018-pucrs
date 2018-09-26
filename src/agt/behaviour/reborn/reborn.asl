@@ -2,7 +2,6 @@
 <-
 	.print("The devil has come into my mind");
 	.drop_all_intentions;
-//	!action::forget_old_action;
 	!revive;
 	.
 	
@@ -11,7 +10,6 @@
 <-
 	.print("Coming back to life");
 	!forget_the_past;
-//	.wait(teste);
 	!strategies::change_role(PastRole,NewRole);
 	.wait({+default::actionID(_)}); // wait for beliefs synchronisation
 	!strategies::go_back_to_work;
@@ -82,9 +80,6 @@
 	: strategies::centerStorage(Storage) & default::storage(Storage,_,_,_,_,StoredItems)
 <-
 	for(.member(item(Item,Qty,_),StoredItems)){
-//		if (default::item(Item,_,_,parts([]))){
-//			addAvailableItem(Storage,Item,Qty);	
-//		}
 		addAvailableItem(Storage,Item,Qty);
 	}
 	.
