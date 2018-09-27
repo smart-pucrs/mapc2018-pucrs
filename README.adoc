@@ -23,11 +23,11 @@ In this repository you will find all the information required to run our code.
 {empty}
 
 == Approach
-We use the {jacamo} platform to develop our team of agents. Here, we briefly describe how we applied each part of {jacamo} framework. 
+We use the {jacamo} platform to develop our team of agents. Here, we briefly describe how we applied each programming abstraction of the {jacamo} framework (agent, environment, organisation). 
 
-- *{jason}*: we use {jason} to develop the behaviour of our agents. They are able to reason about new environment perceptions in order to decide what to do in that environment. In our mechanism, the agents change intentions depending on the team and environemnt state;
-- *{cartago}*: it is very useful tool to exchange team information and to interact with the MAPC server;
-- *{moise}*: our agents adopt roles in organisation that represents our team. We developed our strategy based on these roles, in this sense, it is easy to change our strategy by simply changing the agent's role. {moise} is also useful to enable coordination between multiple agents to accomplish a desired task.
+- *{jason}*: we use {jason} to develop the behaviour of our agents. They are able to reason about perceptions that come from the environment in order to decide their course of action. In our mechanism, agents can change their intention depending on the team and environment state;
+- *{cartago}*: we used it to exchange team information between our agents and to interact with the MAPC server;
+- *{moise}*: our agents adopt roles in the organisation that represent particular tasks (builders, gatherers, etc.). We developed our strategies based on these roles, and in this sense, it is easy for our agents to adopt a different strategy by the agents themselves deciding to change to a different role. {moise} is also useful to facilitate coordination between multiple agents to accomplish a desired task.
 
 For further details about our team implemantation, check out our paper (*coming soon*).
 
