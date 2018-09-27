@@ -1,7 +1,5 @@
 package env;
 
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,9 +8,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import cartago.Artifact;
 import cartago.OPERATION;
@@ -30,9 +25,6 @@ public class TeamArtifact extends Artifact {
 	private final String obspDesiredCompound = "desired_compound";
 	private final String obspDesiredBase 	 = "desired_base";
 	
-	private static Map<String, Integer> shopItemsQty 	= new HashMap<String, Integer>();
-	private static Map<String, Integer> itemsQty 	 	= new HashMap<String, Integer>();
-	private static Map<String, Integer> itemsPrice 	 	= new HashMap<String, Integer>();
 	private static Map<String, String>  agentNames 	 	= new HashMap<String, String>();
 	private static Map<String, String>  agentRoles 	 	= new HashMap<String, String>();
 	private static Map<String, Integer> loads 			= new HashMap<String, Integer>();
@@ -56,13 +48,6 @@ public class TeamArtifact extends Artifact {
 		availableItems.put(storage, new ArrayList<Literal>());
 		String[] itemsAux = availableItems.get(storage).toArray(new String[availableItems.get(storage).size()]);
 		this.defineObsProperty("available_items", Literal.parseLiteral(storage), itemsAux);
-	}
-	
-	@OPERATION
-	void createBuyCoordinationList(String shop){
-		buyCoordination.put(shop, new ArrayList<String>());
-		String[] itemsAux = buyCoordination.get(shop).toArray(new String[buyCoordination.get(shop).size()]);
-		this.defineObsProperty("buy_coordination", shop, itemsAux);
 	}
 	
 	private int timesQtyCompundItem = 4;
@@ -248,32 +233,6 @@ public class TeamArtifact extends Artifact {
 		loads.putAll(duplicateLoads);
 	}
 	
-	@OPERATION
-	void addShopItem(String item, int qty, String itemId, int price){
-		shopItemsQty.put(item,qty);
-		if (itemsQty.containsKey(itemId)) {
-			if (itemsQty.get(itemId) < qty) {
-				itemsQty.replace(itemId, qty);
-			}
-		}
-		else {
-			itemsQty.put(itemId, qty);
-		}
-		if (itemsPrice.containsKey(itemId)) {
-			if (itemsPrice.get(itemId) < price) {
-				itemsPrice.replace(itemId, price);
-			}
-		}
-		else {
-			itemsPrice.put(itemId, price);
-		}
-	}
-	
-	@OPERATION
-	void getShopItem(String item, OpFeedbackParam<Integer> qty){
-		qty.set(shopItemsQty.get(item));
-	}
-	
 	public static int getLoad(String agent) {
 		return loads.get(agent);
 	}
@@ -282,13 +241,6 @@ public class TeamArtifact extends Artifact {
 		return agentRoles.get(agent);
 	}
 	
-	public static int getItemQty(String item) {
-		return itemsQty.get(item);
-	}
-	
-	public static int getItemPrice(String item) {
-		return itemsPrice.get(item);
-	}
 		
 	@OPERATION
 	void addResourceNode(String resourceId, double lat, double lon, String resource){
