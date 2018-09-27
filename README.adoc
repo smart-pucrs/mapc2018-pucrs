@@ -22,12 +22,12 @@ In this repository, you will find all the information required to run our code.
 // Need some preamble to get TOC:
 {empty}
 
-== Approach
+== Our Approach
 We used the {jacamo} platform to develop our team of agents. Here, we briefly describe how we applied each programming abstraction of the {jacamo} framework (agent, environment, organisation). 
 
 - *{jason}*: we use {jason} to develop the behaviour of our agents. They are able to reason about the percepts that come from the environment in order to decide their course of action. In our approach, agents may change their intentions depending on the team and environment state;
-- *{cartago}*: we used it to exchange team information between our agents and to interact with the MAPC server;
-- *{moise}*: our agents adopt roles in the organisation that represent particular tasks (builders, gatherers, etc.). We developed our strategies based on these roles, and in this sense, it is easy for our agents to adopt autonomously to a different strategy (i.e., the agents themselves decide to change to a different role). {moise} is also useful to facilitate coordination when multiple agents are required to work together to accomplish a desired task.
+- *{cartago}*: we use {cartago} to exchange team information between our agents and to interact with the MAPC server;
+- *{moise}*: our agents adopt roles in the {moise} organisation which represent particular tasks (builders, gatherers, etc.). We developed our strategies based on these roles, and in this sense, it is easy for our agents to adopt autonomously to a different strategy (i.e., the agents themselves decide to change to a different role). {moise} is also useful to facilitate coordination when multiple agents are required to work together to accomplish a desired task.
 
 For further details about our team implemantation, check out our paper (*coming soon*).
 
@@ -53,7 +53,7 @@ To run the simulation with three rounds, right-click test/pucrs/agentcontest2018
 
 The server's output is shown on the {eclipse} console. The {jacamo} output is loaded into a separate `gui`. Press `enter` at the server output ({eclipse} console) to start the simulation.
 
-== See Matches
+== Watch the Matches
 If you'd like to see our matches, follow the links below:
 
 - Versus *{jasondtu}*: https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-24-14-05-06-Contest-2018-3of3[São Paulo];
