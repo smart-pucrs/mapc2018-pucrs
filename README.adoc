@@ -32,7 +32,7 @@ We used the {jacamo} platform to develop our team of agents. Here, we briefly de
 For further details about our team implemantation, check out our paper (*coming soon*).
 
 == Prepare the Environment
-To start developing and contributing to this repository, you will need the {jacamo} plugin for {eclipse}. To install so, follow http://jacamo.sourceforge.net/eclipseplugin/tutorial/[this tutorial]. Now, open {eclipse}, and select from the toolbar:
+To start developing and contributing to this repository, you will need the {jacamo} plugin for {eclipse}. In order to install it, please follow http://jacamo.sourceforge.net/eclipseplugin/tutorial/[this tutorial]. Now, open {eclipse} and select from the toolbar:
 
 > File > Import > Git > Projects from Git > Clone URI
 
