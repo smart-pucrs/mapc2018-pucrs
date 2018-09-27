@@ -1,4 +1,4 @@
-SMART_JaCaMo Team
+The SMART_JaCaMo Team
 =================
 :toc:
 :toc-placement: preamble
