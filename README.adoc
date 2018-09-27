@@ -14,7 +14,7 @@ SMART_JaCaMo Team
 :dtg: Dumping to Gather
 :tubdai: TUBDAI
 
-This is the source code of the {smart-team} team, one of the teams participating in the https://multiagentcontest.org/2018/[2018 Multi-Agent Programming Contest (MAPC) in 2018]. 
+This is the source code of the {smart-team} team, one of the teams participating in the https://multiagentcontest.org/2018/[2018 Multi-Agent Programming Contest (MAPC)]. 
 In this repository, you will find all the information required to run our code. 
 
 *Have fun!*
