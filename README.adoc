@@ -32,11 +32,13 @@ We used the {jacamo} platform to develop our team of agents. Here, we briefly de
 For further details about our team implemantation, check out our paper (*coming soon*).
 
 == Prepare the Environment
-To start developing and contributing to this repository, open {eclipse}, and select from the toolbar:
+To start developing and contributing to this repository, you will need the {jacamo} plugin for {eclipse}. To install so, follow http://jacamo.sourceforge.net/eclipseplugin/tutorial/[this tutorial]. Now, open {eclipse}, and select from the toolbar:
 
 > File > Import > Git > Projects from Git > Clone URI
 
 Copy https://github.com/smart-pucrs/mapc2018-pucrs.git and paste it on the URI field.
+
+
 
 If you're fond of command line, just copy and paste the following command at your terminal in your desired folder:
 
