@@ -29,7 +29,7 @@ We used the {jacamo} platform to develop our team of agents. Here, we briefly de
 - *{cartago}*: we use {cartago} to exchange team information between our agents and to interact with the MAPC server;
 - *{moise}*: our agents adopt roles in the {moise} organisation which represent particular tasks (builders, gatherers, etc.). We developed our strategies based on these roles, and in this sense, it is easy for our agents to adopt autonomously to a different strategy (i.e., the agents themselves decide to change to a different role). {moise} is also useful to facilitate coordination when multiple agents are required to work together to accomplish a desired task.
 
-For further details about our team implemantation, check out our paper (*coming soon*).
+For further details about our team implemantation, check out our paper https://link.springer.com/chapter/10.1007%2F978-3-030-37959-9_4[(*link*)].
 
 == Prepare the Environment
 To start developing and contributing to this repository, you will need the {jacamo} plugin for {eclipse}. In order to install it, please follow http://jacamo.sourceforge.net/eclipseplugin/tutorial/[this tutorial]. Now, open {eclipse} and select from the toolbar:
