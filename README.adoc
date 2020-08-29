@@ -64,3 +64,13 @@ If you'd like to see our matches, follow the links below:
 - Versus *{tubdai}*: https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-1of3[Copenhagen], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-2of3[Berlin], https://multiagentcontest.org/2018/replays/?2018-09-25-18-16-09-Contest-2018-3of3[São Paulo].
 
 To see all the MAPC matches, https://multiagentcontest.org/2018/[click this link] and search for Section *Replays*.
+
+== Contributors
+- Tabajara Krausburg
+- Rafael Cauê Cardoso
+- Juliana Damasio
+- Vitor Peres
+- Giovani P. Farias
+- Débora Cristina Engelmann
+- Jomi Fred Hübner
+- Rafael H. Bordini
