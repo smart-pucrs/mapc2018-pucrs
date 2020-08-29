@@ -1,5 +1,5 @@
-The SMART_JaCaMo Team
-=====================
+The SMART_JaCaMo Team (https://link.springer.com/chapter/10.1007%2F978-3-030-37959-9_4[paper here])
+===================================================================================================
 :toc:
 :toc-placement: preamble
 :smart-team: SMART_JaCaMo
